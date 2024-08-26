@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply box-border p-0 m-0 font-inter;
+}
+
+::selection {
+  @apply bg-dark-shadow !important;
+}
+
+html,
+body {
+  @apply min-w-full min-h-full bg-light-default text-dark-default !important;
+}
