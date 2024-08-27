@@ -22,10 +22,10 @@ export function HomeLayout() {
 
   return (
     <>
-      <section className={`relative min-h-screen bg-light-default`}>
+      <section className={`relative min-h-screen bg-black`}>
         {isSmallScreen && isSidebarOpen && (
           <div
-            className="fixed inset-0 z-10 bg-opacity-50 bg-dark-default"
+            className="fixed inset-0 z-10 bg-opacity-25 bg-light-default"
             onClick={() => setIsSidebarOpen(false)}
           ></div>
         )}

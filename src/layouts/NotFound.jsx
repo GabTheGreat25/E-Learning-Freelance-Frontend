@@ -1,5 +1,5 @@
 import React from "react";
-import NotFoundImg from "@assets/404-Not-Found.png";
+import { NotFoundImg } from "@assets";
 
 export function NotFound() {
   const goBack = () => {

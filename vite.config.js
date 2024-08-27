@@ -15,6 +15,8 @@ export default defineConfig({
       "@components": `${srcPath}/components`,
       "@layouts": `${srcPath}/layouts`,
       "@pages": `${srcPath}/pages`,
+      "@utils": `${srcPath}/utils`,
+      "@validators": `${srcPath}/validators`,
     },
   },
   server: {
