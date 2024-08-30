@@ -14,3 +14,43 @@ html,
 body {
   @apply min-w-full min-h-full bg-light-default text-dark-default !important;
 }
+
+.control-dots {
+  @apply 2xl:pb-9 xl:pb-6 lg:pb-3 md:pb-0 !important;
+}
+
+.PhoneInputInput {
+  @apply ml-2 !important;
+}
+
+.PhoneInput input:focus {
+  @apply border-none shadow-none outline-none !important;
+}
+
+input[type="checkbox"].peer:checked::before {
+  @apply content-["✔"] relative -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4 block text-center text-light-default !important;
+}
+
+.css-1cfo1cf {
+  @apply text-light-default !important;
+}
+
+.PhoneInputCountry .PhoneInputCountrySelectArrow {
+  @apply hidden !important;
+}
+
+.react-datepicker__month-container,
+.react-datepicker__header {
+  @apply bg-dark-secondary !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day {
+  @apply text-light-default hover:text-dark-default !important;
+}
+
+.react-datepicker__day--today,
+.react-datepicker__day--selected {
+  @apply bg-info-secondary !important;
+}

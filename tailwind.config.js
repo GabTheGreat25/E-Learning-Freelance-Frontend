@@ -21,12 +21,22 @@ module.exports = {
         light: {
           default: "#FAF7F7",
           shadow: "#4C4C4C",
+          secondary: "#BFBFBF",
+          tertiary: "#8692A6",
           variant: "#F2F2F2",
         },
         dark: {
           default: "#101010",
           shadow: "#00000075",
+          secondary: "#242426",
           variant: "#020202",
+        },
+        error: {
+          default: "#FF0000",
+        },
+        info: {
+          default: "#1565D8",
+          secondary: "#216BA5",
         },
       },
     },

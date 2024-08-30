@@ -5,8 +5,8 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { Test, Home } from "@/pages";
-import { HomeLayout, NotFound, RootLayout } from "@/layouts";
+import { Test, Home, Login, Register, RegisterProfile } from "@/pages";
+import { AdminLayout, HomeLayout, NotFound, RootLayout } from "@/layouts";
 
 export default function App() {
   return (
@@ -16,8 +16,13 @@ export default function App() {
           createRoutesFromElements(
             <Route path="/" element={<RootLayout />}>
               {/* Public Route */}
-              {/* Private Route */}
               <Route element={<HomeLayout />}>
+                <Route index element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="registerProfile" element={<RegisterProfile />} />
+              </Route>
+              {/* Private Route */}
+              <Route element={<AdminLayout />}>
                 <Route index element={<Home />} />
                 {/* <Route index element={<Test />} /> */}
               </Route>

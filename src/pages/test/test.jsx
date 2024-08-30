@@ -91,7 +91,7 @@ export function Test() {
         playsInline
         poster="https://bitdash-a.akamaihd.net/content/sintel/poster.png"
       />
-      <div className="grid justify-around grid-flow-col align-center">
+      <div className="grid justify-around grid-flow-col align-center text-light-default">
         <p>
           Current video resolution: {currentResolution.width}x
           {currentResolution.height}
