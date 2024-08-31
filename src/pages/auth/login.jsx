@@ -24,7 +24,7 @@ export function Login() {
   });
 
   return (
-    <section className="grid min-h-full grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
+    <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
         className="hidden w-full h-full bg-center bg-cover md:block"
         style={{ backgroundImage: `url(${AuthImg})` }}

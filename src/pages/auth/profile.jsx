@@ -78,7 +78,7 @@ export function RegisterProfile() {
       province: null,
       city: null,
     },
-    validationSchema: registerProfileValidation,
+    // validationSchema: registerProfileValidation,
     onSubmit: (values) => {
       console.log("Form data:", values);
     },
@@ -87,7 +87,7 @@ export function RegisterProfile() {
   });
 
   return (
-    <section className="grid min-h-full grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
+    <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
         className="hidden w-full h-full bg-center bg-cover md:block"
         style={{ backgroundImage: `url(${AuthImg})` }}
@@ -356,11 +356,13 @@ export function RegisterProfile() {
 
             <button
               type="submit"
+              onClick={() => navigate("/verification")}
               className="w-full py-3 my-3 text-lg rounded-md bg-dark-secondary text-light-default"
             >
               Save & Continue
             </button>
           </form>
+
           <div className="flex items-end justify-center gap-x-3">
             <img src={LockImg} alt="LockImg" />
             <h1 className="text-sm text-light-tertiary">

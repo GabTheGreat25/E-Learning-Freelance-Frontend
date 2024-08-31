@@ -5,7 +5,15 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { Test, Home, Login, Register, RegisterProfile } from "@/pages";
+import {
+  Test,
+  Home,
+  Login,
+  Register,
+  RegisterProfile,
+  Verification,
+  Verified,
+} from "@/pages";
 import { AdminLayout, HomeLayout, NotFound, RootLayout } from "@/layouts";
 
 export default function App() {
@@ -20,6 +28,8 @@ export default function App() {
                 <Route index element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="registerProfile" element={<RegisterProfile />} />
+                <Route path="verification" element={<Verification />} />
+                <Route path="verified" element={<Verified />} />
               </Route>
               {/* Private Route */}
               <Route element={<AdminLayout />}>
