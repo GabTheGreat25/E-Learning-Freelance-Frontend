@@ -57,7 +57,7 @@ export function Verification() {
       <div className="relative flex items-start justify-center p-6 lg:p-10 xl:p-32">
         <div
           className="absolute top-0 left-0 p-8 cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/registerProfile")}
         >
           <div className="grid grid-cols-[50%_50%] items-end justify-center">
             <FaChevronLeft size={30} />

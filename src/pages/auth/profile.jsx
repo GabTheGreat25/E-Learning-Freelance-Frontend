@@ -81,6 +81,7 @@ export function RegisterProfile() {
     // validationSchema: registerProfileValidation,
     onSubmit: (values) => {
       console.log("Form data:", values);
+      // navigate("/verification");
     },
     validateOnBlur: true,
     validateOnChange: true,
@@ -356,7 +357,6 @@ export function RegisterProfile() {
 
             <button
               type="submit"
-              onClick={() => navigate("/verification")}
               className="w-full py-3 my-3 text-lg rounded-md bg-dark-secondary text-light-default"
             >
               Save & Continue

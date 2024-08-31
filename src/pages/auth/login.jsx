@@ -6,10 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { PasswordVisibility } from "@utils";
 import { useFormik } from "formik";
 import { loginValidation } from "@validators";
+import { hooks } from "@api";
 
 export function Login() {
   const navigate = useNavigate();
   const { isPasswordVisible, togglePasswordVisibility } = PasswordVisibility();
+
+  const [loginUser] = hooks.useLoginUserMutation();
+
+  console.log("loginUser hook:", loginUser);
 
   const formik = useFormik({
     initialValues: {
@@ -19,7 +24,7 @@ export function Login() {
     validationSchema: loginValidation,
     onSubmit: (values) => {
       console.log("Form values:", values);
-      // navigate("/dashboard");
+      loginUser(values);
     },
   });
 
