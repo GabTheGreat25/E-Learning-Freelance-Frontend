@@ -363,7 +363,7 @@ export function RegisterProfile() {
           </form>
           <div className="flex items-end justify-center gap-x-3">
             <img src={LockImg} alt="LockImg" />
-            <h1 className="relative text-sm bottom-1 text-light-tertiary">
+            <h1 className="text-sm text-light-tertiary">
               Your Info is safely secured
             </h1>
           </div>
