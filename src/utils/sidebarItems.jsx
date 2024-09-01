@@ -1,8 +1,13 @@
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "@hooks";
 import * as images from "@assets";
+import { Toast } from "@utils";
+import { TOAST } from "@constants";
 
 export function SidebarItems() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return [
     {
@@ -64,8 +69,9 @@ export function SidebarItems() {
       label: "Log Out",
       icon: images.LogoutImg,
       onClick: () => {
-        console.log("Logging out");
-        // navigate("/login");
+        dispatch(authActions.logout());
+        navigate("/");
+        Toast(TOAST.SUCCESS, "Logged out successfully");
       },
     },
   ];

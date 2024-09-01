@@ -7,12 +7,16 @@
 }
 
 ::selection {
-  @apply bg-dark-shadow !important;
+  @apply bg-light-shadow !important;
 }
 
 html,
 body {
   @apply min-w-full min-h-full bg-light-default text-dark-default !important;
+}
+
+.loader {
+  @apply grid items-center justify-center w-full min-h-screen !important;
 }
 
 .control-dots {
@@ -44,13 +48,32 @@ input[type="checkbox"].peer:checked::before {
   @apply bg-dark-secondary !important;
 }
 
-.react-datepicker__current-month,
-.react-datepicker__day-name,
 .react-datepicker__day {
   @apply text-light-default hover:text-dark-default !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__current-month {
+  @apply text-light-default font-semibold  !important;
+}
+
+.react-datepicker__year-read-view--selected-year {
+  @apply text-light-default text-base  !important;
+}
+
+.react-datepicker__year-read-view--down-arrow {
+  @apply mt-1 !important;
 }
 
 .react-datepicker__day--today,
 .react-datepicker__day--selected {
   @apply bg-info-secondary !important;
+}
+
+.react-datepicker__year-select {
+  @apply bg-dark-secondary text-light-default text-sm mt-2 mb-1 !important;
+}
+
+.custom-datepicker-popper .react-datepicker__year-dropdown {
+  width: 200px !important;
 }

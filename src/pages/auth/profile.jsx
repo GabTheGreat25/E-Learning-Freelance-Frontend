@@ -1,30 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { CalendarImg, LockImg } from "@assets";
 import { FaChevronLeft } from "react-icons/fa";
-import { AuthImg, CoverImg } from "@assets";
-import { SelectStyles } from "@utils";
 import { useNavigate } from "react-router-dom";
+import { FadeLoader } from "react-spinners";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { registerProfileValidation } from "@validators";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import { Country, State, City } from "country-state-city";
+import { AuthImg, CoverImg, CalendarImg, LockImg } from "@assets";
+import { SelectStyles, Toast } from "@utils";
+import { registerProfileValidation } from "@validators";
+import { TOAST } from "@constants";
+import { hooks } from "@api";
+import { locationActions } from "@hooks";
 
 export function RegisterProfile() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [registerUser, { isLoading }] = hooks.useRegisterUserMutation();
+  const form = useSelector((state) => state.location.formData);
 
   const [isFocused, setIsFocused] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedProvince, setSelectedProvince] = useState(null);
-
   const [countryOptions, setCountryOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [provinceOptions, setProvinceOptions] = useState([]);
@@ -71,17 +77,51 @@ export function RegisterProfile() {
 
   const formik = useFormik({
     initialValues: {
-      phoneNumber: "",
-      birthdate: "",
+      mobileNumber: "",
+      birthDate: "",
       address: "",
       country: null,
       province: null,
       city: null,
+      gender: null,
     },
-    // validationSchema: registerProfileValidation,
+    validationSchema: registerProfileValidation,
     onSubmit: (values) => {
-      console.log("Form data:", values);
-      // navigate("/verification");
+      const formData = {
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        password: form.password,
+        mobileNumber: values.mobileNumber,
+        birthDate: new Date(values.birthDate).toISOString(),
+        address: values.address,
+        country: values.country.label,
+        province: `${values.province.label}, ${values.province.value}`,
+        city: values.city.label,
+        gender: values.gender.value,
+      };
+      registerUser(formData)
+        .unwrap()
+        .then((res) => {
+          if (res.success) {
+            Toast(TOAST.SUCCESS, res.message);
+            navigate("/verification");
+            dispatch(locationActions.clearFormData());
+          } else
+            Toast(
+              TOAST.ERROR,
+              res.error?.data?.message ||
+                "Registration failed. Please try again.",
+            );
+        })
+        .catch((error) => {
+          console.error("API error:", error);
+          Toast(
+            TOAST.ERROR,
+            error?.data?.message ||
+              "An unexpected error occurred. Please try again.",
+          );
+        });
     },
     validateOnBlur: true,
     validateOnChange: true,
@@ -119,258 +159,307 @@ export function RegisterProfile() {
         </div>
       </div>
 
-      <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
-        <div className="absolute top-0 left-0 p-8 cursor-pointer">
-          <div
-            onClick={() => navigate("/register")}
-            className="grid grid-cols-[50%_50%] items-end justify-center"
-          >
-            <FaChevronLeft size={30} />
-            <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
-              Back
-            </p>
-          </div>
+      {isLoading ? (
+        <div className="loader">
+          <FadeLoader color="#FAF7F7" loading={true} size={50} />
         </div>
-
-        <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
-          <div className="grid grid-rows-2">
-            <p className="text-base font-medium text-start text-light-secondary">
-              STEP 02/03
-            </p>
-            <h3 className="text-lg font-medium text-end">Address</h3>
-          </div>
-        </div>
-
-        <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
-          <h1 className="mb-1 text-4xl font-semibold">
-            Complete Your Profile!
-          </h1>
-          <p className="mb-2 text-base">
-            For the purpose of industry regulation, your details are required.
-          </p>
-          <hr className="mb-8" />
-
-          <form onSubmit={formik.handleSubmit}>
-            <div className="mb-4">
-              <label
-                htmlFor="phone"
-                className="block mb-2 text-base font-medium"
+      ) : (
+        <>
+          <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
+            <div className="absolute top-0 left-0 p-8 cursor-pointer">
+              <div
+                onClick={() => navigate("/register")}
+                className="grid grid-cols-[50%_50%] items-end justify-center"
               >
-                Phone Number
-              </label>
-              <PhoneInput
-                international
-                limitMaxLength
-                focusInputOnCountrySelection
-                defaultCountry="PH"
-                countryCallingCodeEditable={false}
-                value={formik.values.phoneNumber}
-                onChange={(value) => formik.setFieldValue("phoneNumber", value)}
-                className={`w-full p-4 border rounded-md ${
-                  formik.errors.phoneNumber && formik.touched.phoneNumber
-                    ? "border-error-default"
-                    : "border-light-secondary"
-                } text-light-default placeholder-light-secondary`}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                style={{
-                  boxShadow: isFocused ? "0 0 0 1px white" : "none",
-                }}
-              />
-              {formik.errors.phoneNumber && formik.touched.phoneNumber ? (
-                <p className="pt-2 text-error-default">
-                  {formik.errors.phoneNumber}
+                <FaChevronLeft size={30} />
+                <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
+                  Back
                 </p>
-              ) : null}
-            </div>
-
-            <div className="relative mb-4">
-              <label
-                htmlFor="birthdate"
-                className="block mb-2 text-base font-medium"
-              >
-                Birthdate
-              </label>
-              <div className="flex items-center">
-                <input
-                  type="text"
-                  id="birthdate"
-                  name="birthdate"
-                  value={startDate ? startDate.toLocaleDateString() : ""}
-                  readOnly
-                  className={`w-full p-4 border ${
-                    formik.errors.birthdate && formik.touched.birthdate
-                      ? "border-error-default"
-                      : "border-light-secondary"
-                  } rounded-md text-light-default placeholder-light-secondary`}
-                  placeholder="Select Birthday"
-                  onClick={() => setShowDatePicker((prev) => !prev)}
-                />
-                <img
-                  src={CalendarImg}
-                  alt="CalendarImg"
-                  className="absolute cursor-pointer right-4 text-light-secondary"
-                  onClick={() => setShowDatePicker((prev) => !prev)}
-                />
               </div>
-              {showDatePicker ? (
-                <div className="absolute z-10 mt-2">
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => {
-                      setStartDate(date);
-                      formik.setFieldValue("birthdate", date);
-                      setShowDatePicker(false);
+            </div>
+
+            <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
+              <div className="grid grid-rows-2">
+                <p className="text-base font-medium text-start text-light-secondary">
+                  STEP 02/03
+                </p>
+                <h3 className="text-lg font-medium text-end">Address</h3>
+              </div>
+            </div>
+
+            <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
+              <h1 className="mb-1 text-4xl font-semibold">
+                Complete Your Profile!
+              </h1>
+              <p className="mb-2 text-base">
+                For the purpose of industry regulation, your details are
+                required.
+              </p>
+              <hr className="mb-8" />
+
+              <form onSubmit={formik.handleSubmit}>
+                <div className="mb-4">
+                  <label
+                    htmlFor="mobileNumber"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Mobile Number <span className="text-red-600">*</span>
+                  </label>
+                  <PhoneInput
+                    international
+                    limitMaxLength
+                    focusInputOnCountrySelection
+                    defaultCountry="PH"
+                    countryCallingCodeEditable={false}
+                    value={formik.values.mobileNumber}
+                    onChange={(value) =>
+                      formik.setFieldValue("mobileNumber", value)
+                    }
+                    className={`w-full p-4 border rounded-md ${
+                      formik.errors.mobileNumber && formik.touched.mobileNumber
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    } text-light-default placeholder-light-secondary`}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    style={{
+                      boxShadow: isFocused ? "0 0 0 1px white" : "none",
                     }}
-                    inline
                   />
+                  {formik.errors.mobileNumber && formik.touched.mobileNumber ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.mobileNumber}
+                    </p>
+                  ) : null}
                 </div>
-              ) : null}
-              {formik.errors.birthdate && formik.touched.birthdate ? (
-                <p className="pt-2 text-error-default">
-                  {formik.errors.birthdate}
-                </p>
-              ) : null}
+
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="birthDate"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Birth Date <span className="text-red-600">*</span>
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      id="birthDate"
+                      name="birthDate"
+                      value={startDate ? startDate.toLocaleDateString() : ""}
+                      readOnly
+                      className={`w-full p-4 border ${
+                        formik.errors.birthDate && formik.touched.birthDate
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } rounded-md text-light-default placeholder-light-secondary`}
+                      placeholder="Select Birthday"
+                      onClick={() => setShowDatePicker((prev) => !prev)}
+                    />
+                    <img
+                      src={CalendarImg}
+                      alt="CalendarImg"
+                      className="absolute cursor-pointer right-4 text-light-secondary"
+                      onClick={() => setShowDatePicker((prev) => !prev)}
+                    />
+                  </div>
+                  {showDatePicker && (
+                    <div className="absolute z-10 mt-2">
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => {
+                          setStartDate(date);
+                          formik.setFieldValue("birthDate", date);
+                          setShowDatePicker(false);
+                        }}
+                        inline
+                        showYearDropdown
+                        scrollableYearDropdown={false}
+                        dropdownMode="select"
+                        dateFormat="MM/dd/yyyy"
+                      />
+                    </div>
+                  )}
+                  {formik.errors.birthDate && formik.touched.birthDate && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.birthDate}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="gender"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Gender <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={[
+                      { label: "Male", value: "male" },
+                      { label: "Female", value: "female" },
+                    ]}
+                    value={formik.values.gender}
+                    onChange={(option) =>
+                      formik.setFieldValue("gender", option)
+                    }
+                    className={`w-full p-[.65rem] border rounded-md ${
+                      formik.errors.gender && formik.touched.gender
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select your gender"
+                    styles={SelectStyles()}
+                  />
+
+                  {formik.errors.gender && formik.touched.gender ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.gender}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="country"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Country <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={countryOptions}
+                    value={formik.values.country}
+                    onChange={(option) => {
+                      setSelectedCountry(option);
+                      formik.setFieldValue("country", option || null);
+                      option &&
+                      State.getStatesOfCountry(option.value).length === 0
+                        ? (setSelectedProvince(null),
+                          setCityOptions([]),
+                          formik.setFieldValue("province", null),
+                          formik.setFieldValue("city", null))
+                        : (setSelectedProvince(null),
+                          formik.setFieldValue("province", null),
+                          formik.setFieldValue("city", null));
+                    }}
+                    className={`w-full p-[.65rem] border rounded-md ${
+                      formik.errors.country && formik.touched.country
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select a country"
+                    styles={SelectStyles()}
+                  />
+                  {formik.errors.country && formik.touched.country ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.country}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="province"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Province <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={provinceOptions}
+                    value={formik.values.province}
+                    onChange={(option) => {
+                      setSelectedProvince(option);
+                      formik.setFieldValue("province", option || null);
+                    }}
+                    className={`w-full p-[.65rem] border rounded-md ${
+                      formik.errors.province && formik.touched.province
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select a province"
+                    styles={SelectStyles()}
+                    isDisabled={!selectedCountry}
+                  />
+                  {formik.errors.province && formik.touched.province ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.province}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="relative mb-4">
+                  <label
+                    htmlFor="city"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    City <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={cityOptions}
+                    value={formik.values.city}
+                    onChange={(option) =>
+                      formik.setFieldValue("city", option || null)
+                    }
+                    className={`w-full p-[.65rem] border rounded-md ${
+                      formik.errors.city && formik.touched.city
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select a city"
+                    styles={SelectStyles()}
+                    isDisabled={!selectedProvince}
+                  />
+                  {formik.errors.city && formik.touched.city ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.city}
+                    </p>
+                  ) : null}
+                </div>
+
+                <div className="relative mb-8">
+                  <label
+                    htmlFor="address"
+                    className="block mb-2 text-base font-medium"
+                  >
+                    Address <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    id="address"
+                    name="address"
+                    type="text"
+                    placeholder="Enter your address"
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    className={`w-full p-4 border rounded-md ${
+                      formik.errors.address && formik.touched.address
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    } text-light-default placeholder-light-secondary`}
+                  />
+                  {formik.errors.address && formik.touched.address ? (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.address}
+                    </p>
+                  ) : null}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 my-3 text-lg rounded-md bg-dark-secondary text-light-default"
+                >
+                  Save & Continue
+                </button>
+              </form>
+
+              <div className="flex items-end justify-center gap-x-3">
+                <img src={LockImg} alt="LockImg" />
+                <h1 className="text-sm text-light-tertiary">
+                  Your Info is safely secured
+                </h1>
+              </div>
             </div>
-
-            <div className="relative mb-4">
-              <label
-                htmlFor="address"
-                className="block mb-2 text-base font-medium"
-              >
-                Address
-              </label>
-              <input
-                id="address"
-                type="text"
-                placeholder="Enter your address"
-                value={formik.values.address}
-                onChange={(e) =>
-                  formik.setFieldValue("address", e.target.value)
-                }
-                className={`w-full p-4 border rounded-md ${
-                  formik.errors.address && formik.touched.address
-                    ? "border-error-default"
-                    : "border-light-secondary"
-                } text-light-default placeholder-light-secondary`}
-              />
-              {formik.errors.address && formik.touched.address ? (
-                <p className="pt-2 text-error-default">
-                  {formik.errors.address}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="relative mb-4">
-              <label
-                htmlFor="country"
-                className="block mb-2 text-base font-medium"
-              >
-                Country
-              </label>
-              <Select
-                options={countryOptions}
-                value={formik.values.country}
-                onChange={(option) => {
-                  setSelectedCountry(option);
-                  formik.setFieldValue("country", option || null);
-                  option && State.getStatesOfCountry(option.value).length === 0
-                    ? (setSelectedProvince(null),
-                      setCityOptions([]),
-                      formik.setFieldValue("province", null),
-                      formik.setFieldValue("city", null))
-                    : (setSelectedProvince(null),
-                      formik.setFieldValue("province", null),
-                      formik.setFieldValue("city", null));
-                }}
-                className={`w-full p-[.65rem] border rounded-md ${
-                  formik.errors.country && formik.touched.country
-                    ? "border-error-default"
-                    : "border-light-secondary"
-                }`}
-                placeholder="Select a country"
-                styles={SelectStyles()}
-              />
-              {formik.errors.country && formik.touched.country ? (
-                <p className="pt-2 text-error-default">
-                  {formik.errors.country}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="relative mb-4">
-              <label
-                htmlFor="province"
-                className="block mb-2 text-base font-medium"
-              >
-                Province
-              </label>
-              <Select
-                options={provinceOptions}
-                value={formik.values.province}
-                onChange={(option) => {
-                  setSelectedProvince(option);
-                  formik.setFieldValue("province", option || null);
-                }}
-                className={`w-full p-[.65rem] border rounded-md ${
-                  formik.errors.province && formik.touched.province
-                    ? "border-error-default"
-                    : "border-light-secondary"
-                }`}
-                placeholder="Select a province"
-                styles={SelectStyles()}
-                isDisabled={!selectedCountry}
-              />
-              {formik.errors.province && formik.touched.province ? (
-                <p className="pt-2 text-error-default">
-                  {formik.errors.province}
-                </p>
-              ) : null}
-            </div>
-
-            <div className="relative mb-8">
-              <label
-                htmlFor="city"
-                className="block mb-2 text-base font-medium"
-              >
-                City
-              </label>
-              <Select
-                options={cityOptions}
-                value={formik.values.city}
-                onChange={(option) => {
-                  formik.setFieldValue("city", option || null);
-                }}
-                className={`w-full p-[.65rem] border rounded-md ${
-                  formik.errors.city && formik.touched.city
-                    ? "border-error-default"
-                    : "border-light-secondary"
-                }`}
-                placeholder="Select a city"
-                styles={SelectStyles()}
-                isDisabled={!selectedProvince}
-              />
-              {formik.errors.city && formik.touched.city ? (
-                <p className="pt-2 text-error-default">{formik.errors.city}</p>
-              ) : null}
-            </div>
-
-            <button
-              type="submit"
-              className="w-full py-3 my-3 text-lg rounded-md bg-dark-secondary text-light-default"
-            >
-              Save & Continue
-            </button>
-          </form>
-
-          <div className="flex items-end justify-center gap-x-3">
-            <img src={LockImg} alt="LockImg" />
-            <h1 className="text-sm text-light-tertiary">
-              Your Info is safely secured
-            </h1>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </section>
   );
 }

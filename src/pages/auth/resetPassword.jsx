@@ -1,40 +1,52 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { FadeLoader } from "react-spinners";
-import { AuthImg, CoverImg, FacebookImg, GoogleImg } from "@assets";
-import { PasswordVisibility, Toast } from "@utils";
-import { loginValidation } from "@validators";
-import { hooks } from "@api";
+import { AuthImg, CoverImg } from "@assets";
+import { Toast, PasswordVisibility } from "@utils";
+import { resetPasswordValidation } from "@validators";
 import { TOAST } from "@constants";
+import { hooks } from "@api";
 
-export function Login() {
+export function ResetPassword() {
   const navigate = useNavigate();
-  const { isPasswordVisible, togglePasswordVisibility } = PasswordVisibility();
-  const [loginUser, { isLoading }] = hooks.useLoginUserMutation();
+
+  const {
+    isPasswordVisible,
+    togglePasswordVisibility,
+    isConfirmPasswordVisible,
+    toggleConfirmPasswordVisibility,
+  } = PasswordVisibility();
+
+  const [resetPassword, { isLoading }] = hooks.useResetPasswordMutation();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      otp: "",
       password: "",
+      confirmPassword: "",
     },
-    validationSchema: loginValidation,
+    validationSchema: resetPasswordValidation,
     onSubmit: (values) => {
-      loginUser(values)
+      resetPassword({
+        otpCode: values.otp,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+      })
         .unwrap()
         .then((res) => {
           if (res.success) {
-            Toast(TOAST.SUCCESS, "Login successful!");
-            navigate("/dashboard");
-          } else {
+            Toast(TOAST.SUCCESS, res.message);
+            navigate("/");
+          } else
             Toast(
               TOAST.ERROR,
               res.error?.data?.message ||
-                "Something went wrong. Please try again.",
+                "Failed to reset password. Please try again.",
             );
-          }
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -79,42 +91,56 @@ export function Login() {
           </Carousel>
         </div>
       </div>
-      <div className="flex items-center justify-center p-6 lg:p-10 xl:p-32">
+
+      <div className="relative flex items-start justify-center p-6 lg:p-10 xl:p-32">
         {isLoading ? (
           <div className="loader">
             <FadeLoader color="#FAF7F7" loading={true} size={50} />
           </div>
         ) : (
           <>
-            <div className="w-full max-w-lg">
-              <h1 className="mb-1 text-4xl font-semibold">Login</h1>
-              <p className="mb-2 text-lg">Sign in to get started</p>
+            <div className="absolute top-0 left-0 p-8 cursor-pointer">
+              <div
+                onClick={() => navigate("/forgotPassword")}
+                className="grid grid-cols-[50%_50%] items-end justify-center"
+              >
+                <FaChevronLeft size={30} />
+                <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
+                  Back
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full max-w-lg xl:mt-8 mt-28">
+              <h1 className="mb-1 text-4xl font-semibold">Reset Password</h1>
+              <p className="mb-2 text-lg">Enter your OTP and new password</p>
               <hr className="mb-8" />
 
               <form onSubmit={formik.handleSubmit}>
                 <div className="mb-4">
                   <label
-                    htmlFor="email"
+                    htmlFor="otp"
                     className="block mb-2 text-base font-medium"
                   >
-                    Email address <span className="text-error-default">*</span>
+                    OTP <span className="text-red-600">*</span>
                   </label>
                   <input
-                    type="email"
-                    id="email"
-                    placeholder="Email"
+                    type="text"
+                    id="otp"
+                    name="otp"
+                    placeholder="Enter Your OTP"
                     className={`w-full p-4 border rounded-md ${
-                      formik.errors.email && formik.touched.email
+                      formik.errors.otp && formik.touched.otp
                         ? "border-error-default"
                         : "border-light-secondary"
                     } text-light-default placeholder-light-secondary`}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.email}
+                    value={formik.values.otp}
                   />
-                  {formik.errors.email && formik.touched.email && (
+                  {formik.errors.otp && formik.touched.otp && (
                     <p className="pt-2 text-error-default">
-                      {formik.errors.email}
+                      {formik.errors.otp}
                     </p>
                   )}
                 </div>
@@ -124,12 +150,13 @@ export function Login() {
                     htmlFor="password"
                     className="block mb-2 text-base font-medium"
                   >
-                    Password <span className="text-error-default">*</span>
+                    Password <span className="text-red-600">*</span>
                   </label>
                   <div className="relative">
                     <input
                       type={isPasswordVisible ? "text" : "password"}
                       id="password"
+                      name="password"
                       placeholder="Enter password"
                       className={`w-full p-4 border rounded-md ${
                         formik.errors.password && formik.touched.password
@@ -155,65 +182,52 @@ export function Login() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-start pb-6">
-                  <button
-                    onClick={() => navigate("/forgotPassword")}
-                    className="underline text-light-secondary"
+                <div className="mb-4">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block mb-2 text-base font-medium"
                   >
-                    Forgot Password
-                  </button>
+                    Confirm Password <span className="text-red-600">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={isConfirmPasswordVisible ? "text" : "password"}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      placeholder="Confirm New Password"
+                      className={`w-full p-4 border rounded-md ${
+                        formik.errors.confirmPassword &&
+                        formik.touched.confirmPassword
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } text-light-default placeholder-light-secondary`}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.confirmPassword}
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleConfirmPasswordVisibility}
+                      className="absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
+                    >
+                      {isConfirmPasswordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  {formik.errors.confirmPassword &&
+                    formik.touched.confirmPassword && (
+                      <p className="mt-2 text-error-default">
+                        {formik.errors.confirmPassword}
+                      </p>
+                    )}
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-3 mb-6 text-lg rounded-md bg-dark-secondary text-light-default"
-                  disabled={isLoading}
+                  className="w-full py-3 my-6 text-lg rounded-md bg-dark-secondary text-light-default"
                 >
-                  Login
+                  Reset Password
                 </button>
               </form>
-
-              <div className="grid items-center justify-center grid-cols-[40%_20%_40%] mb-6 text-sm text-center">
-                <hr />
-                <span className="text-light-secondary">Or</span>
-                <hr />
-              </div>
-
-              <div className="grid w-full grid-cols-[40%_60%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
-                <div className="grid items-center justify-center">
-                  <img
-                    src={GoogleImg}
-                    alt="GoogleImg"
-                    className="w-6 h-6 mr-2"
-                  />
-                </div>
-                <div className="grid items-start justify-start">
-                  <button className="text-lg font-semibold">
-                    Login with Google
-                  </button>
-                </div>
-              </div>
-              <div className="grid w-full grid-cols-[40%_60%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
-                <div className="grid items-center justify-center">
-                  <img
-                    src={FacebookImg}
-                    alt="FacebookImg"
-                    className="w-6 h-6 mr-2"
-                  />
-                </div>
-                <div className="grid items-start justify-start">
-                  <button className="text-lg font-semibold">
-                    Login with Facebook
-                  </button>
-                </div>
-              </div>
-              <hr className="mt-8" />
-              <button
-                onClick={() => navigate("/register")}
-                className="w-full py-3 mt-6 text-lg rounded-md cursor-pointer bg-dark-secondary text-light-default"
-              >
-                Register
-              </button>
             </div>
           </>
         )}

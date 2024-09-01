@@ -5,3 +5,6 @@ export * from "./auth/register.jsx";
 export * from "./auth/profile.jsx";
 export * from "./auth/verification.jsx";
 export * from "./auth/verified.jsx";
+export * from "./auth/forgotPassword.jsx";
+export * from "./auth/sendResetLink.jsx";
+export * from "./auth/resetPassword.jsx";

@@ -2,27 +2,38 @@ import React, { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FaChevronLeft } from "react-icons/fa";
-import { AuthImg, CoverImg, FacebookImg, GoogleImg } from "@assets";
-import { PasswordVisibility } from "@utils";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { useSelector, useDispatch } from "react-redux";
+import { AuthImg, CoverImg, FacebookImg, GoogleImg } from "@assets";
+import { PasswordVisibility } from "@utils";
 import { registerValidation } from "@validators";
+import { locationActions } from "@hooks";
 
 export function Register() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { isPasswordVisible, togglePasswordVisibility } = PasswordVisibility();
   const [isChecked, setIsChecked] = useState(true);
+  const [termsError, setTermsError] = useState("");
+
+  const form = useSelector((state) => state.location.formData);
 
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
-      email: "",
-      password: "",
+      firstname: form.firstname || "",
+      lastname: form.lastname || "",
+      email: form.email || "",
+      password: form.password || "",
     },
-    // validationSchema: registerValidation,
+    validationSchema: registerValidation,
     onSubmit: (values) => {
-      console.log("Form values:", values);
+      if (!isChecked) {
+        setTermsError("You must agree to the terms and conditions.");
+        return;
+      }
+      setTermsError("");
+      dispatch(locationActions.updateFormData(values));
       navigate("/registerProfile");
     },
   });
@@ -99,7 +110,11 @@ export function Register() {
                 type="text"
                 id="firstname"
                 placeholder="Enter Your Firstname"
-                className={`w-full p-4 border rounded-md ${formik.errors.firstname && formik.touched.firstname ? "border-error-default" : "border-light-secondary"} text-light-default placeholder-light-secondary`}
+                className={`w-full p-4 border rounded-md ${
+                  formik.errors.firstname && formik.touched.firstname
+                    ? "border-error-default"
+                    : "border-light-secondary"
+                } text-light-default placeholder-light-secondary`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.firstname}
@@ -110,7 +125,6 @@ export function Register() {
                 </p>
               )}
             </div>
-
             <div className="mb-4">
               <label
                 htmlFor="lastname"
@@ -122,7 +136,11 @@ export function Register() {
                 type="text"
                 id="lastname"
                 placeholder="Enter Your Lastname"
-                className={`w-full p-4 border rounded-md ${formik.errors.lastname && formik.touched.lastname ? "border-error-default" : "border-light-secondary"} text-light-default placeholder-light-secondary`}
+                className={`w-full p-4 border rounded-md ${
+                  formik.errors.lastname && formik.touched.lastname
+                    ? "border-error-default"
+                    : "border-light-secondary"
+                } text-light-default placeholder-light-secondary`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.lastname}
@@ -133,7 +151,6 @@ export function Register() {
                 </p>
               )}
             </div>
-
             <div className="mb-4">
               <label
                 htmlFor="email"
@@ -145,7 +162,11 @@ export function Register() {
                 type="email"
                 id="email"
                 placeholder="Enter your email address"
-                className={`w-full p-4 border rounded-md ${formik.errors.email && formik.touched.email ? "border-error-default" : "border-light-secondary"} text-light-default placeholder-light-secondary`}
+                className={`w-full p-4 border rounded-md ${
+                  formik.errors.email && formik.touched.email
+                    ? "border-error-default"
+                    : "border-light-secondary"
+                } text-light-default placeholder-light-secondary`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
@@ -154,7 +175,6 @@ export function Register() {
                 <p className="pt-2 text-error-default">{formik.errors.email}</p>
               )}
             </div>
-
             <div className="mb-4">
               <label
                 htmlFor="password"
@@ -167,7 +187,11 @@ export function Register() {
                   type={isPasswordVisible ? "text" : "password"}
                   id="password"
                   placeholder="Enter password"
-                  className={`w-full p-4 border rounded-md ${formik.errors.password && formik.touched.password ? "border-error-default" : "border-light-secondary"} text-light-default placeholder-light-secondary`}
+                  className={`w-full p-4 border rounded-md ${
+                    formik.errors.password && formik.touched.password
+                      ? "border-error-default"
+                      : "border-light-secondary"
+                  } text-light-default placeholder-light-secondary`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
@@ -186,7 +210,6 @@ export function Register() {
                 </p>
               )}
             </div>
-
             <label
               htmlFor="terms"
               className="relative flex items-center cursor-pointer"
@@ -205,7 +228,9 @@ export function Register() {
                 </a>
               </span>
             </label>
-
+            {termsError && (
+              <p className="pt-2 text-error-default">{termsError}</p>
+            )}
             <button
               type="submit"
               className="w-full py-3 my-6 text-lg rounded-md bg-dark-secondary text-light-default"

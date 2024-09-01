@@ -20,6 +20,7 @@ export default defineConfig({
       "@layouts": `${srcPath}/layouts`,
       "@pages": `${srcPath}/pages`,
       "@api": `${srcPath}/state/api/reducer`,
+      "@hooks": `${srcPath}/state/hooks`,
       "@utils": `${srcPath}/utils`,
       "@validators": `${srcPath}/validators`,
     },

@@ -12,7 +12,7 @@ const prepareHeaders = (headers) => {
 };
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: import.meta.env.API_URL,
+  baseUrl: import.meta.env.VITE_API_URL,
   credentials: RESOURCE.INCLUDE,
   prepareHeaders,
 });
