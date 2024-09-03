@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+*::before,
+*::after,
 * {
   @apply box-border p-0 m-0 font-inter;
 }
@@ -12,7 +14,11 @@
 
 html,
 body {
-  @apply min-w-full min-h-full bg-light-default text-dark-default !important;
+  @apply min-w-full min-h-full !important;
+}
+
+body {
+  @apply overflow-hidden !important;
 }
 
 .loader {
@@ -24,7 +30,7 @@ body {
 }
 
 .PhoneInputInput {
-  @apply ml-2 !important;
+  @apply ml-2 bg-transparent !important;
 }
 
 .PhoneInput input:focus {
@@ -75,5 +81,5 @@ input[type="checkbox"].peer:checked::before {
 }
 
 .custom-datepicker-popper .react-datepicker__year-dropdown {
-  width: 200px !important;
+  @apply w-[200px] !important;
 }

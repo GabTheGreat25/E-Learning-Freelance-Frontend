@@ -35,7 +35,7 @@ export function AdminLayout() {
             toggleSidebar={toggleSidebar}
           />
 
-          <div className="flex-grow lg:pt-0 md:pt-16">
+          <div className="flex-grow lg:pt-0">
             <Outlet context={{ isSidebarOpen }} />
           </div>
         </div>

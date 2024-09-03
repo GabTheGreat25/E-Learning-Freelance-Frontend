@@ -14,3 +14,4 @@ export { default as GoogleImg } from "../assets/google.png";
 export { default as CalendarImg } from "../assets/calendar.png";
 export { default as LockImg } from "../assets/lock.png";
 export { default as VerifiedImg } from "../assets/verified.png";
+export { default as UploadImg } from "../assets/uploadImage.png";

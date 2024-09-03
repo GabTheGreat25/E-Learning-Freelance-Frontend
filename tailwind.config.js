@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        xxs: "320px",
+        xxs: "324px",
         xs: "425px",
         sm: "640px",
         md: "768px",
@@ -51,7 +51,9 @@ module.exports = {
     logs: false,
   },
   plugins: [
+    require("tailwind-scrollbar"),
     require("tailwind-scrollbar-hide"),
+    require("@gradin/tailwindcss-scrollbar"),
     require("tailwindcss-animate"),
     require("daisyui"),
   ],

@@ -3,10 +3,9 @@ import { METHOD, TAGS, RESOURCE } from "@/constants";
 import { generateEndpoints } from "./endpoints";
 import { generateHooks } from "./hooks";
 
-const prepareHeaders = (headers) => {
-  // if (getState()?.auth?.authenticated)
-  //   headers.set("authorization", `Bearer ${getState()?.auth?.token || ""}`);
-
+const prepareHeaders = (headers, { getState }) => {
+  if (getState().auth.authenticated)
+    headers.set("authorization", `Bearer ${getState().auth.token || ""}`);
   headers.set("accept", `application/json`);
   return headers;
 };

@@ -96,7 +96,7 @@ export function RegisterProfile() {
         birthDate: new Date(values.birthDate).toISOString(),
         address: values.address,
         country: values.country.label,
-        province: `${values.province.label}, ${values.province.value}`,
+        province: values.province.label,
         city: values.city.label,
         gender: values.gender.value,
       };
@@ -130,42 +130,43 @@ export function RegisterProfile() {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
-        className="hidden w-full h-full bg-center bg-cover md:block"
+        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
+        <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
           <Carousel
             autoPlay
             infiniteLoop
             showThumbs={false}
             showStatus={false}
+            showArrows={false}
+            showIndicators={true}
             interval={3000}
           >
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 1"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 2"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
           </Carousel>
         </div>
       </div>
-
       {isLoading ? (
         <div className="loader">
           <FadeLoader color="#FAF7F7" loading={true} size={50} />
         </div>
       ) : (
         <>
-          <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
+          <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 left-0 p-8 cursor-pointer">
               <div
                 onClick={() => navigate("/register")}
@@ -187,7 +188,7 @@ export function RegisterProfile() {
               </div>
             </div>
 
-            <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
+            <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
               <h1 className="mb-1 text-4xl font-semibold">
                 Complete Your Profile!
               </h1>
@@ -223,14 +224,15 @@ export function RegisterProfile() {
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     style={{
-                      boxShadow: isFocused ? "0 0 0 1px white" : "none",
+                      boxShadow: isFocused ? "0 0 0 1.75px #216BA5" : "none",
                     }}
                   />
-                  {formik.errors.mobileNumber && formik.touched.mobileNumber ? (
-                    <p className="pt-2 text-error-default">
-                      {formik.errors.mobileNumber}
-                    </p>
-                  ) : null}
+                  {formik.errors.mobileNumber &&
+                    formik.touched.mobileNumber && (
+                      <p className="pt-2 text-error-default">
+                        {formik.errors.mobileNumber}
+                      </p>
+                    )}
                 </div>
 
                 <div className="relative mb-4">
@@ -244,14 +246,13 @@ export function RegisterProfile() {
                     <input
                       type="text"
                       id="birthDate"
-                      name="birthDate"
                       value={startDate ? startDate.toLocaleDateString() : ""}
                       readOnly
                       className={`w-full p-4 border ${
                         formik.errors.birthDate && formik.touched.birthDate
                           ? "border-error-default"
                           : "border-light-secondary"
-                      } rounded-md text-light-default placeholder-light-secondary`}
+                      } rounded-md text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                       placeholder="Select Birthday"
                       onClick={() => setShowDatePicker((prev) => !prev)}
                     />
@@ -306,16 +307,16 @@ export function RegisterProfile() {
                       formik.errors.gender && formik.touched.gender
                         ? "border-error-default"
                         : "border-light-secondary"
-                    }`}
+                    } focus:border-info-secondary focus:outline-none`}
                     placeholder="Select your gender"
                     styles={SelectStyles()}
                   />
 
-                  {formik.errors.gender && formik.touched.gender ? (
+                  {formik.errors.gender && formik.touched.gender && (
                     <p className="pt-2 text-error-default">
                       {formik.errors.gender}
                     </p>
-                  ) : null}
+                  )}
                 </div>
 
                 <div className="relative mb-4">
@@ -345,15 +346,15 @@ export function RegisterProfile() {
                       formik.errors.country && formik.touched.country
                         ? "border-error-default"
                         : "border-light-secondary"
-                    }`}
+                    } focus:border-info-secondary focus:outline-none`}
                     placeholder="Select a country"
                     styles={SelectStyles()}
                   />
-                  {formik.errors.country && formik.touched.country ? (
+                  {formik.errors.country && formik.touched.country && (
                     <p className="pt-2 text-error-default">
                       {formik.errors.country}
                     </p>
-                  ) : null}
+                  )}
                 </div>
 
                 <div className="relative mb-4">
@@ -374,16 +375,16 @@ export function RegisterProfile() {
                       formik.errors.province && formik.touched.province
                         ? "border-error-default"
                         : "border-light-secondary"
-                    }`}
+                    } focus:border-info-secondary focus:outline-none`}
                     placeholder="Select a province"
                     styles={SelectStyles()}
                     isDisabled={!selectedCountry}
                   />
-                  {formik.errors.province && formik.touched.province ? (
+                  {formik.errors.province && formik.touched.province && (
                     <p className="pt-2 text-error-default">
                       {formik.errors.province}
                     </p>
-                  ) : null}
+                  )}
                 </div>
 
                 <div className="relative mb-4">
@@ -403,16 +404,16 @@ export function RegisterProfile() {
                       formik.errors.city && formik.touched.city
                         ? "border-error-default"
                         : "border-light-secondary"
-                    }`}
+                    } focus:border-info-secondary focus:outline-none`}
                     placeholder="Select a city"
                     styles={SelectStyles()}
                     isDisabled={!selectedProvince}
                   />
-                  {formik.errors.city && formik.touched.city ? (
+                  {formik.errors.city && formik.touched.city && (
                     <p className="pt-2 text-error-default">
                       {formik.errors.city}
                     </p>
-                  ) : null}
+                  )}
                 </div>
 
                 <div className="relative mb-8">
@@ -424,7 +425,6 @@ export function RegisterProfile() {
                   </label>
                   <input
                     id="address"
-                    name="address"
                     type="text"
                     placeholder="Enter your address"
                     value={formik.values.address}
@@ -433,13 +433,13 @@ export function RegisterProfile() {
                       formik.errors.address && formik.touched.address
                         ? "border-error-default"
                         : "border-light-secondary"
-                    } text-light-default placeholder-light-secondary`}
+                    } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                   />
-                  {formik.errors.address && formik.touched.address ? (
+                  {formik.errors.address && formik.touched.address && (
                     <p className="pt-2 text-error-default">
                       {formik.errors.address}
                     </p>
-                  ) : null}
+                  )}
                 </div>
 
                 <button

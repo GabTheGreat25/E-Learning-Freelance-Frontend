@@ -41,37 +41,38 @@ export function Register() {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
-        className="hidden w-full h-full bg-center bg-cover md:block"
+        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
+        <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
           <Carousel
             autoPlay
             infiniteLoop
             showThumbs={false}
             showStatus={false}
             showArrows={false}
+            showIndicators={true}
             interval={3000}
           >
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 1"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 2"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
           </Carousel>
         </div>
       </div>
 
-      <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
+      <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
         <div
           className="absolute top-0 left-0 p-8 cursor-pointer"
           onClick={() => navigate("/")}
@@ -93,7 +94,7 @@ export function Register() {
           </div>
         </div>
 
-        <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
+        <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
           <h1 className="mb-1 text-4xl font-semibold">Register</h1>
           <p className="mb-2 text-lg">Your details are required.</p>
           <hr className="mb-8" />
@@ -114,7 +115,7 @@ export function Register() {
                   formik.errors.firstname && formik.touched.firstname
                     ? "border-error-default"
                     : "border-light-secondary"
-                } text-light-default placeholder-light-secondary`}
+                } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.firstname}
@@ -140,7 +141,7 @@ export function Register() {
                   formik.errors.lastname && formik.touched.lastname
                     ? "border-error-default"
                     : "border-light-secondary"
-                } text-light-default placeholder-light-secondary`}
+                } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.lastname}
@@ -166,7 +167,7 @@ export function Register() {
                   formik.errors.email && formik.touched.email
                     ? "border-error-default"
                     : "border-light-secondary"
-                } text-light-default placeholder-light-secondary`}
+                } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.email}
@@ -191,7 +192,7 @@ export function Register() {
                     formik.errors.password && formik.touched.password
                       ? "border-error-default"
                       : "border-light-secondary"
-                  } text-light-default placeholder-light-secondary`}
+                  } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
@@ -245,7 +246,7 @@ export function Register() {
             <hr />
           </div>
 
-          <div className="grid w-full grid-cols-[35%_65%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
+          <div className="grid w-full xl:grid-cols-[35%_65%] grid-cols-[25%_75%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
             <div className="grid items-center justify-center">
               <img src={GoogleImg} alt="GoogleImg" className="w-6 h-6 mr-2" />
             </div>
@@ -256,7 +257,7 @@ export function Register() {
             </div>
           </div>
 
-          <div className="grid w-full grid-cols-[35%_65%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
+          <div className="grid w-full xl:grid-cols-[35%_65%] grid-cols-[25%_75%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
             <div className="grid items-center justify-center">
               <img
                 src={FacebookImg}

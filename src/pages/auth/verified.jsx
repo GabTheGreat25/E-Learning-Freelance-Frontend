@@ -13,30 +13,36 @@ export function Verified() {
         className="hidden w-full h-full bg-center bg-cover md:block"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            interval={3000}
-          >
-            <div>
-              <img
-                src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
-              />
-            </div>
-            <div>
-              <img
-                src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
-              />
-            </div>
-          </Carousel>
+        <div
+          className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
+          style={{ backgroundImage: `url(${AuthImg})` }}
+        >
+          <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              showArrows={false}
+              showIndicators={true}
+              interval={3000}
+            >
+              <div>
+                <img
+                  src={CoverImg}
+                  alt="Cover Image 1"
+                  className="object-cover min-h-full rounded-3xl"
+                />
+              </div>
+              <div>
+                <img
+                  src={CoverImg}
+                  alt="Cover Image 2"
+                  className="object-cover min-h-full rounded-3xl"
+                />
+              </div>
+            </Carousel>
+          </div>
         </div>
       </div>
 

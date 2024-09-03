@@ -51,43 +51,49 @@ export function ForgotPassword() {
         className="hidden w-full h-full bg-center bg-cover md:block"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            interval={3000}
-          >
-            <div>
-              <img
-                src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
-              />
-            </div>
-            <div>
-              <img
-                src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
-              />
-            </div>
-          </Carousel>
+        <div
+          className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
+          style={{ backgroundImage: `url(${AuthImg})` }}
+        >
+          <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
+            <Carousel
+              autoPlay
+              infiniteLoop
+              showThumbs={false}
+              showStatus={false}
+              showArrows={false}
+              showIndicators={true}
+              interval={3000}
+            >
+              <div>
+                <img
+                  src={CoverImg}
+                  alt="Cover Image 1"
+                  className="object-cover min-h-full rounded-3xl"
+                />
+              </div>
+              <div>
+                <img
+                  src={CoverImg}
+                  alt="Cover Image 2"
+                  className="object-cover min-h-full rounded-3xl"
+                />
+              </div>
+            </Carousel>
+          </div>
         </div>
       </div>
 
-      <div className="relative flex items-start justify-center p-6 lg:p-10 xl:p-32">
-        {isLoading ? (
-          <div className="loader">
-            <FadeLoader color="#FAF7F7" loading={true} size={50} />
-          </div>
-        ) : (
-          <>
+      {isLoading ? (
+        <div className="loader">
+          <FadeLoader color="#FAF7F7" loading={true} size={50} />
+        </div>
+      ) : (
+        <>
+          <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 left-0 p-8 cursor-pointer">
               <div
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/")}
                 className="grid grid-cols-[50%_50%] items-end justify-center"
               >
                 <FaChevronLeft size={30} />
@@ -97,7 +103,7 @@ export function ForgotPassword() {
               </div>
             </div>
 
-            <div className="w-full max-w-lg xl:mt-8 mt-28">
+            <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
               <h1 className="mb-1 text-4xl font-semibold">Forgot Password</h1>
               <p className="mb-2 text-lg">Enter your email to continue</p>
               <hr className="mb-8" />
@@ -139,9 +145,9 @@ export function ForgotPassword() {
                 </button>
               </form>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

@@ -45,53 +45,56 @@ export function Login() {
           );
         });
     },
+    validateOnBlur: true,
+    validateOnChange: true,
   });
 
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
-        className="hidden w-full h-full bg-center bg-cover md:block"
+        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
+        <div className="flex items-center justify-center w-full h-full lg:p-12 2xl:p-28">
           <Carousel
             autoPlay
             infiniteLoop
             showThumbs={false}
             showStatus={false}
             showArrows={false}
+            showIndicators={true}
             interval={3000}
           >
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 1"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 2"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
           </Carousel>
         </div>
       </div>
-      <div className="flex items-center justify-center p-6 lg:p-10 xl:p-32">
-        {isLoading ? (
-          <div className="loader">
-            <FadeLoader color="#FAF7F7" loading={true} size={50} />
-          </div>
-        ) : (
-          <>
-            <div className="w-full max-w-lg">
+      {isLoading ? (
+        <div className="loader">
+          <FadeLoader color="#FAF7F7" loading={true} size={50} />
+        </div>
+      ) : (
+        <>
+          <div className="w-full h-screen py-24 overflow-y-auto scrollbar-thin">
+            <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
               <h1 className="mb-1 text-4xl font-semibold">Login</h1>
               <p className="mb-2 text-lg">Sign in to get started</p>
               <hr className="mb-8" />
 
-              <form onSubmit={formik.handleSubmit}>
+              <form onSubmit={formik.handleSubmit} className="">
                 <div className="mb-4">
                   <label
                     htmlFor="email"
@@ -107,9 +110,8 @@ export function Login() {
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
                         : "border-light-secondary"
-                    } text-light-default placeholder-light-secondary`}
+                    } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                     onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email && (
@@ -135,9 +137,8 @@ export function Login() {
                         formik.errors.password && formik.touched.password
                           ? "border-error-default"
                           : "border-light-secondary"
-                      } text-light-default placeholder-light-secondary`}
+                      } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                       onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
                       value={formik.values.password}
                     />
                     <button
@@ -157,6 +158,7 @@ export function Login() {
 
                 <div className="flex items-center justify-start pb-6">
                   <button
+                    type="button"
                     onClick={() => navigate("/forgotPassword")}
                     className="underline text-light-secondary"
                   >
@@ -179,11 +181,11 @@ export function Login() {
                 <hr />
               </div>
 
-              <div className="grid w-full grid-cols-[40%_60%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
+              <div className="grid w-full xl:grid-cols-[40%_60%] grid-cols-[30%_70%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
                 <div className="grid items-center justify-center">
                   <img
                     src={GoogleImg}
-                    alt="GoogleImg"
+                    alt="Google Image"
                     className="w-6 h-6 mr-2"
                   />
                 </div>
@@ -193,11 +195,11 @@ export function Login() {
                   </button>
                 </div>
               </div>
-              <div className="grid w-full grid-cols-[40%_60%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
+              <div className="grid w-full xl:grid-cols-[40%_60%] grid-cols-[30%_70%] py-4 mb-4 rounded-lg shadow-lg bg-light-default text-dark-default cursor-pointer">
                 <div className="grid items-center justify-center">
                   <img
                     src={FacebookImg}
-                    alt="FacebookImg"
+                    alt="Facebook Image"
                     className="w-6 h-6 mr-2"
                   />
                 </div>
@@ -215,9 +217,9 @@ export function Login() {
                 Register
               </button>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

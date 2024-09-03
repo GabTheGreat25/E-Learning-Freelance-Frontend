@@ -78,43 +78,44 @@ export function Verification() {
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <div
-        className="hidden w-full h-full bg-center bg-cover md:block"
+        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
         style={{ backgroundImage: `url(${AuthImg})` }}
       >
-        <div className="relative flex items-center justify-center min-h-full xl:p-12 lg:p-7 md:p-6 rounded-3xl">
+        <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
           <Carousel
             autoPlay
             infiniteLoop
             showThumbs={false}
             showStatus={false}
             showArrows={false}
+            showIndicators={true}
             interval={3000}
           >
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 1"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 1"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
             <div>
               <img
                 src={CoverImg}
-                alt="CoverImg 2"
-                className="object-cover w-full h-full rounded-lg"
+                alt="Cover Image 2"
+                className="object-cover min-h-full rounded-3xl"
               />
             </div>
           </Carousel>
         </div>
       </div>
 
-      <div className="relative flex items-start justify-center p-6 lg:p-10 xl:p-32">
-        {isLoading || isResending ? (
-          <div className="loader">
-            <FadeLoader color="#FAF7F7" loading={true} size={50} />
-          </div>
-        ) : (
-          <>
+      {isLoading || isResending ? (
+        <div className="loader">
+          <FadeLoader color="#FAF7F7" loading={true} size={50} />
+        </div>
+      ) : (
+        <>
+          <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
               <div className="grid grid-rows-2">
                 <p className="text-base font-medium text-end text-light-secondary">
@@ -124,7 +125,7 @@ export function Verification() {
               </div>
             </div>
 
-            <div className="w-full max-w-lg xl:mt-8 mt-28">
+            <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
               <h1 className="mb-1 text-4xl font-semibold">OTP Verification</h1>
               <p className="mb-2 text-lg">
                 Enter the OTP sent to your registered contact.
@@ -185,9 +186,9 @@ export function Verification() {
                 </h1>
               </div>
             </div>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

@@ -16,7 +16,7 @@ export function SidebarItems() {
       icon: images.HomeImg,
       onClick: () => {
         console.log("Navigating to Home");
-        // navigate("/home");
+        navigate("/dashboard");
       },
     },
     {
@@ -60,8 +60,7 @@ export function SidebarItems() {
       label: "Settings",
       icon: images.SettingImg,
       onClick: () => {
-        console.log("Navigating to Settings");
-        // navigate("/settings");
+        navigate("/dashboard/settings");
       },
     },
     {

@@ -1,6 +1,7 @@
 import * as yup from "yup";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
+// Add custom method for mobile number validation
 yup.addMethod(yup.string, "mobileNumber", function () {
   return this.test("mobileNumber", "Invalid mobile number", function (value) {
     const { path, createError } = this;
@@ -15,7 +16,13 @@ yup.addMethod(yup.string, "mobileNumber", function () {
   });
 });
 
-export const registerProfileValidation = yup.object().shape({
+export const updateProfileValidation = yup.object().shape({
+  firstname: yup.string().required("First Name is required"),
+  lastname: yup.string().required("Last Name is required"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
   mobileNumber: yup
     .string()
     .mobileNumber()
@@ -24,6 +31,7 @@ export const registerProfileValidation = yup.object().shape({
     .date()
     .typeError("Invalid date format")
     .required("Birth Date is required"),
+  bio: yup.string(),
   gender: yup
     .object()
     .shape({
@@ -61,4 +69,12 @@ export const registerProfileValidation = yup.object().shape({
     .nullable()
     .default(null)
     .required("City is required"),
+  avatar: yup
+    .string()
+    .nullable()
+    .test("is-base64", "Invalid image format", (value) => {
+      if (!value) return true;
+      const base64Pattern = /^data:image\/(jpeg|png|jpg);base64,/;
+      return base64Pattern.test(value);
+    }),
 });

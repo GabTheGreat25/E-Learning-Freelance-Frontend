@@ -1,0 +1,701 @@
+import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Country, State, City } from "country-state-city";
+import Select from "react-select";
+import { useSelector } from "react-redux";
+import { FadeLoader } from "react-spinners";
+import { SelectStyles, PasswordVisibility, Toast } from "@utils";
+import { Navbar } from "@components";
+import { CalendarImg, UploadImg } from "@assets";
+import { updateProfileValidation } from "@validators";
+import { hooks } from "@api";
+import { TOAST } from "@constants";
+
+export function Setting() {
+  const [isFocused, setIsFocused] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
+  const [provinceOptions, setProvinceOptions] = useState([]);
+  const { isPasswordVisible, togglePasswordVisibility } = PasswordVisibility();
+  const [avatar, setAvatar] = useState(null);
+
+  const user = useSelector((state) => state.auth.user);
+  const userId = user._id;
+
+  const { data, refetch } = hooks.useGetProfileQuery(userId);
+
+  const [updateProfile, { isLoading }] = hooks.useUpdateProfileMutation();
+
+  const formik = useFormik({
+    initialValues: {
+      mobileNumber: "",
+      birthDate: "",
+      address: "",
+      country: null,
+      province: null,
+      city: null,
+      firstname: "",
+      lastname: "",
+      email: "",
+      gender: null,
+      bio: "",
+      avatar: null,
+    },
+    validationSchema: updateProfileValidation,
+    onSubmit: (values) => {
+      const formData = {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        email: values.email,
+        mobileNumber: values.mobileNumber,
+        birthDate: new Date(values.birthDate).toISOString(),
+        address: values.address,
+        country: values.country.label,
+        province: values.province.label,
+        city: values.city.label,
+        gender: values.gender.value,
+        bio: values.bio,
+        avatar: avatar,
+      };
+
+      updateProfile(formData)
+        .unwrap()
+        .then((res) => {
+          if (res.success) {
+            console.log(res.data);
+            Toast(TOAST.SUCCESS, "Profile updated successfully.");
+            refetch();
+          } else {
+            Toast(TOAST.ERROR, res.error || "Failed to update profile.");
+          }
+        })
+        .catch((error) => {
+          Toast(
+            TOAST.ERROR,
+            error.message || "An error occurred during profile update.",
+          );
+        });
+    },
+    validateOnBlur: true,
+    validateOnChange: true,
+  });
+
+  useEffect(() => {
+    const countries = Country.getAllCountries();
+    const options = countries.map((country) => ({
+      label: country.name,
+      value: country.isoCode,
+    }));
+    setCountryOptions(options);
+  }, []);
+
+  useEffect(() => {
+    if (data?.user) {
+      formik.setFieldValue("firstname", data.user.firstname || "");
+      formik.setFieldValue("lastname", data.user.lastname || "");
+      formik.setFieldValue("email", data.user.email || "");
+      formik.setFieldValue("address", data.user.address || "");
+      formik.setFieldValue("mobileNumber", data.user.mobileNumber || "");
+      formik.setFieldValue("bio", data.user.bio || "");
+      formik.setFieldValue("password", data.user.password || "");
+
+      if (data.user.country) {
+        const selectedCountry = countryOptions.find(
+          (option) => option.label === data.user.country,
+        );
+        setSelectedCountry(selectedCountry);
+        formik.setFieldValue("country", selectedCountry);
+      }
+
+      if (data.user.gender) {
+        const genderOption = {
+          label: data.user.gender,
+          value: data.user.gender,
+        };
+        formik.setFieldValue("gender", genderOption);
+      }
+
+      if (data.user.birthDate) {
+        const birthDate = new Date(data.user.birthDate);
+        setStartDate(birthDate);
+        formik.setFieldValue("birthDate", birthDate);
+      }
+    }
+  }, [data, countryOptions]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const provinces = State.getStatesOfCountry(selectedCountry.value).map(
+        (province) => ({
+          label: province.name,
+          value: province.isoCode,
+        }),
+      );
+      setProvinceOptions(provinces);
+
+      setCityOptions([]);
+      formik.setFieldValue("city", null);
+
+      if (data?.user?.province) {
+        const selectedProvince = provinces.find(
+          (province) => province.label === data.user.province,
+        );
+        setSelectedProvince(selectedProvince);
+        formik.setFieldValue("province", selectedProvince);
+      }
+    } else {
+      setProvinceOptions([]);
+    }
+  }, [selectedCountry, data]);
+
+  useEffect(() => {
+    if (selectedProvince) {
+      const cities = City.getCitiesOfState(
+        selectedCountry.value,
+        selectedProvince.value,
+      ).map((city) => ({
+        label: city.name,
+        value: city.name,
+      }));
+      setCityOptions(cities);
+
+      if (data?.user?.city) {
+        const selectedCity = cities.find(
+          (city) => city.label === data.user.city,
+        );
+        formik.setFieldValue("city", selectedCity);
+      }
+    }
+  }, [selectedProvince, selectedCountry, data]);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+        formik.setFieldValue("avatar", reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setAvatar(null);
+      formik.setFieldValue("avatar", null);
+    }
+  };
+
+  return (
+    <>
+      {isLoading ? (
+        <div className="loader">
+          <FadeLoader color="#FAF7F7" loading={true} size={50} />
+        </div>
+      ) : (
+        <>
+          <Navbar title="Settings" />
+          <section className="h-screen px-10 pt-12 pb-32 overflow-y-auto scrollbar-thin 2xl:px-28 xl:px-24 lg:px-12">
+            <div className="flex items-center justify-between pb-3 pr-6 text-light-default">
+              <div className="text-sm font-semibold xs:text-lg md:text-2xl">
+                General info
+              </div>
+              <button
+                type="button"
+                className="px-4 py-1 border rounded-full xs:px-6 md:px-10 border-light-default"
+                onClick={formik.handleSubmit}
+              >
+                Save
+              </button>
+            </div>
+            <hr className="pb-6 border-light-shadow" />
+
+            <form onSubmit={formik.handleSubmit}>
+              <div className="flex items-end justify-between pb-8">
+                <div>
+                  <h1 className="pb-3 text-sm font-semibold xs:text-xl text-light-default">
+                    Profile Photo
+                  </h1>
+                  <div
+                    className={`flex flex-col items-center justify-center md:p-8 p-4 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default w-fit ${
+                      formik.errors.avatar && formik.touched.avatar
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                      id="upload-photo"
+                    />
+                    <label htmlFor="upload-photo">
+                      <div className="flex flex-col items-center justify-center cursor-pointer">
+                        <img
+                          src={UploadImg}
+                          alt="UploadImg"
+                          className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
+                        />
+                        <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
+                          {formik.values.avatar
+                            ? "Change Profile Photo"
+                            : "Upload a Profile Photo"}
+                        </h1>
+                        <p className="text-xs text-center md:text-base text-light-secondary">
+                          {formik.values.avatar
+                            ? formik.values.avatar.name
+                            : "jpg, jpeg, png files"}
+                        </p>
+                      </div>
+                      {formik.errors.avatar && formik.touched.avatar && (
+                        <p className="pt-2 text-error-default">
+                          {formik.errors.avatar}
+                        </p>
+                      )}
+                    </label>
+                  </div>
+                </div>
+                {/* {avatarPreview && (
+                  <div className="ml-4">
+                    <img
+                      src={avatarPreview}
+                      alt="Profile Preview"
+                      className="object-cover xl:w-[15rem] xl:h-[15rem] md:w-48 md:h-48 w-[9rem] h-[9rem]"
+                    />
+                  </div>
+                )} */}
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="firstname"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    First Name <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="firstname"
+                    placeholder="Enter your Firstname"
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.firstname && formik.touched.firstname
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    value={formik.values.firstname}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.errors.firstname && formik.touched.firstname && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.firstname}
+                    </p>
+                  )}
+                </div>
+                <div className="w-[46%] mb-4 md:w-full">
+                  <label
+                    htmlFor="mobileNumber"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Mobile Number <span className="text-red-600">*</span>
+                  </label>
+                  <PhoneInput
+                    international
+                    limitMaxLength
+                    focusInputOnCountrySelection
+                    defaultCountry="PH"
+                    countryCallingCodeEditable={false}
+                    className={` text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary ${
+                      formik.errors.mobileNumber && formik.touched.mobileNumber
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    value={formik.values.mobileNumber}
+                    onChange={(value) =>
+                      formik.setFieldValue("mobileNumber", value)
+                    }
+                    style={{
+                      boxShadow: isFocused ? "0 0 0 1.75px #216BA5" : "none",
+                    }}
+                  />
+                  {formik.errors.mobileNumber &&
+                    formik.touched.mobileNumber && (
+                      <p className="pt-2 text-error-default">
+                        {formik.errors.mobileNumber}
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="lastname"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Last Name <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="lastname"
+                    placeholder="Enter your Lastname"
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.lastname && formik.touched.lastname
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    value={formik.values.lastname}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.errors.lastname && formik.touched.lastname && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.lastname}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative w-full mb-4">
+                  <label
+                    htmlFor="birthDate"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Birth Date <span className="text-red-600">*</span>
+                  </label>
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      id="birthDate"
+                      name="birthDate"
+                      value={startDate ? startDate.toLocaleDateString() : ""}
+                      readOnly
+                      className={` text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary bg-transparent focus:border-info-secondary focus:outline-none ${
+                        formik.errors.birthDate && formik.touched.birthDate
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      }`}
+                      placeholder="Select Birthday"
+                      onClick={() => setShowDatePicker((prev) => !prev)}
+                    />
+                    <img
+                      src={CalendarImg}
+                      alt="CalendarImg"
+                      className="absolute hidden cursor-pointer right-4 text-light-secondary xxs:block"
+                      onClick={() => setShowDatePicker((prev) => !prev)}
+                    />
+                  </div>
+                  {showDatePicker && (
+                    <div className="absolute z-10 mt-2">
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => {
+                          setStartDate(date);
+                          formik.setFieldValue("birthDate", date);
+                          setShowDatePicker(false);
+                        }}
+                        inline
+                        showYearDropdown
+                        scrollableYearDropdown={false}
+                        dropdownMode="select"
+                        dateFormat="MM/dd/yyyy"
+                      />
+                    </div>
+                  )}
+                  {formik.errors.birthDate && formik.touched.birthDate && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.birthDate}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Email Address <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="email"
+                    placeholder="Enter your Email"
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.email && formik.touched.email
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.errors.email && formik.touched.email && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.email}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="address"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Address <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    placeholder="Enter your Address"
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.address && formik.touched.address
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.errors.address && formik.touched.address && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.address}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="relative w-full mb-4">
+                  <label
+                    htmlFor="gender"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Gender <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={[
+                      { label: "Male", value: "male" },
+                      { label: "Female", value: "female" },
+                    ]}
+                    value={formik.values.gender}
+                    onChange={(option) =>
+                      formik.setFieldValue("gender", option)
+                    }
+                    className={`w-full p-[.65rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.gender && formik.touched.gender
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select gender"
+                    styles={SelectStyles()}
+                  />
+                  {formik.errors.gender && formik.touched.gender && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.gender}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="bio"
+                    className="block mb-2 text-xs font-medium md:text-base text-light-default"
+                  >
+                    Bio <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="bio"
+                    placeholder="Enter your Bio"
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.bio && formik.touched.bio
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    value={formik.values.bio}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.errors.bio && formik.touched.bio && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.bio}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="relative w-full mb-4">
+                  <label
+                    htmlFor="country"
+                    className="block mb-2 text-base font-medium text-light-default"
+                  >
+                    Country <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={countryOptions}
+                    value={formik.values.country}
+                    onChange={(option) => {
+                      setSelectedCountry(option);
+                      formik.setFieldValue("country", option || null);
+                      setSelectedProvince(null);
+                      setProvinceOptions([]);
+                      setCityOptions([]);
+                      formik.setFieldValue("province", null);
+                      formik.setFieldValue("city", null);
+                    }}
+                    className={`w-full p-[.65rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.country && formik.touched.country
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select country"
+                    styles={SelectStyles()}
+                  />
+                  {formik.errors.country && formik.touched.country && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.country}
+                    </p>
+                  )}
+                </div>
+
+                <div className="relative w-full mb-4">
+                  <label
+                    htmlFor="province"
+                    className="block mb-2 text-base font-medium text-light-default"
+                  >
+                    Province <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={provinceOptions}
+                    value={formik.values.province}
+                    onChange={(option) => {
+                      setSelectedProvince(option);
+                      formik.setFieldValue("province", option || null);
+                      setCityOptions([]);
+                      formik.setFieldValue("city", null);
+                    }}
+                    className={`w-full p-[.65rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.province && formik.touched.province
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select province"
+                    styles={SelectStyles()}
+                    isDisabled={!selectedCountry}
+                  />
+                  {formik.errors.province && formik.touched.province && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.province}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
+                <div className="relative w-full mb-4">
+                  <label
+                    htmlFor="city"
+                    className="block mb-2 text-base font-medium text-light-default"
+                  >
+                    City <span className="text-red-600">*</span>
+                  </label>
+                  <Select
+                    options={cityOptions}
+                    value={formik.values.city}
+                    onChange={(option) =>
+                      formik.setFieldValue("city", option || null)
+                    }
+                    className={`w-full p-[.65rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      formik.errors.city && formik.touched.city
+                        ? "border-error-default"
+                        : "border-light-secondary"
+                    }`}
+                    placeholder="Select city"
+                    styles={SelectStyles()}
+                    isDisabled={!selectedProvince}
+                  />
+                  {formik.errors.city && formik.touched.city && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.city}
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-base font-medium text-light-default"
+                  >
+                    Password <span className="text-error-default">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={isPasswordVisible ? "text" : "password"}
+                      id="password"
+                      placeholder="Enter password"
+                      className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                        formik.errors.password && formik.touched.password
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      }`}
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
+                    >
+                      {isPasswordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
+                  {formik.errors.password && formik.touched.password && (
+                    <p className="pt-2 text-error-default">
+                      {formik.errors.password}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </form>
+
+            <div className="flex items-center justify-center pt-12 text-light-default 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8">
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </div>
+              <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </div>
+            </div>
+            <div className="pt-8 text-base text-center text-light-secondary">
+              <p>2024 Copyright</p>
+            </div>
+          </section>
+        </>
+      )}
+    </>
+  );
+}

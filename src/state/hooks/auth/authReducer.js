@@ -20,10 +20,20 @@ const authSlice = createSlice({
     builder.addMatcher(
       api.endpoints.loginUser.matchFulfilled,
       (state, { payload }) => {
-        if (payload?.success === true) {
+        if (payload.success) {
           state.token = payload.token;
           state.authenticated = true;
+          state.user = payload.user;
+        }
+      },
+    );
+
+    builder.addMatcher(
+      api.endpoints.updateProfile.matchFulfilled,
+      (state, { payload }) => {
+        if (payload.success) {
           state.user = {
+            ...state.user,
             ...payload.user,
           };
         }

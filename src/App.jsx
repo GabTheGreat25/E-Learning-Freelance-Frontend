@@ -8,6 +8,7 @@ import {
 import {
   Test,
   Home,
+  Setting,
   Login,
   ForgotPassword,
   SendResetLink,
@@ -44,7 +45,8 @@ export default function App() {
               <Route element={<PrivateRoute />}>
                 <Route path="dashboard" element={<AdminLayout />}>
                   <Route index element={<Home />} />
-                  {/* <Route index element={<Test />} /> */}
+                  <Route path="settings" element={<Setting />} />
+                  <Route index path="test" element={<Test />} />
                 </Route>
               </Route>
               {/* 404 */}

@@ -11,7 +11,7 @@ export function Sidebar({ isSidebarOpen, toggleSidebar }) {
   };
 
   return (
-    <section className="relative">
+    <section className="relative bg-dark-default">
       <div
         className={`${
           isSidebarOpen ? "md:translate-x-80" : "translate-x-0"

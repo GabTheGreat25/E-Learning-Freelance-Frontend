@@ -4,3 +4,4 @@ export * from "./login.js";
 export * from "./verification.js";
 export * from "./forgotPassword.js";
 export * from "./resetPassword.js";
+export * from "./updateProfile.js";
