@@ -58,7 +58,11 @@ export function Setting() {
         lastname: values.lastname,
         email: values.email,
         mobileNumber: values.mobileNumber,
-        birthDate: new Date(values.birthDate).toISOString(),
+        birthDate: new Date(
+          new Date(values.birthDate).setDate(
+            new Date(values.birthDate).getDate() + 1,
+          ),
+        ).toISOString(),
         address: values.address,
         country: values.country.label,
         province: values.province.label,
@@ -66,6 +70,7 @@ export function Setting() {
         gender: values.gender.value,
         bio: values.bio,
       };
+
       if (avatar && avatar.startsWith("data:image/")) formData.avatar = avatar;
 
       updateProfile(formData)
@@ -160,6 +165,7 @@ export function Setting() {
 
       if (data.user.birthDate) {
         const birthDate = new Date(data.user.birthDate);
+        birthDate.setDate(birthDate.getDate() - 1);
         setStartDate(birthDate);
         formik.setFieldValue("birthDate", birthDate);
       }
