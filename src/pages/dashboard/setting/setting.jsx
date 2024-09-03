@@ -11,7 +11,7 @@ import { FadeLoader } from "react-spinners";
 import { SelectStyles, PasswordVisibility, Toast } from "@utils";
 import { Navbar } from "@components";
 import { CalendarImg, UploadImg } from "@assets";
-import { updateProfileValidation } from "@validators";
+import { updateProfileValidation, updatePasswordValidation } from "@validators";
 import { hooks } from "@api";
 import { TOAST } from "@constants";
 
@@ -28,11 +28,13 @@ export function Setting() {
   const [avatar, setAvatar] = useState(null);
 
   const user = useSelector((state) => state.auth.user);
-  const userId = user._id;
 
-  const { data, refetch } = hooks.useGetProfileQuery(userId);
+  const { data, refetch } = hooks.useGetProfileQuery(user._id);
 
   const [updateProfile, { isLoading }] = hooks.useUpdateProfileMutation();
+
+  const [updatePassword, { isLoading: isUpdatingPassword }] =
+    hooks.useUpdatePasswordMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -63,19 +65,16 @@ export function Setting() {
         city: values.city.label,
         gender: values.gender.value,
         bio: values.bio,
-        avatar: avatar,
       };
+      if (avatar && avatar.startsWith("data:image/")) formData.avatar = avatar;
 
       updateProfile(formData)
         .unwrap()
         .then((res) => {
           if (res.success) {
-            console.log(res.data);
             Toast(TOAST.SUCCESS, "Profile updated successfully.");
             refetch();
-          } else {
-            Toast(TOAST.ERROR, res.error || "Failed to update profile.");
-          }
+          } else Toast(TOAST.ERROR, res.error || "Failed to update profile.");
         })
         .catch((error) => {
           Toast(
@@ -83,6 +82,33 @@ export function Setting() {
             error.message || "An error occurred during profile update.",
           );
         });
+    },
+    validateOnBlur: true,
+    validateOnChange: true,
+  });
+
+  const formikPassword = useFormik({
+    initialValues: {
+      password: "",
+    },
+    validationSchema: updatePasswordValidation,
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        const res = await updatePassword({
+          password: values.password,
+        }).unwrap();
+        if (res.success) {
+          Toast(TOAST.SUCCESS, "Password updated successfully.");
+          resetForm();
+        } else Toast(TOAST.ERROR, res.message || "Failed to update password.");
+      } catch (error) {
+        Toast(
+          TOAST.ERROR,
+          error.message || "An error occurred during password update.",
+        );
+      } finally {
+        setSubmitting(false);
+      }
     },
     validateOnBlur: true,
     validateOnChange: true,
@@ -106,6 +132,15 @@ export function Setting() {
       formik.setFieldValue("mobileNumber", data.user.mobileNumber || "");
       formik.setFieldValue("bio", data.user.bio || "");
       formik.setFieldValue("password", data.user.password || "");
+
+      if (data.user.avatar && data.user.avatar.url) {
+        const avatarUrl = data.user.avatar.url;
+        setAvatar(avatarUrl);
+        formik.setFieldValue("avatar", avatarUrl);
+      } else {
+        setAvatar(null);
+        formik.setFieldValue("avatar", null);
+      }
 
       if (data.user.country) {
         const selectedCountry = countryOptions.find(
@@ -177,23 +212,21 @@ export function Setting() {
   }, [selectedProvince, selectedCountry, data]);
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
         setAvatar(reader.result);
         formik.setFieldValue("avatar", reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setAvatar(null);
-      formik.setFieldValue("avatar", null);
-    }
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || isUpdatingPassword ? (
         <div className="loader">
           <FadeLoader color="#FAF7F7" loading={true} size={50} />
         </div>
@@ -248,9 +281,7 @@ export function Setting() {
                             : "Upload a Profile Photo"}
                         </h1>
                         <p className="text-xs text-center md:text-base text-light-secondary">
-                          {formik.values.avatar
-                            ? formik.values.avatar.name
-                            : "jpg, jpeg, png files"}
+                          jpg, jpeg, png files
                         </p>
                       </div>
                       {formik.errors.avatar && formik.touched.avatar && (
@@ -261,15 +292,15 @@ export function Setting() {
                     </label>
                   </div>
                 </div>
-                {/* {avatarPreview && (
+                {formik.values.avatar ? (
                   <div className="ml-4">
                     <img
-                      src={avatarPreview}
+                      src={formik.values.avatar}
                       alt="Profile Preview"
                       className="object-cover xl:w-[15rem] xl:h-[15rem] md:w-48 md:h-48 w-[9rem] h-[9rem]"
                     />
                   </div>
-                )} */}
+                ) : null}
               </div>
 
               <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
@@ -289,7 +320,7 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
-                    value={formik.values.firstname}
+                    value={formik.values.firstname || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -312,7 +343,7 @@ export function Setting() {
                     focusInputOnCountrySelection
                     defaultCountry="PH"
                     countryCallingCodeEditable={false}
-                    className={` text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary ${
+                    className={`text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary ${
                       formik.errors.mobileNumber && formik.touched.mobileNumber
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -353,7 +384,7 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
-                    value={formik.values.lastname}
+                    value={formik.values.lastname || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -378,7 +409,7 @@ export function Setting() {
                       name="birthDate"
                       value={startDate ? startDate.toLocaleDateString() : ""}
                       readOnly
-                      className={` text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary bg-transparent focus:border-info-secondary focus:outline-none ${
+                      className={`text-[.65rem] md:text-base w-full p-4 border rounded-md text-light-default placeholder-light-secondary bg-transparent focus:border-info-secondary focus:outline-none ${
                         formik.errors.birthDate && formik.touched.birthDate
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -435,7 +466,7 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
-                    value={formik.values.email}
+                    value={formik.values.email || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -462,7 +493,7 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
-                    value={formik.values.address}
+                    value={formik.values.address || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -522,7 +553,7 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
-                    value={formik.values.bio}
+                    value={formik.values.bio || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -544,7 +575,7 @@ export function Setting() {
                   </label>
                   <Select
                     options={countryOptions}
-                    value={formik.values.country}
+                    value={formik.values.country || null}
                     onChange={(option) => {
                       setSelectedCountry(option);
                       formik.setFieldValue("country", option || null);
@@ -578,7 +609,7 @@ export function Setting() {
                   </label>
                   <Select
                     options={provinceOptions}
-                    value={formik.values.province}
+                    value={formik.values.province || null}
                     onChange={(option) => {
                       setSelectedProvince(option);
                       formik.setFieldValue("province", option || null);
@@ -612,7 +643,7 @@ export function Setting() {
                   </label>
                   <Select
                     options={cityOptions}
-                    value={formik.values.city}
+                    value={formik.values.city || null}
                     onChange={(option) =>
                       formik.setFieldValue("city", option || null)
                     }
@@ -632,41 +663,59 @@ export function Setting() {
                   )}
                 </div>
 
-                <div className="w-full mb-4">
-                  <label
-                    htmlFor="password"
-                    className="block mb-2 text-base font-medium text-light-default"
-                  >
-                    Password <span className="text-error-default">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={isPasswordVisible ? "text" : "password"}
-                      id="password"
-                      placeholder="Enter password"
-                      className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
-                        formik.errors.password && formik.touched.password
-                          ? "border-error-default"
-                          : "border-light-secondary"
-                      }`}
-                      value={formik.values.password}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <button
-                      type="button"
-                      onClick={togglePasswordVisibility}
-                      className="absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
+                <form className="w-full mb-4">
+                  <div>
+                    <label
+                      htmlFor="password"
+                      className="block mb-2 text-base font-medium text-light-default"
                     >
-                      {isPasswordVisible ? "Hide" : "Show"}
-                    </button>
+                      Password <span className="text-error-default">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={isPasswordVisible ? "text" : "password"}
+                        id="password"
+                        placeholder="Enter password"
+                        className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                          formikPassword.errors.password &&
+                          formikPassword.touched.password
+                            ? "border-error-default"
+                            : "border-light-secondary"
+                        }`}
+                        value={formikPassword.values.password || ""}
+                        onChange={formikPassword.handleChange}
+                        onBlur={(e) => {
+                          if (
+                            !e.relatedTarget ||
+                            e.relatedTarget.id !== "resetButton"
+                          ) {
+                            formikPassword.setFieldTouched("password", false);
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-20  right-12 top-1/2 text-light-secondary"
+                      >
+                        {isPasswordVisible ? "Hide" : "Show"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={formikPassword.handleSubmit}
+                        className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-6 right-3 top-1/2 text-light-secondary"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                    {formikPassword.errors.password &&
+                      formikPassword.touched.password && (
+                        <p className="pt-2 text-error-default">
+                          {formikPassword.errors.password}
+                        </p>
+                      )}
                   </div>
-                  {formik.errors.password && formik.touched.password && (
-                    <p className="pt-2 text-error-default">
-                      {formik.errors.password}
-                    </p>
-                  )}
-                </div>
+                </form>
               </div>
             </form>
 

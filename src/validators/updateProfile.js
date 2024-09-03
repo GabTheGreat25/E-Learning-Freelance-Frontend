@@ -69,12 +69,5 @@ export const updateProfileValidation = yup.object().shape({
     .nullable()
     .default(null)
     .required("City is required"),
-  avatar: yup
-    .string()
-    .nullable()
-    .test("is-base64", "Invalid image format", (value) => {
-      if (!value) return true;
-      const base64Pattern = /^data:image\/(jpeg|png|jpg);base64,/;
-      return base64Pattern.test(value);
-    }),
+  avatar: yup.string().nullable(),
 });

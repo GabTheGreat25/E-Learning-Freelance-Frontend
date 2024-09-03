@@ -6,5 +6,5 @@ export const METHOD = {
   PATCH: "PATCH",
   PUT: "PUT",
   DELETE: "DELETE",
-  TAGS: [TAGS.USERS],
+  TAGS: [TAGS.USER],
 };

@@ -1,8 +1,10 @@
+import { PATH, METHOD } from "@constants";
+
 export const registerUser = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/register",
-      method: "POST",
+      url: PATH.REGISTER,
+      method: METHOD.POST,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -11,8 +13,8 @@ export const registerUser = (builder) =>
 export const resendOTP = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/send/verification",
-      method: "POST",
+      url: PATH.SEND_VERIFICATION,
+      method: METHOD.POST,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -21,8 +23,8 @@ export const resendOTP = (builder) =>
 export const verifyOTP = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/verification",
-      method: "POST",
+      url: PATH.VERIFICATION,
+      method: METHOD.POST,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -31,8 +33,8 @@ export const verifyOTP = (builder) =>
 export const loginUser = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/login",
-      method: "POST",
+      url: PATH.LOGIN,
+      method: METHOD.POST,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -41,8 +43,8 @@ export const loginUser = (builder) =>
 export const getProfile = (builder) =>
   builder.query({
     query: () => ({
-      url: "/me",
-      method: "GET",
+      url: PATH.ME,
+      method: METHOD.GET,
     }),
     providesTags: ["User"],
   });
@@ -50,8 +52,8 @@ export const getProfile = (builder) =>
 export const updatePassword = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/me/changePassword",
-      method: "PUT",
+      url: PATH.CHANGE_PASSWORD,
+      method: METHOD.PUT,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -60,8 +62,8 @@ export const updatePassword = (builder) =>
 export const updateProfile = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/me/update",
-      method: "PUT",
+      url: PATH.UPDATE_PROFILE,
+      method: METHOD.PUT,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -70,8 +72,8 @@ export const updateProfile = (builder) =>
 export const forgotPassword = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/password/forgot",
-      method: "POST",
+      url: PATH.FORGOT_PASSWORD,
+      method: METHOD.POST,
       body: payload,
     }),
     invalidatesTags: ["User"],
@@ -80,8 +82,8 @@ export const forgotPassword = (builder) =>
 export const resetPassword = (builder) =>
   builder.mutation({
     query: (payload) => ({
-      url: "/password/reset",
-      method: "PUT",
+      url: PATH.RESET_PASSWORD,
+      method: METHOD.PUT,
       body: payload,
     }),
     invalidatesTags: ["User"],

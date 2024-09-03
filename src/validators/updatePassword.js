@@ -1,10 +1,6 @@
 import * as yup from "yup";
 
-export const loginValidation = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email address")
-    .required("Email is required"),
+export const updatePasswordValidation = yup.object().shape({
   password: yup
     .string()
     .min(8, "Password must be at least 8 characters")
