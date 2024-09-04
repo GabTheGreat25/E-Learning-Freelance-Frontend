@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FaChevronLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
-import { AuthImg, CoverImg, FacebookImg, GoogleImg } from "@assets";
+import { FacebookImg, GoogleImg } from "@assets";
+import { MyCarousel } from "@components";
 import { PasswordVisibility } from "@utils";
 import { registerValidation } from "@validators";
 import { locationActions } from "@hooks";
@@ -40,38 +39,7 @@ export function Register() {
 
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
-      <div
-        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
-        style={{ backgroundImage: `url(${AuthImg})` }}
-      >
-        <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            showIndicators={true}
-            interval={3000}
-          >
-            <div>
-              <img
-                src={CoverImg}
-                alt="Cover Image 1"
-                className="object-cover min-h-full rounded-3xl"
-              />
-            </div>
-            <div>
-              <img
-                src={CoverImg}
-                alt="Cover Image 2"
-                className="object-cover min-h-full rounded-3xl"
-              />
-            </div>
-          </Carousel>
-        </div>
-      </div>
-
+      <MyCarousel />
       <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
         <div
           className="absolute top-0 left-0 p-8 cursor-pointer"

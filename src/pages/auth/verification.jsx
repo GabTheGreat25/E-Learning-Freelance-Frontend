@@ -1,11 +1,10 @@
 import React from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { FadeLoader } from "react-spinners";
-import { AuthImg, CoverImg, LockImg } from "@assets";
+import { LockImg } from "@assets";
+import { MyCarousel } from "@components";
 import { verificationValidation } from "@validators";
 import { Toast } from "@utils";
 import { TOAST } from "@constants";
@@ -77,38 +76,7 @@ export function Verification() {
 
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
-      <div
-        className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
-        style={{ backgroundImage: `url(${AuthImg})` }}
-      >
-        <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
-          <Carousel
-            autoPlay
-            infiniteLoop
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            showIndicators={true}
-            interval={3000}
-          >
-            <div>
-              <img
-                src={CoverImg}
-                alt="Cover Image 1"
-                className="object-cover min-h-full rounded-3xl"
-              />
-            </div>
-            <div>
-              <img
-                src={CoverImg}
-                alt="Cover Image 2"
-                className="object-cover min-h-full rounded-3xl"
-              />
-            </div>
-          </Carousel>
-        </div>
-      </div>
-
+      <MyCarousel />
       {isLoading || isResending ? (
         <div className="loader">
           <FadeLoader color="#FAF7F7" loading={true} size={50} />

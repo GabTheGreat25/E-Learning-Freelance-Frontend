@@ -1,51 +1,14 @@
 import React from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useNavigate } from "react-router-dom";
-import { AuthImg, CoverImg, LockImg, VerifiedImg } from "@assets";
+import { LockImg, VerifiedImg } from "@assets";
+import { MyCarousel } from "@components";
 
 export function SendResetLink() {
   const navigate = useNavigate();
 
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
-      <div
-        className="hidden w-full h-full bg-center bg-cover md:block"
-        style={{ backgroundImage: `url(${AuthImg})` }}
-      >
-        <div
-          className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
-          style={{ backgroundImage: `url(${AuthImg})` }}
-        >
-          <div className="flex items-center justify-center w-full h-full p-0 xl:p-8 2xl:p-28">
-            <Carousel
-              autoPlay
-              infiniteLoop
-              showThumbs={false}
-              showStatus={false}
-              showArrows={false}
-              showIndicators={true}
-              interval={3000}
-            >
-              <div>
-                <img
-                  src={CoverImg}
-                  alt="Cover Image 1"
-                  className="object-cover min-h-full rounded-3xl"
-                />
-              </div>
-              <div>
-                <img
-                  src={CoverImg}
-                  alt="Cover Image 2"
-                  className="object-cover min-h-full rounded-3xl"
-                />
-              </div>
-            </Carousel>
-          </div>
-        </div>
-      </div>
-
+      <MyCarousel />
       <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
         <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
           <h1 className="mb-1 text-3xl font-semibol d lg:text-4xl">
