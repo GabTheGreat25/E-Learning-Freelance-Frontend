@@ -1,4 +1,4 @@
 export * from "./sidebar.jsx";
 export * from "./navbar.jsx";
-export * from "./PrivateRoute.jsx";
-export * from "./PublicRoute.jsx";
+export * from "./privateRoute.jsx";
+export * from "./publicRoute.jsx";

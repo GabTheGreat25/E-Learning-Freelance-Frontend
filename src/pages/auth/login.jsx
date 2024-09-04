@@ -28,21 +28,22 @@ export function Login() {
           if (res.success) {
             Toast(TOAST.SUCCESS, "Login successful!");
             navigate("/dashboard");
-          } else {
+          } else
             Toast(
               TOAST.ERROR,
               res.error?.data?.message ||
                 "Something went wrong. Please try again.",
             );
-          }
         })
         .catch((error) => {
-          console.error("API error:", error);
-          Toast(
-            TOAST.ERROR,
+          const errorMessage =
             error?.data?.message ||
-              "An unexpected error occurred. Please try again.",
-          );
+            "An unexpected error occurred. Please try again.";
+
+          if (errorMessage.toLowerCase().includes("not verified")) {
+            Toast(TOAST.ERROR, errorMessage);
+            navigate("/verification");
+          } else Toast(TOAST.ERROR, errorMessage);
         });
     },
     validateOnBlur: true,
