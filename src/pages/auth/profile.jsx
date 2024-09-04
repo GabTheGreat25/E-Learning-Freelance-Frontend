@@ -83,6 +83,7 @@ export function RegisterProfile() {
       province: null,
       city: null,
       gender: null,
+      role: "admin",
     },
     validationSchema: registerProfileValidation,
     onSubmit: (values) => {
@@ -102,6 +103,7 @@ export function RegisterProfile() {
         province: values.province.label,
         city: values.city.label,
         gender: values.gender.value,
+        role: values.role,
       };
       registerUser(formData)
         .unwrap()

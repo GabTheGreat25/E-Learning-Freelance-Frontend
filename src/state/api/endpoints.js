@@ -1,10 +1,11 @@
-import { UserApi } from "./services";
+import { UserApi, CarouselApi } from "./services";
 
 export const generateEndpoints = (builder) => {
   const endpoints = {};
+  const combinedApis = { ...UserApi, ...CarouselApi };
 
-  Object.keys(UserApi).forEach((key) => {
-    endpoints[key] = UserApi[key](builder);
+  Object.keys(combinedApis).forEach((key) => {
+    endpoints[key] = combinedApis[key](builder);
   });
 
   return endpoints;

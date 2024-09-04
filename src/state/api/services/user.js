@@ -1,4 +1,4 @@
-import { PATH, METHOD } from "@constants";
+import { PATH, METHOD, TAGS } from "@constants";
 
 export const registerUser = (builder) =>
   builder.mutation({
@@ -7,7 +7,7 @@ export const registerUser = (builder) =>
       method: METHOD.POST,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const resendOTP = (builder) =>
@@ -17,7 +17,7 @@ export const resendOTP = (builder) =>
       method: METHOD.POST,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const verifyOTP = (builder) =>
@@ -27,7 +27,7 @@ export const verifyOTP = (builder) =>
       method: METHOD.POST,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const loginUser = (builder) =>
@@ -37,7 +37,7 @@ export const loginUser = (builder) =>
       method: METHOD.POST,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const getProfile = (builder) =>
@@ -46,7 +46,7 @@ export const getProfile = (builder) =>
       url: PATH.ME,
       method: METHOD.GET,
     }),
-    providesTags: ["User"],
+    providesTags: [TAGS.USER],
   });
 
 export const updatePassword = (builder) =>
@@ -56,7 +56,7 @@ export const updatePassword = (builder) =>
       method: METHOD.PUT,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const updateProfile = (builder) =>
@@ -66,7 +66,7 @@ export const updateProfile = (builder) =>
       method: METHOD.PUT,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const forgotPassword = (builder) =>
@@ -76,7 +76,7 @@ export const forgotPassword = (builder) =>
       method: METHOD.POST,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });
 
 export const resetPassword = (builder) =>
@@ -86,5 +86,5 @@ export const resetPassword = (builder) =>
       method: METHOD.PUT,
       body: payload,
     }),
-    invalidatesTags: ["User"],
+    invalidatesTags: [TAGS.USER],
   });

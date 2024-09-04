@@ -8,4 +8,5 @@ export const PATH = {
   UPDATE_PROFILE: "/me/update",
   FORGOT_PASSWORD: "/password/forgot",
   RESET_PASSWORD: "/password/reset",
+  ALL_CAROUSEL: "/allCarousel",
 };
