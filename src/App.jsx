@@ -9,6 +9,7 @@ import {
   Test,
   Home,
   Analytics,
+  ViewAnalytics,
   Setting,
   Login,
   ForgotPassword,
@@ -47,6 +48,7 @@ export default function App() {
                 <Route path="dashboard" element={<AdminLayout />}>
                   <Route index element={<Home />} />
                   <Route path="analytics" element={<Analytics />} />
+                  <Route path="analytics/:id" element={<ViewAnalytics />} />
                   <Route path="settings" element={<Setting />} />
                   <Route index path="test" element={<Test />} />
                 </Route>

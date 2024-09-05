@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 
-export function DataTable({ columns, data, initialRowsPerPage = 15 }) {
+export function DataTable({
+  columns,
+  data,
+  initialRowsPerPage = 15,
+  handleRowClick,
+}) {
   const [selectedColumns, setSelectedColumns] = useState(
     columns.filter((column) => column !== "ID"),
   );
@@ -46,6 +51,11 @@ export function DataTable({ columns, data, initialRowsPerPage = 15 }) {
     );
   };
 
+  const slicedData = data.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage,
+  );
+
   return (
     <div>
       <div className="flex flex-wrap items-center w-full my-4">
@@ -71,7 +81,7 @@ export function DataTable({ columns, data, initialRowsPerPage = 15 }) {
       </div>
 
       <div className="rounded-md scrollbar-thin max-h-[650px] overflow-y-auto">
-        <div className="overflow-x-auto 2xl:w-[100%] w-[200%]">
+        <div className="overflow-x-auto 2xl:w-[120%] w-[200%]">
           <table className="w-full text-left table-auto">
             <thead>
               <tr className="text-light-default bg-dark-default">
@@ -95,34 +105,33 @@ export function DataTable({ columns, data, initialRowsPerPage = 15 }) {
               </tr>
             </thead>
             <tbody className="text-light-default bg-dark-default">
-              {data
-                .slice(
-                  (currentPage - 1) * rowsPerPage,
-                  currentPage * rowsPerPage,
-                )
-                .map((row) => (
-                  <tr key={row._id} className="hover:bg-light-shadow">
-                    <td className="px-4 py-2 border-b border-light-shadow">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(row._id)}
-                        onChange={() => handleRowSelect(row._id)}
-                        className="h-5 w-5 p-1 text-[.6rem] bg-transparent border-2 rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
-                      />
+              {slicedData.map((row) => (
+                <tr
+                  key={row._id}
+                  className="cursor-pointer hover:bg-light-shadow"
+                  onClick={() => handleRowClick(row._id)}
+                >
+                  <td className="px-4 py-2 border-b border-light-shadow">
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(row._id)}
+                      onChange={() => handleRowSelect(row._id)}
+                      className="h-5 w-5 p-1 text-[.6rem] bg-transparent border-2 rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                    />
+                  </td>
+                  <td className="px-4 py-2 border-b border-light-shadow">
+                    {row._id}
+                  </td>
+                  {selectedColumns.map((column) => (
+                    <td
+                      key={`${row._id}-${column}`}
+                      className="px-4 py-2 border-b border-light-shadow"
+                    >
+                      {row[column]}
                     </td>
-                    <td className="px-4 py-2 border-b border-light-shadow">
-                      {row._id}
-                    </td>
-                    {selectedColumns.map((column) => (
-                      <td
-                        key={`${row._id}-${column}`}
-                        className="px-4 py-2 border-b border-light-shadow"
-                      >
-                        {row[column]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

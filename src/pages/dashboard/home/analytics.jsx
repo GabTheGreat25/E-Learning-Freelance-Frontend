@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { GradientVideoImg } from "@assets";
 
@@ -17,6 +18,7 @@ const generateObjectId = () => {
 };
 
 export function Analytics() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Overview");
 
   const columns = [
@@ -41,11 +43,15 @@ export function Analytics() {
     "Last Video": "Things to master if you...",
   }));
 
+  const handleRowClick = (id) => {
+    navigate(`/dashboard/analytics/${id}`);
+  };
+
   return (
     <>
       <Navbar title="Home" />
       <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
-        {/* Overview */}
+        {/* Analytics */}
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
         {/* First Button */}
@@ -159,7 +165,11 @@ export function Analytics() {
               </button>
             </div>
           </div>
-          <DataTable columns={columns} data={data} />
+          <DataTable
+            columns={columns}
+            data={data}
+            handleRowClick={handleRowClick}
+          />
         </div>
 
         <Footer />
