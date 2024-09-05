@@ -310,7 +310,7 @@ export function Home() {
               visibleCourses.length <= 3
                 ? "md:items-start items-center"
                 : "items-center"
-            } justify-center xl-px-0 lg:px-6 px-2 md:px-12`}
+            } justify-center  xl:px-0 lg:px-6 px-2 md:px-12`}
           >
             <div className="flex gap-4 pt-6 pb-2">
               {visibleCourses.map((course, index) => (
@@ -394,14 +394,15 @@ export function Home() {
                     {truncateText(video.title, 6)}{" "}
                   </h1>
                   <p className="text-sm text-light-secondary">
-                    {video.courseName} • {video.duration}{" "}
+                    {video.courseName} <br />
+                    {video.duration}{" "}
                     <span className="float-right">{video.date}</span>
                   </p>
                 </div>
                 <p className="text-sm text-light-secondary">
                   {truncateText(description, 22)}{" "}
                 </p>
-                <div className="flex items-center justify-between text-sm text-light-secondary">
+                <div className="flex items-center justify-between text-xs text-light-secondary">
                   <div className="flex items-center gap-2">
                     <FaEye className="text-light-secondary" />
                     <span>{video.views} Views</span>
