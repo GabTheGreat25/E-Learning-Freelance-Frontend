@@ -15,3 +15,8 @@ export { default as CalendarImg } from "../assets/calendar.png";
 export { default as LockImg } from "../assets/lock.png";
 export { default as VerifiedImg } from "../assets/verified.png";
 export { default as UploadImg } from "../assets/uploadImage.png";
+export { default as VideoImg } from "../assets/video-img.png";
+export { default as GradientVideoImg } from "../assets/gradient-video.png";
+export { default as GradientHomeImg } from "../assets/gradient-home.png";
+export { default as GradientNotificationImg } from "../assets/gradient-notification.png";
+export { default as GradientTransactionImg } from "../assets/gradient-transaction.png";

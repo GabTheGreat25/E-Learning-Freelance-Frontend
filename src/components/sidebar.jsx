@@ -32,9 +32,9 @@ export function Sidebar({ isSidebarOpen, toggleSidebar }) {
         )}
       </div>
       <div
-        className={`fixed top-0 left-0 min-h-screen bg-dark-default shadow-xl transform transition-transform duration-300 ease-in-out z-20 ${
+        className={`fixed top-0  left-0 bg-dark-default shadow-xl transform transition-transform duration-300 ease-in-out z-20 ${
           !isSidebarOpen && "-translate-x-full"
-        } xxs:w-64 sm:w-72 md:w-80 lg:w-80 lg:translate-x-0 lg:relative lg:block`}
+        } xxs:w-64 sm:w-72 md:w-80 lg:w-80 lg:translate-x-0 lg:relative lg:block h-screen overflow-auto scrollbar-thin scrollbar-hide`}
       >
         {isSidebarOpen && (
           <div className="flex px-6 pt-6 place-content-end md:hidden text-light-default">

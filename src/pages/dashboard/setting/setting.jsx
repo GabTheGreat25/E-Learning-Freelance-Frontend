@@ -230,6 +230,41 @@ export function Setting() {
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  const handleFileSelect = (file) => {
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+        formik.setFieldValue("avatar", reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      Toast(TOAST.ERROR, "Please upload a valid image file.");
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFileSelect(files[0]);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("dragover", handleDragOver);
+    window.addEventListener("drop", handleDrop);
+
+    return () => {
+      window.removeEventListener("dragover", handleDragOver);
+      window.removeEventListener("drop", handleDrop);
+    };
+  }, []);
+
   return (
     <>
       {isLoading || isUpdatingPassword ? (
@@ -266,6 +301,8 @@ export function Setting() {
                         ? "border-error-default"
                         : "border-light-secondary"
                     }`}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
                   >
                     <input
                       type="file"
@@ -669,59 +706,57 @@ export function Setting() {
                   )}
                 </div>
 
-                <form className="w-full mb-4">
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block mb-2 text-base font-medium text-light-default"
+                <div className="w-full mb-4">
+                  <label
+                    htmlFor="password"
+                    className="block mb-2 text-base font-medium text-light-default"
+                  >
+                    Password <span className="text-error-default">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={isPasswordVisible ? "text" : "password"}
+                      id="password"
+                      placeholder="Enter password"
+                      className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                        formikPassword.errors.password &&
+                        formikPassword.touched.password
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      }`}
+                      value={formikPassword.values.password || ""}
+                      onChange={formikPassword.handleChange}
+                      onBlur={(e) => {
+                        if (
+                          !e.relatedTarget ||
+                          e.relatedTarget.id !== "resetButton"
+                        ) {
+                          formikPassword.setFieldTouched("password", false);
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-20  right-12 top-1/2 text-light-secondary"
                     >
-                      Password <span className="text-error-default">*</span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={isPasswordVisible ? "text" : "password"}
-                        id="password"
-                        placeholder="Enter password"
-                        className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
-                          formikPassword.errors.password &&
-                          formikPassword.touched.password
-                            ? "border-error-default"
-                            : "border-light-secondary"
-                        }`}
-                        value={formikPassword.values.password || ""}
-                        onChange={formikPassword.handleChange}
-                        onBlur={(e) => {
-                          if (
-                            !e.relatedTarget ||
-                            e.relatedTarget.id !== "resetButton"
-                          ) {
-                            formikPassword.setFieldTouched("password", false);
-                          }
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-20  right-12 top-1/2 text-light-secondary"
-                      >
-                        {isPasswordVisible ? "Hide" : "Show"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={formikPassword.handleSubmit}
-                        className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-6 right-3 top-1/2 text-light-secondary"
-                      >
-                        Reset
-                      </button>
-                    </div>
-                    {formikPassword.errors.password &&
-                      formikPassword.touched.password && (
-                        <p className="pt-2 text-error-default">
-                          {formikPassword.errors.password}
-                        </p>
-                      )}
+                      {isPasswordVisible ? "Hide" : "Show"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={formikPassword.handleSubmit}
+                      className="md:text-base text-[.65rem] absolute transform -translate-y-1/2 md:right-6 right-3 top-1/2 text-light-secondary"
+                    >
+                      Reset
+                    </button>
                   </div>
-                </form>
+                  {formikPassword.errors.password &&
+                    formikPassword.touched.password && (
+                      <p className="pt-2 text-error-default">
+                        {formikPassword.errors.password}
+                      </p>
+                    )}
+                </div>
               </div>
             </form>
 

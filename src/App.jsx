@@ -8,6 +8,7 @@ import {
 import {
   Test,
   Home,
+  Analytics,
   Setting,
   Login,
   ForgotPassword,
@@ -45,6 +46,7 @@ export default function App() {
               <Route element={<PrivateRoute />}>
                 <Route path="dashboard" element={<AdminLayout />}>
                   <Route index element={<Home />} />
+                  <Route path="analytics" element={<Analytics />} />
                   <Route path="settings" element={<Setting />} />
                   <Route index path="test" element={<Test />} />
                 </Route>
