@@ -373,7 +373,7 @@ export function Home() {
             <button className="px-8 py-1 border rounded-full">Add Video</button>
           </div>
 
-          <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-4">
             {limitedVideos.map((video, index) => (
               <div
                 key={index}

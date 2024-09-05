@@ -1,74 +1,150 @@
 import React, { useState } from "react";
-import { Navbar, Footer, TabNavigation } from "@components";
+import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { GradientVideoImg } from "@assets";
+
+const generateObjectId = () => {
+  return (
+    Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0") +
+    Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0") +
+    Math.floor(Math.random() * 0xffffff)
+      .toString(16)
+      .padStart(6, "0")
+  );
+};
 
 export function Analytics() {
   const [activeTab, setActiveTab] = useState("Overview");
 
-  // State for managing column visibility and pagination
-  const [columns, setColumns] = useState({
-    id: true,
-    firstName: true,
-    lastName: true,
-    age: true,
-    gender: true,
-    lastActive: true,
-    dateRegistered: true,
-    lastVideo: true,
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(15);
+  const columns = [
+    "ID",
+    "First Name",
+    "Last Name",
+    "Age",
+    "Gender",
+    "Last Active",
+    "Date Registered",
+    "Last Video",
+  ];
 
-  // Generate data with incrementing IDs
-  const data = Array.from({ length: 200 }, (_, i) => ({
-    id: (i + 1).toString(),
-    firstName: "Juan",
-    lastName: "Dela Cruz",
-    age: 20,
-    gender: "Male",
-    lastActive: "Aug 10, 2024",
-    dateRegistered: "June 10, 2024",
-    lastVideo: "Things to master if you want to learn...",
+  const data = new Array(200).fill().map(() => ({
+    _id: generateObjectId(),
+    "First Name": "Juan",
+    "Last Name": "Dela Cruz",
+    Age: 20,
+    Gender: "Male",
+    "Last Active": "Aug 10, 2024",
+    "Date Registered": "June 10, 2024",
+    "Last Video": "Things to master if you...",
   }));
-
-  const handleColumnChange = (column) => {
-    setColumns((prevColumns) => ({
-      ...prevColumns,
-      [column]: !prevColumns[column],
-    }));
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= Math.ceil(data.length / rowsPerPage)) {
-      setCurrentPage(newPage);
-    }
-  };
-
-  const handleRowsPerPageChange = (event) => {
-    setRowsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset to first page on rows per page change
-  };
-
-  const visibleData = data.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage,
-  );
 
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Overview */}
         <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        {/* Existing components... */}
+        {/* First Button */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">
-          {/* Your cards go here */}
+          <div
+            className="bg-center bg-no-repeat bg-cover rounded-lg"
+            style={{ backgroundImage: `url(${GradientVideoImg})` }}
+          >
+            <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg">
+              <div className="overflow-hidden">
+                <h1 className="text-3xl font-normal truncate text-light-default">
+                  Active Users
+                </h1>
+                <p className="mt-1 text-sm truncate text-light-secondary">
+                  Number of users who are currently <br /> active on the
+                  platform
+                </p>
+              </div>
+              <h1 className="text-5xl font-bold text-light-default">40</h1>
+            </div>
+          </div>
+
+          <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
+            <div className="overflow-hidden">
+              <h1 className="text-3xl font-normal truncate text-light-default">
+                Total Completed Students
+              </h1>
+              <p className="mt-1 text-sm truncate text-light-secondary">
+                Total number of students currently <br /> registered on the
+                platform
+              </p>
+            </div>
+            <div className="flex items-end justify-between mt-4">
+              <h1 className="text-5xl font-bold text-light-default">40</h1>
+              <button className="flex items-center text-lg text-light-default">
+                See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default md:col-span-2 xl:col-span-1">
+            <div className="overflow-hidden">
+              <h1 className="text-3xl font-normal truncate text-light-default">
+                Total Book Downloads
+              </h1>
+              <p className="mt-1 text-sm truncate text-light-secondary">
+                Total number of students currently <br /> registered on the
+                platform
+              </p>
+            </div>
+            <div className="flex items-end justify-between mt-4">
+              <h1 className="text-5xl font-bold text-light-default">34</h1>
+              <button className="flex items-center text-lg text-light-default">
+                See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6 md:flex-row md:col-span-2 xl:col-span-3">
+            <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
+              <div className="overflow-hidden">
+                <h1 className="text-3xl font-normal truncate text-light-default">
+                  Inactive Users
+                </h1>
+                <p className="mt-1 text-sm truncate text-light-secondary">
+                  Total number of students currently <br /> registered on the
+                  platform
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-4">
+                <h1 className="text-5xl font-bold text-light-default">109</h1>
+                <button className="flex items-center text-lg text-light-default">
+                  See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
+              <div className="overflow-hidden">
+                <h1 className="text-3xl font-normal truncate text-light-default">
+                  Total Students
+                </h1>
+                <p className="mt-1 text-sm truncate text-light-secondary">
+                  Total number of students currently <br /> registered on the
+                  platform
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-4">
+                <h1 className="text-5xl font-bold text-light-default">213</h1>
+                <button className="flex items-center text-lg text-light-default">
+                  See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Data Tables */}
-        <div className="pt-20">
-          <div className="flex items-center justify-between md:gap-x-0 gap-x-2">
+        <div>
+          <div className="flex items-center justify-between pt-12 md:gap-x-0 gap-x-2">
             <div className="flex gap-x-6">
               <div>
                 <h1 className="pb-1 md:text-3xl">Active Users</h1>
@@ -78,128 +154,14 @@ export function Analytics() {
               </div>
             </div>
             <div>
-              <button className="px-4 py-1 text-xs border rounded-full md:text-base md:px-8">
+              <button className="px-4 py-1 text-sm border rounded-full md:text-base md:px-8">
                 Export CSV
               </button>
             </div>
           </div>
-
-          {/* Column visibility controls */}
-          <div className="flex items-center justify-start gap-4 my-4">
-            <label>Columns:</label>
-            {Object.keys(columns).map((column) => (
-              <label key={column} className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={columns[column]}
-                  onChange={() => handleColumnChange(column)}
-                />
-                {column.charAt(0).toUpperCase() + column.slice(1)}
-              </label>
-            ))}
-          </div>
-
-          {/* Data Table */}
-          <div className="relative max-h-[500px] overflow-hidden border border-gray-700 rounded">
-            <div className="overflow-x-auto scrollbar-thin">
-              <table className="min-w-full divide-y divide-gray-200 table-fixed">
-                <thead className="sticky top-0 bg-gray-700">
-                  <tr>
-                    {columns.id && <th className="px-4 py-2 text-left">ID</th>}
-                    {columns.firstName && (
-                      <th className="px-4 py-2 text-left">First Name</th>
-                    )}
-                    {columns.lastName && (
-                      <th className="px-4 py-2 text-left">Last Name</th>
-                    )}
-                    {columns.age && (
-                      <th className="px-4 py-2 text-left">Age</th>
-                    )}
-                    {columns.gender && (
-                      <th className="px-4 py-2 text-left">Gender</th>
-                    )}
-                    {columns.lastActive && (
-                      <th className="px-4 py-2 text-left">Last Active</th>
-                    )}
-                    {columns.dateRegistered && (
-                      <th className="px-4 py-2 text-left">Date Registered</th>
-                    )}
-                    {columns.lastVideo && (
-                      <th className="px-4 py-2 text-left">Last Video</th>
-                    )}
-                  </tr>
-                </thead>
-                <tbody className="block overflow-y-auto bg-gray-800 scrollbar-thin max-h-80">
-                  {visibleData.map((row, index) => (
-                    <tr key={index} className="flex w-full hover:bg-gray-700">
-                      {columns.id && (
-                        <td className="w-24 px-4 py-2">{row.id}</td>
-                      )}
-                      {columns.firstName && (
-                        <td className="w-32 px-4 py-2">{row.firstName}</td>
-                      )}
-                      {columns.lastName && (
-                        <td className="w-32 px-4 py-2">{row.lastName}</td>
-                      )}
-                      {columns.age && (
-                        <td className="w-16 px-4 py-2">{row.age}</td>
-                      )}
-                      {columns.gender && (
-                        <td className="w-24 px-4 py-2">{row.gender}</td>
-                      )}
-                      {columns.lastActive && (
-                        <td className="px-4 py-2 w-36">{row.lastActive}</td>
-                      )}
-                      {columns.dateRegistered && (
-                        <td className="px-4 py-2 w-36">{row.dateRegistered}</td>
-                      )}
-                      {columns.lastVideo && (
-                        <td className="w-48 px-4 py-2">{row.lastVideo}</td>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-between mt-4">
-            <div className="flex items-center">
-              <label>Rows per page:</label>
-              <select
-                value={rowsPerPage}
-                onChange={handleRowsPerPageChange}
-                className="ml-2 border rounded"
-              >
-                {[5, 10, 15, 20, 25].map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-2 py-1 border rounded"
-              >
-                {"<"}
-              </button>
-              <span className="mx-2">
-                {currentPage} of {Math.ceil(data.length / rowsPerPage)}
-              </span>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === Math.ceil(data.length / rowsPerPage)}
-                className="px-2 py-1 border rounded"
-              >
-                {">"}
-              </button>
-            </div>
-          </div>
+          <DataTable columns={columns} data={data} />
         </div>
+
         <Footer />
       </section>
     </>
