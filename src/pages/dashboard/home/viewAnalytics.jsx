@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegEdit, FaEye } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
+import { homeTabs } from "@utils";
 import { VideoImg } from "@assets";
 
 const currentVideos = [
@@ -80,7 +81,7 @@ const generateObjectId = () => {
 };
 
 export function ViewAnalytics() {
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [activeTab, setActiveTab] = useState("Analytics");
   const navigate = useNavigate();
 
   const columns = ["ID", "Lesson", "Progress", "Started", "Finished", "Date"];
@@ -113,7 +114,11 @@ export function ViewAnalytics() {
       <Navbar title="Analytics" />
       <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Analytics */}
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabNavigation
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          tabs={homeTabs}
+        />
 
         {/* Breadcrumbs */}
         <div className="flex items-center justify-start mt-4 mb-8 gap-x-3">

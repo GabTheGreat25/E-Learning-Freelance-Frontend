@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
+import { homeTabs } from "@utils";
 import { GradientVideoImg } from "@assets";
 
 const generateObjectId = () => {
@@ -19,7 +20,7 @@ const generateObjectId = () => {
 
 export function Analytics() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [activeTab, setActiveTab] = useState("Analytics");
 
   const columns = [
     "ID",
@@ -52,7 +53,11 @@ export function Analytics() {
       <Navbar title="Home" />
       <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Analytics */}
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabNavigation
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          tabs={homeTabs}
+        />
 
         {/* First Button */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">

@@ -10,6 +10,9 @@ import {
   Home,
   Analytics,
   ViewAnalytics,
+  Courses,
+  Videos,
+  Promotions,
   Setting,
   Login,
   ForgotPassword,
@@ -49,6 +52,9 @@ export default function App() {
                   <Route index element={<Home />} />
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="analytics/:id" element={<ViewAnalytics />} />
+                  <Route path="courses" element={<Courses />} />
+                  <Route path="promotions" element={<Promotions />} />
+                  <Route path="videos" element={<Videos />} />
                   <Route path="settings" element={<Setting />} />
                   <Route index path="test" element={<Test />} />
                 </Route>

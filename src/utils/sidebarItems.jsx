@@ -15,7 +15,6 @@ export function SidebarItems() {
       label: "Home",
       icon: images.HomeImg,
       onClick: () => {
-        console.log("Navigating to Home");
         navigate("/dashboard");
       },
     },
@@ -24,8 +23,7 @@ export function SidebarItems() {
       label: "Content",
       icon: images.TaskSquareImg,
       onClick: () => {
-        console.log("Navigating to Content");
-        // navigate("/content");
+        navigate("/dashboard/videos");
       },
     },
     {

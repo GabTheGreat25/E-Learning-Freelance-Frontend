@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaEye, FaArrowLeft, FaArrowRight, FaRegEdit } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation } from "@components";
+import { homeTabs } from "@utils";
 import {
   VideoImg,
   GradientVideoImg,
@@ -222,7 +223,11 @@ export function Home() {
       <Navbar title="Home" />
       <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Overview */}
-        <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+        <TabNavigation
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          tabs={homeTabs}
+        />
 
         {/* First Button */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">
