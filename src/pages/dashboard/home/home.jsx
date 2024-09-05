@@ -316,7 +316,7 @@ export function Home() {
               {visibleCourses.map((course, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 p-6 rounded-lg shadow-lg xl:max-w-xs max-w-[17.5rem] bg-dark-secondary text-light-default"
+                  className="flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default"
                 >
                   <h1 className="text-xl font-semibold">{course.title}</h1>
                   <p className="text-sm text-light-secondary">
