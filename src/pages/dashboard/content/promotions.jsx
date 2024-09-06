@@ -23,7 +23,7 @@ export function Promotions() {
             alt="PromotionUploadImg"
             className="object-cover"
           />
-          <h1 className="pb-2 text-4xl">Create a Promotion</h1>
+          <h1 className="pb-2 text-4xl pt-9">Create a Promotion</h1>
           <p className="pb-6 text-light-secondary">
             Click on “Add Promotion” to begin
           </p>
