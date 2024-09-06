@@ -25,6 +25,7 @@ export function RegisterProfile() {
   const [registerUser, { isLoading }] = hooks.useRegisterUserMutation();
 
   const profileForm = useSelector((state) => state.profile.formData);
+  console.log(profileForm);
   const form = useSelector((state) => state.location.formData);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -39,6 +40,10 @@ export function RegisterProfile() {
     profileForm.province || null,
   );
   const [selectedCity, setSelectedCity] = useState(profileForm.city || null);
+  const [customProvince, setCustomProvince] = useState(
+    profileForm?.province?.value || "",
+  );
+  const [customCity, setCustomCity] = useState(profileForm?.city?.value || "");
   const [countryOptions, setCountryOptions] = useState([]);
   const [provinceOptions, setProvinceOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
@@ -67,6 +72,9 @@ export function RegisterProfile() {
       setSelectedCity(null);
       formik.setFieldValue("province", null);
       formik.setFieldValue("city", null);
+    } else {
+      setCustomProvince("");
+      setCustomCity("");
     }
   }, [selectedCountry]);
 
@@ -86,6 +94,8 @@ export function RegisterProfile() {
     if (cities.length === 0) {
       setSelectedCity(null);
       formik.setFieldValue("city", null);
+    } else {
+      setCustomCity("");
     }
   }, [selectedProvince, selectedCountry]);
 
@@ -115,8 +125,8 @@ export function RegisterProfile() {
         ).toISOString(),
         address: values.address,
         country: values.country.label,
-        province: values.province.label,
-        city: values.city.label,
+        province: values.province ? values.province.label : customProvince,
+        city: values.city ? values.city.label : customCity,
         gender: values.gender.value,
         role: values.role,
       };
@@ -355,22 +365,43 @@ export function RegisterProfile() {
                   >
                     Province <span className="text-red-600">*</span>
                   </label>
-                  <Select
-                    options={provinceOptions}
-                    value={selectedProvince}
-                    onChange={(option) => {
-                      setSelectedProvince(option);
-                      formik.setFieldValue("province", option || null);
-                    }}
-                    className={`w-full p-[.65rem] border rounded-md ${
-                      formik.errors.province && formik.touched.province
-                        ? "border-error-default"
-                        : "border-light-secondary"
-                    } focus:border-info-secondary focus:outline-none`}
-                    placeholder="Select a province"
-                    styles={SelectStyles()}
-                    isDisabled={!selectedCountry}
-                  />
+                  {provinceOptions.length > 0 ? (
+                    <Select
+                      options={provinceOptions}
+                      value={selectedProvince}
+                      onChange={(option) => {
+                        setSelectedProvince(option);
+                        formik.setFieldValue("province", option || null);
+                      }}
+                      className={`w-full p-[.65rem] border rounded-md ${
+                        formik.errors.province && formik.touched.province
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } focus:border-info-secondary focus:outline-none`}
+                      placeholder="Select a province"
+                      styles={SelectStyles()}
+                      isDisabled={!selectedCountry}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder="Enter your province"
+                      value={customProvince}
+                      onChange={(e) => {
+                        const customValue = e.target.value;
+                        setCustomProvince(customValue);
+                        formik.setFieldValue("province", {
+                          label: customValue,
+                          value: customValue,
+                        });
+                      }}
+                      className={`w-full p-4 ${
+                        formik.errors.province && formik.touched.province
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } capitalize border rounded-md text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
+                    />
+                  )}
                   {formik.errors.province && formik.touched.province && (
                     <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.province}
@@ -385,21 +416,43 @@ export function RegisterProfile() {
                   >
                     City <span className="text-red-600">*</span>
                   </label>
-                  <Select
-                    options={cityOptions}
-                    value={selectedCity}
-                    onChange={(option) =>
-                      formik.setFieldValue("city", option || null)
-                    }
-                    className={`w-full p-[.65rem] border rounded-md ${
-                      formik.errors.city && formik.touched.city
-                        ? "border-error-default"
-                        : "border-light-secondary"
-                    } focus:border-info-secondary focus:outline-none`}
-                    placeholder="Select a city"
-                    styles={SelectStyles()}
-                    isDisabled={!selectedProvince}
-                  />
+                  {cityOptions.length > 0 ? (
+                    <Select
+                      options={cityOptions}
+                      value={selectedCity}
+                      onChange={(option) => {
+                        setSelectedCity(option);
+                        formik.setFieldValue("city", option || null);
+                      }}
+                      className={`w-full p-[.65rem] border rounded-md ${
+                        formik.errors.city && formik.touched.city
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } focus:border-info-secondary focus:outline-none`}
+                      placeholder="Select a city"
+                      styles={SelectStyles()}
+                      isDisabled={!selectedProvince}
+                    />
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder="Enter your city"
+                      value={customCity}
+                      onChange={(e) => {
+                        const customValue = e.target.value;
+                        setCustomCity(customValue);
+                        formik.setFieldValue("city", {
+                          label: customValue,
+                          value: customValue,
+                        });
+                      }}
+                      className={`w-full p-4 ${
+                        formik.errors.city && formik.touched.city
+                          ? "border-error-default"
+                          : "border-light-secondary"
+                      } capitalize border rounded-md text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
+                    />
+                  )}
                   {formik.errors.city && formik.touched.city && (
                     <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.city}
