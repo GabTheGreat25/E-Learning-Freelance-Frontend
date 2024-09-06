@@ -82,13 +82,6 @@ const courses = [
     active: 10,
     imgSrc: VideoImg,
   },
-  {
-    title: "Success Course 11",
-    videos: 10,
-    views: 100,
-    active: 10,
-    imgSrc: VideoImg,
-  },
 ];
 
 const videos = [

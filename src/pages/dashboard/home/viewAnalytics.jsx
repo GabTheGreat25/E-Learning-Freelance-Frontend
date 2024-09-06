@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaRegEdit, FaEye } from "react-icons/fa";
+import { FaEye, FaArrowLeft, FaArrowRight, FaRegEdit } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { homeTabs } from "@utils";
@@ -9,7 +9,7 @@ import { VideoImg } from "@assets";
 const currentVideos = [
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -18,7 +18,79 @@ const currentVideos = [
   },
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -30,7 +102,7 @@ const currentVideos = [
 const doneVideos = [
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -39,7 +111,7 @@ const doneVideos = [
   },
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -48,7 +120,7 @@ const doneVideos = [
   },
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -57,7 +129,61 @@ const doneVideos = [
   },
   {
     title: "Things to master if you want to learn",
-    courseName: "Course Name",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
+    duration: "2 hr 1 min",
+    date: "Aug 18",
+    views: 100,
+    active: 50,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Things to master if you want to learn",
+    videoName: "Course Name",
     duration: "2 hr 1 min",
     date: "Aug 18",
     views: 100,
@@ -81,8 +207,18 @@ const generateObjectId = () => {
 };
 
 export function ViewAnalytics() {
-  const [activeTab, setActiveTab] = useState("Analytics");
   const navigate = useNavigate();
+
+  const [activeTab, setActiveTab] = useState("Analytics");
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [visibleCurrentVideos, setVisibleCurrentVideos] = useState([]);
+  const [currentVideosPerPage, setcurrentVideosPerPage] = useState(1);
+
+  const [doneVideoIndex, setDoneVideoIndex] = useState(0);
+  const [visibleDoneVideos, setVisibleDoneVideos] = useState([]);
+  const [doneVideosPerPage, setdoneVideosPerPage] = useState(1);
+
+  const containerRef = useRef(null);
 
   const columns = ["ID", "Lesson", "Progress", "Started", "Finished", "Date"];
 
@@ -95,7 +231,6 @@ export function ViewAnalytics() {
     Date: "Aug 10 , 2024",
   }));
 
-  const watchingVideos = currentVideos.slice(0, 2);
   const finishedVideos = doneVideos.slice(0, 4);
 
   const description =
@@ -107,6 +242,73 @@ export function ViewAnalytics() {
       return `${words.slice(0, wordLimit).join(" ")} ...`;
     }
     return text;
+  };
+
+  useEffect(() => {
+    const updateVideosVisibility = () => {
+      const containerWidth = containerRef.current?.offsetWidth || 0;
+      const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
+      const itemWidth = isSmallScreen ? 250 : 300;
+
+      const newcurrentVideosPerPage = Math.floor(containerWidth / itemWidth);
+      setcurrentVideosPerPage(newcurrentVideosPerPage);
+      setVisibleCurrentVideos(
+        currentVideos.slice(
+          currentVideoIndex,
+          currentVideoIndex + newcurrentVideosPerPage,
+        ),
+      );
+    };
+
+    updateVideosVisibility();
+
+    window.addEventListener("resize", updateVideosVisibility);
+
+    return () => window.removeEventListener("resize", updateVideosVisibility);
+  }, [currentVideoIndex]);
+
+  const handleCurrentNext = () => {
+    if (currentVideoIndex + currentVideosPerPage < currentVideos.length) {
+      setCurrentVideoIndex(currentVideoIndex + currentVideosPerPage);
+    }
+  };
+
+  const handleCurrentBack = () => {
+    if (currentVideoIndex > 0) {
+      setCurrentVideoIndex(currentVideoIndex - currentVideosPerPage);
+    }
+  };
+
+  useEffect(() => {
+    const updateVideosVisibility = () => {
+      const containerWidth = containerRef.current?.offsetWidth || 0;
+      const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
+      const itemWidth = isSmallScreen ? 250 : 300;
+
+      const newdoneVideosPerPage = Math.floor(containerWidth / itemWidth);
+      setdoneVideosPerPage(newdoneVideosPerPage);
+      setVisibleDoneVideos(
+        doneVideos.slice(doneVideoIndex, doneVideoIndex + newdoneVideosPerPage),
+      );
+    };
+
+    updateVideosVisibility();
+
+    window.addEventListener("resize", updateVideosVisibility);
+
+    return () => window.removeEventListener("resize", updateVideosVisibility);
+  }, [doneVideoIndex]);
+
+  const handleDoneNext = () => {
+    if (doneVideoIndex + doneVideosPerPage < doneVideos.length) {
+      setDoneVideoIndex(doneVideoIndex + doneVideosPerPage);
+    }
+  };
+
+  const handleDoneBack = () => {
+    if (doneVideoIndex > 0) {
+      setDoneVideoIndex(doneVideoIndex - doneVideosPerPage);
+    }
   };
 
   return (
@@ -142,98 +344,144 @@ export function ViewAnalytics() {
             </p>
             <p className="text-sm text-light-secondary">Monthly Member</p>
           </div>
-          <div></div>
+
           {/* Currently Watching */}
           <div className="w-full h-full">
             <h1 className="text-3xl">Currently Watching</h1>
-            <div className="grid items-center justify-center max-w-2xl gap-6 pt-6 md:grid-flow-col-dense">
-              {watchingVideos.map((video, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col p-4 space-y-4 rounded-lg shadow-lg text-light-default"
-                >
-                  <div className="relative">
-                    <img
-                      src={video.imgSrc}
-                      alt="Video thumbnail"
-                      className="object-cover w-full h-48 rounded-lg"
-                    />
-                    <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
-                      <FaRegEdit className="text-light-default" /> Edit
-                    </button>
-                  </div>
-                  <div>
-                    <h1 className="text-lg font-semibold leading-tight">
-                      {truncateText(video.title, 6)}{" "}
-                    </h1>
+            <div
+              ref={containerRef}
+              className={`relative flex flex-col ${
+                visibleCurrentVideos.length <= 3
+                  ? "md:items-start items-center"
+                  : "items-center"
+              } justify-center xl:px-0 lg:px-6 px-2 md:px-12`}
+            >
+              <div className="flex gap-4 pt-6 pb-2">
+                {visibleCurrentVideos.map((video, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col p-4 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] rounded-lg shadow-lg text-light-default"
+                  >
+                    <div className="relative">
+                      <img
+                        src={video.imgSrc}
+                        alt="Video thumbnail"
+                        className="object-cover w-full h-48 rounded-lg"
+                      />
+                      <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
+                        <FaRegEdit className="text-light-default" /> Edit
+                      </button>
+                    </div>
+                    <div>
+                      <h1 className="text-lg font-semibold leading-tight">
+                        {truncateText(video.title, 6)}{" "}
+                      </h1>
+                      <p className="text-sm text-light-secondary">
+                        {video.videoName} <br />
+                        {video.duration}{" "}
+                        <span className="float-right">{video.date}</span>
+                      </p>
+                    </div>
                     <p className="text-sm text-light-secondary">
-                      {video.courseName} <br />
-                      {video.duration}{" "}
-                      <span className="float-right">{video.date}</span>
+                      {truncateText(description, 22)}{" "}
                     </p>
-                  </div>
-                  <p className="text-sm text-light-secondary">
-                    {truncateText(description, 22)}{" "}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-light-secondary">
-                    <div className="flex items-center gap-2">
-                      <FaEye className="text-light-secondary" />
-                      <span>{video.views} Views</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <HiOutlineChartBar className="text-light-secondary" />
-                      <span>{video.active} Active Viewers</span>
+                    <div className="flex items-center justify-between text-xs text-light-secondary">
+                      <div className="flex items-center gap-2">
+                        <FaEye className="text-light-secondary" />
+                        <span>{video.views} Views</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <HiOutlineChartBar className="text-light-secondary" />
+                        <span>{video.active} Active Viewers</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
+              <button
+                className={`bg-dark-secondary p-2 rounded-full`}
+                onClick={handleCurrentBack}
+              >
+                <FaArrowLeft className="text-xl text-light-default" />
+              </button>
+              <button
+                className={`bg-dark-secondary p-2 rounded-full`}
+                onClick={handleCurrentNext}
+              >
+                <FaArrowRight className="text-xl text-light-default" />
+              </button>
             </div>
           </div>
 
           {/* Finished Videos */}
           <div className="w-full h-full pt-16">
             <h1 className="text-3xl">Finished Videos</h1>
-            <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-              {finishedVideos.map((video, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col p-4 space-y-4 rounded-lg shadow-lg text-light-default"
-                >
-                  <div className="relative">
-                    <img
-                      src={video.imgSrc}
-                      alt="Video thumbnail"
-                      className="object-cover w-full h-48 rounded-lg"
-                    />
-                    <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
-                      <FaRegEdit className="text-light-default" /> Edit
-                    </button>
-                  </div>
-                  <div>
-                    <h1 className="text-lg font-semibold leading-tight">
-                      {truncateText(video.title, 6)}{" "}
-                    </h1>
+            <div
+              ref={containerRef}
+              className={`relative flex flex-col ${
+                visibleDoneVideos.length <= 3
+                  ? "md:items-start items-center"
+                  : "items-center"
+              } justify-center xl:px-0 lg:px-6 px-2 md:px-12`}
+            >
+              <div className="flex gap-4 pt-6 pb-2">
+                {visibleDoneVideos.map((video, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col p-4 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] rounded-lg shadow-lg text-light-default"
+                  >
+                    <div className="relative">
+                      <img
+                        src={video.imgSrc}
+                        alt="Video thumbnail"
+                        className="object-cover w-full h-48 rounded-lg"
+                      />
+                      <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
+                        <FaRegEdit className="text-light-default" /> Edit
+                      </button>
+                    </div>
+                    <div>
+                      <h1 className="text-lg font-semibold leading-tight">
+                        {truncateText(video.title, 6)}{" "}
+                      </h1>
+                      <p className="text-sm text-light-secondary">
+                        {video.videoName} <br />
+                        {video.duration}{" "}
+                        <span className="float-right">{video.date}</span>
+                      </p>
+                    </div>
                     <p className="text-sm text-light-secondary">
-                      {video.courseName} <br />
-                      {video.duration}{" "}
-                      <span className="float-right">{video.date}</span>
+                      {truncateText(description, 22)}{" "}
                     </p>
-                  </div>
-                  <p className="text-sm text-light-secondary">
-                    {truncateText(description, 22)}{" "}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-light-secondary">
-                    <div className="flex items-center gap-2">
-                      <FaEye className="text-light-secondary" />
-                      <span>{video.views} Views</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <HiOutlineChartBar className="text-light-secondary" />
-                      <span>{video.active} Active Viewers</span>
+                    <div className="flex items-center justify-between text-xs text-light-secondary">
+                      <div className="flex items-center gap-2">
+                        <FaEye className="text-light-secondary" />
+                        <span>{video.views} Views</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <HiOutlineChartBar className="text-light-secondary" />
+                        <span>{video.active} Active Viewers</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+            </div>
+            <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
+              <button
+                className={`bg-dark-secondary p-2 rounded-full`}
+                onClick={handleDoneBack}
+              >
+                <FaArrowLeft className="text-xl text-light-default" />
+              </button>
+              <button
+                className={`bg-dark-secondary p-2 rounded-full`}
+                onClick={handleDoneNext}
+              >
+                <FaArrowRight className="text-xl text-light-default" />
+              </button>
             </div>
           </div>
 

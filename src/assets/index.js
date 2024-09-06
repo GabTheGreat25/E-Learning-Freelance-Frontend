@@ -20,3 +20,8 @@ export { default as GradientVideoImg } from "../assets/gradient-video.png";
 export { default as GradientHomeImg } from "../assets/gradient-home.png";
 export { default as GradientNotificationImg } from "../assets/gradient-notification.png";
 export { default as GradientTransactionImg } from "../assets/gradient-transaction.png";
+export { default as VideoUploadImg } from "../assets/video-upload.png";
+export { default as AddVideoImg } from "../assets/video-add.png";
+export { default as DocumentFilterImg } from "../assets/document-filter.png";
+export { default as CourseUploadImg } from "../assets/course-upload.png";
+export { default as PromotionUploadImg } from "../assets/promotion-upload.png";
