@@ -9,7 +9,7 @@ import Select from "react-select";
 import { useSelector } from "react-redux";
 import { FadeLoader } from "react-spinners";
 import { SelectStyles, PasswordVisibility, Toast } from "@utils";
-import { Navbar } from "@components";
+import { Navbar, Footer } from "@components";
 import { CalendarImg, UploadImg } from "@assets";
 import { updateProfileValidation, updatePasswordValidation } from "@validators";
 import { hooks } from "@api";
@@ -300,7 +300,7 @@ export function Setting() {
                       formik.errors.avatar && formik.touched.avatar
                         ? "border-error-default"
                         : "border-light-secondary"
-                    }`}
+                    } focus:border-info-secondary focus:outline-none`}
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                   >
@@ -328,7 +328,7 @@ export function Setting() {
                         </p>
                       </div>
                       {formik.errors.avatar && formik.touched.avatar && (
-                        <p className="pt-2 text-error-default">
+                        <p className="mt-2 text-lg font-semibold text-error-default">
                           {formik.errors.avatar}
                         </p>
                       )}
@@ -368,7 +368,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.firstname && formik.touched.firstname && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.firstname}
                     </p>
                   )}
@@ -403,7 +403,7 @@ export function Setting() {
                   />
                   {formik.errors.mobileNumber &&
                     formik.touched.mobileNumber && (
-                      <p className="pt-2 text-error-default">
+                      <p className="mt-2 text-lg font-semibold text-error-default">
                         {formik.errors.mobileNumber}
                       </p>
                     )}
@@ -432,7 +432,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.lastname && formik.touched.lastname && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.lastname}
                     </p>
                   )}
@@ -485,7 +485,7 @@ export function Setting() {
                     </div>
                   )}
                   {formik.errors.birthDate && formik.touched.birthDate && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.birthDate}
                     </p>
                   )}
@@ -514,7 +514,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.email}
                     </p>
                   )}
@@ -541,7 +541,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.address && formik.touched.address && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.address}
                     </p>
                   )}
@@ -574,7 +574,7 @@ export function Setting() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.gender && formik.touched.gender && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.gender}
                     </p>
                   )}
@@ -601,7 +601,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.bio && formik.touched.bio && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.bio}
                     </p>
                   )}
@@ -637,7 +637,7 @@ export function Setting() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.country && formik.touched.country && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.country}
                     </p>
                   )}
@@ -669,7 +669,7 @@ export function Setting() {
                     isDisabled={!selectedCountry}
                   />
                   {formik.errors.province && formik.touched.province && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.province}
                     </p>
                   )}
@@ -700,7 +700,7 @@ export function Setting() {
                     isDisabled={!selectedProvince}
                   />
                   {formik.errors.city && formik.touched.city && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.city}
                     </p>
                   )}
@@ -752,37 +752,14 @@ export function Setting() {
                   </div>
                   {formikPassword.errors.password &&
                     formikPassword.touched.password && (
-                      <p className="pt-2 text-error-default">
+                      <p className="mt-2 text-lg font-semibold text-error-default">
                         {formikPassword.errors.password}
                       </p>
                     )}
                 </div>
               </div>
             </form>
-
-            <div className="flex items-center justify-center pt-12 text-light-default 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8">
-              <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </div>
-              <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </div>
-            </div>
-            <div className="pt-8 text-base text-center text-light-secondary">
-              <p>2024 Copyright</p>
-            </div>
+            <Footer />
           </section>
         </>
       )}

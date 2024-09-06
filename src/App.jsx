@@ -7,13 +7,6 @@ import {
 } from "react-router-dom";
 import {
   Test,
-  Home,
-  Analytics,
-  ViewAnalytics,
-  Courses,
-  Videos,
-  Promotions,
-  Setting,
   Login,
   ForgotPassword,
   SendResetLink,
@@ -22,6 +15,16 @@ import {
   RegisterProfile,
   Verification,
   Verified,
+  Home,
+  Analytics,
+  ViewAnalytics,
+  Courses,
+  AddCourses,
+  Videos,
+  AddVideos,
+  Promotions,
+  AddPromotions,
+  Setting,
 } from "@/pages";
 import { AdminLayout, HomeLayout, NotFound, RootLayout } from "@/layouts";
 import { PrivateRoute, PublicRoute } from "@/components";
@@ -53,10 +56,13 @@ export default function App() {
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="analytics/:id" element={<ViewAnalytics />} />
                   <Route path="courses" element={<Courses />} />
+                  <Route path="courses/create" element={<AddCourses />} />
                   <Route path="promotions" element={<Promotions />} />
+                  <Route path="promotions/create" element={<AddPromotions />} />
                   <Route path="videos" element={<Videos />} />
+                  <Route path="videos/create" element={<AddVideos />} />
                   <Route path="settings" element={<Setting />} />
-                  <Route index path="test" element={<Test />} />
+                  <Route path="test" element={<Test />} />
                 </Route>
               </Route>
               {/* 404 */}

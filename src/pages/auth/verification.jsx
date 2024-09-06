@@ -116,13 +116,13 @@ export function Verification() {
                       formik.errors.otp && formik.touched.otp
                         ? "border-error-default"
                         : "border-light-secondary"
-                    } text-light-default placeholder-light-secondary`}
+                    } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.otp}
                   />
                   {formik.errors.otp && formik.touched.otp && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.otp}
                     </p>
                   )}

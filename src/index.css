@@ -83,3 +83,7 @@ input[type="checkbox"].peer:checked::before {
 .custom-datepicker-popper .react-datepicker__year-dropdown {
   @apply w-[200px] !important;
 }
+
+.Toastify {
+  @apply duration-100 ease-in-out !important;
+}

@@ -335,6 +335,7 @@ export function ViewAnalytics() {
             Juan Dela Cruz
           </span>
         </div>
+
         <div>
           {/* Student */}
           <div className="pb-12">

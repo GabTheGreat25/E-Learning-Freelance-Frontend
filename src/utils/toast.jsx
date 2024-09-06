@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const defaultToastProps = {
@@ -10,6 +10,7 @@ const defaultToastProps = {
   draggable: false,
   closeOnClick: true,
   pauseOnFocusLoss: true,
+  transition: Slide,
 };
 
 export const Toast = (type, message, options = {}) => {

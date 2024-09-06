@@ -16,23 +16,32 @@ import { SelectStyles, Toast } from "@utils";
 import { registerProfileValidation } from "@validators";
 import { TOAST } from "@constants";
 import { hooks } from "@api";
-import { locationActions } from "@hooks";
+import { locationActions, profileActions } from "@hooks";
 
 export function RegisterProfile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [registerUser, { isLoading }] = hooks.useRegisterUserMutation();
+
+  const profileForm = useSelector((state) => state.profile.formData);
   const form = useSelector((state) => state.location.formData);
 
   const [isFocused, setIsFocused] = useState(false);
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState(
+    profileForm.birthDate ? new Date(profileForm.birthDate) : null,
+  );
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(
+    profileForm.country || null,
+  );
+  const [selectedProvince, setSelectedProvince] = useState(
+    profileForm.province || null,
+  );
+  const [selectedCity, setSelectedCity] = useState(profileForm.city || null);
   const [countryOptions, setCountryOptions] = useState([]);
-  const [cityOptions, setCityOptions] = useState([]);
   const [provinceOptions, setProvinceOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
 
   useEffect(() => {
     const countries = Country.getAllCountries();
@@ -50,11 +59,15 @@ export function RegisterProfile() {
           value: province.isoCode,
         }))
       : [];
+
     setProvinceOptions(provinces);
-    setSelectedProvince(null);
-    setCityOptions([]);
-    formik.setFieldValue("province", null);
-    formik.setFieldValue("city", null);
+
+    if (provinces.length === 0) {
+      setSelectedProvince(null);
+      setSelectedCity(null);
+      formik.setFieldValue("province", null);
+      formik.setFieldValue("city", null);
+    }
   }, [selectedCountry]);
 
   useEffect(() => {
@@ -67,22 +80,24 @@ export function RegisterProfile() {
           value: city.name,
         }))
       : [];
+
     setCityOptions(cities);
-    formik.setFieldValue(
-      "city",
-      cities.length === 0 ? null : formik.values.city,
-    );
+
+    if (cities.length === 0) {
+      setSelectedCity(null);
+      formik.setFieldValue("city", null);
+    }
   }, [selectedProvince, selectedCountry]);
 
   const formik = useFormik({
     initialValues: {
-      mobileNumber: "",
-      birthDate: "",
-      address: "",
-      country: null,
-      province: null,
-      city: null,
-      gender: null,
+      mobileNumber: profileForm.mobileNumber || "",
+      birthDate: profileForm.birthDate || "",
+      address: profileForm.address || "",
+      country: profileForm.country || null,
+      province: profileForm.province || null,
+      city: profileForm.city || null,
+      gender: profileForm.gender || null,
       role: "admin",
     },
     validationSchema: registerProfileValidation,
@@ -112,6 +127,7 @@ export function RegisterProfile() {
             Toast(TOAST.SUCCESS, res.message);
             navigate("/verification");
             dispatch(locationActions.clearFormData());
+            dispatch(profileActions.clearProfileData(formData));
           } else
             Toast(
               TOAST.ERROR,
@@ -144,7 +160,16 @@ export function RegisterProfile() {
           <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 left-0 p-8 cursor-pointer">
               <div
-                onClick={() => navigate("/register")}
+                onClick={() => {
+                  const formikValues = {
+                    ...formik.values,
+                    birthDate: formik.values.birthDate
+                      ? new Date(formik.values.birthDate).toISOString()
+                      : null,
+                  };
+                  dispatch(profileActions.updateProfileData(formikValues));
+                  navigate("/register");
+                }}
                 className="grid grid-cols-[50%_50%] items-end justify-center"
               >
                 <FaChevronLeft size={30} />
@@ -204,7 +229,7 @@ export function RegisterProfile() {
                   />
                   {formik.errors.mobileNumber &&
                     formik.touched.mobileNumber && (
-                      <p className="pt-2 text-error-default">
+                      <p className="mt-2 text-lg font-semibold text-error-default">
                         {formik.errors.mobileNumber}
                       </p>
                     )}
@@ -256,7 +281,7 @@ export function RegisterProfile() {
                     </div>
                   )}
                   {formik.errors.birthDate && formik.touched.birthDate && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.birthDate}
                     </p>
                   )}
@@ -288,7 +313,7 @@ export function RegisterProfile() {
                   />
 
                   {formik.errors.gender && formik.touched.gender && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.gender}
                     </p>
                   )}
@@ -307,15 +332,6 @@ export function RegisterProfile() {
                     onChange={(option) => {
                       setSelectedCountry(option);
                       formik.setFieldValue("country", option || null);
-                      option &&
-                      State.getStatesOfCountry(option.value).length === 0
-                        ? (setSelectedProvince(null),
-                          setCityOptions([]),
-                          formik.setFieldValue("province", null),
-                          formik.setFieldValue("city", null))
-                        : (setSelectedProvince(null),
-                          formik.setFieldValue("province", null),
-                          formik.setFieldValue("city", null));
                     }}
                     className={`w-full p-[.65rem] border rounded-md ${
                       formik.errors.country && formik.touched.country
@@ -326,7 +342,7 @@ export function RegisterProfile() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.country && formik.touched.country && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.country}
                     </p>
                   )}
@@ -341,7 +357,7 @@ export function RegisterProfile() {
                   </label>
                   <Select
                     options={provinceOptions}
-                    value={formik.values.province}
+                    value={selectedProvince}
                     onChange={(option) => {
                       setSelectedProvince(option);
                       formik.setFieldValue("province", option || null);
@@ -356,7 +372,7 @@ export function RegisterProfile() {
                     isDisabled={!selectedCountry}
                   />
                   {formik.errors.province && formik.touched.province && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.province}
                     </p>
                   )}
@@ -371,7 +387,7 @@ export function RegisterProfile() {
                   </label>
                   <Select
                     options={cityOptions}
-                    value={formik.values.city}
+                    value={selectedCity}
                     onChange={(option) =>
                       formik.setFieldValue("city", option || null)
                     }
@@ -385,7 +401,7 @@ export function RegisterProfile() {
                     isDisabled={!selectedProvince}
                   />
                   {formik.errors.city && formik.touched.city && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.city}
                     </p>
                   )}
@@ -411,7 +427,7 @@ export function RegisterProfile() {
                     } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                   />
                   {formik.errors.address && formik.touched.address && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.address}
                     </p>
                   )}

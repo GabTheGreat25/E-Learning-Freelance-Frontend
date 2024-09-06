@@ -78,18 +78,18 @@ export function Register() {
               <input
                 type="text"
                 id="firstname"
-                placeholder="Enter Your Firstname"
+                placeholder="Enter your first name"
                 className={`w-full p-4 border rounded-md ${
                   formik.errors.firstname && formik.touched.firstname
                     ? "border-error-default"
                     : "border-light-secondary"
-                } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
+                } text-light-default capitalize placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.firstname}
               />
               {formik.errors.firstname && formik.touched.firstname && (
-                <p className="pt-2 text-error-default">
+                <p className="mt-2 text-lg font-semibold text-error-default">
                   {formik.errors.firstname}
                 </p>
               )}
@@ -104,18 +104,18 @@ export function Register() {
               <input
                 type="text"
                 id="lastname"
-                placeholder="Enter Your Lastname"
+                placeholder="Enter your last name"
                 className={`w-full p-4 border rounded-md ${
                   formik.errors.lastname && formik.touched.lastname
                     ? "border-error-default"
                     : "border-light-secondary"
-                } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
+                } text-light-default capitalize placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.lastname}
               />
               {formik.errors.lastname && formik.touched.lastname && (
-                <p className="pt-2 text-error-default">
+                <p className="mt-2 text-lg font-semibold text-error-default">
                   {formik.errors.lastname}
                 </p>
               )}
@@ -141,7 +141,9 @@ export function Register() {
                 value={formik.values.email}
               />
               {formik.errors.email && formik.touched.email && (
-                <p className="pt-2 text-error-default">{formik.errors.email}</p>
+                <p className="mt-2 text-lg font-semibold text-error-default">
+                  {formik.errors.email}
+                </p>
               )}
             </div>
             <div className="mb-4">
@@ -174,7 +176,7 @@ export function Register() {
                 </button>
               </div>
               {formik.errors.password && formik.touched.password && (
-                <p className="mt-2 text-error-default">
+                <p className="mt-2 text-lg font-semibold text-error-default">
                   {formik.errors.password}
                 </p>
               )}
@@ -198,7 +200,9 @@ export function Register() {
               </span>
             </label>
             {termsError && (
-              <p className="pt-2 text-error-default">{termsError}</p>
+              <p className="mt-2 text-lg font-semibold text-error-default">
+                {termsError}
+              </p>
             )}
             <button
               type="submit"

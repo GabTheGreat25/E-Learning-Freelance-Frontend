@@ -85,7 +85,7 @@ export function Login() {
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="pt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.email}
                     </p>
                   )}
@@ -120,7 +120,7 @@ export function Login() {
                     </button>
                   </div>
                   {formik.errors.password && formik.touched.password && (
-                    <p className="mt-2 text-error-default">
+                    <p className="mt-2 text-lg font-semibold text-error-default">
                       {formik.errors.password}
                     </p>
                   )}

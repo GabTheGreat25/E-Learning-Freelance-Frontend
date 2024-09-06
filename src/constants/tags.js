@@ -4,4 +4,5 @@ export const TAGS = {
   LOCATION: "location",
   USER: "User",
   CAROUSEL: "Carousel",
+  PROFILE: "Profile",
 };
