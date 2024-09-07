@@ -165,6 +165,8 @@ export function Home() {
   const [visibleCourses, setVisibleCourses] = useState([]);
   const [coursesPerPage, setCoursesPerPage] = useState(1);
   const limitedVideos = videos.slice(0, 8);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
+  const [isBackDisabled, setIsBackDisabled] = useState(true);
 
   const containerRef = useRef(null);
 
@@ -190,24 +192,27 @@ export function Home() {
       setVisibleCourses(
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
+
+      // Disable next if at the end, disable back if at the start
+      setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
+      setIsBackDisabled(currentIndex === 0);
     };
 
     updateCoursesVisibility();
-
     window.addEventListener("resize", updateCoursesVisibility);
 
     return () => window.removeEventListener("resize", updateCoursesVisibility);
-  }, [currentIndex]);
+  }, [currentIndex, coursesPerPage]);
 
   const handleNext = () => {
-    if (currentIndex + coursesPerPage < courses.length) {
-      setCurrentIndex(currentIndex + coursesPerPage);
+    if (currentIndex < courses.length - 1) {
+      setCurrentIndex(currentIndex + 1);
     }
   };
 
   const handleBack = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - coursesPerPage);
+      setCurrentIndex(currentIndex - 1);
     }
   };
 
@@ -345,14 +350,20 @@ export function Home() {
 
           <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
             <button
-              className={`bg-dark-secondary p-2 rounded-full`}
+              className={`bg-dark-secondary p-2 rounded-full ${
+                isBackDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={handleBack}
+              disabled={isBackDisabled}
             >
               <FaArrowLeft className="text-xl text-light-default" />
             </button>
             <button
-              className={`bg-dark-secondary p-2 rounded-full`}
+              className={`bg-dark-secondary p-2 rounded-full ${
+                isNextDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={handleNext}
+              disabled={isNextDisabled}
             >
               <FaArrowRight className="text-xl text-light-default" />
             </button>
