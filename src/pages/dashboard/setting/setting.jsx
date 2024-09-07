@@ -175,7 +175,10 @@ export function Setting() {
   }, [data, countryOptions]);
 
   useEffect(() => {
+    console.log("Running country effect");
+
     if (selectedCountry) {
+      // Fetch provinces based on selected country
       const provinces = State.getStatesOfCountry(selectedCountry.value).map(
         (province) => ({
           label: province.name,
@@ -190,27 +193,70 @@ export function Setting() {
 
       if (provinces.length > 0) {
         setProvinceOptions(provinces);
+
+        // Check if user has a saved province
+        if (data?.user?.province) {
+          const defaultProvince = provinces.find(
+            (option) => option.label === data.user.province,
+          );
+
+          if (defaultProvince) {
+            setSelectedProvince(defaultProvince);
+            formik.setFieldValue("province", defaultProvince);
+
+            // Fetch cities for the selected province
+            const cities = City.getCitiesOfState(
+              selectedCountry.value,
+              defaultProvince.value,
+            ).map((city) => ({
+              label: city.name,
+              value: city.name,
+            }));
+
+            // Check if the user's saved city exists in the fetched city list
+            const defaultCity = cities.find(
+              (city) => city.label === data?.user?.city,
+            );
+
+            if (cities.length > 0) {
+              setCityOptions(cities);
+              if (defaultCity) {
+                formik.setFieldValue("city", defaultCity);
+              } else {
+                formik.setFieldValue("city", "");
+              }
+            } else {
+              setCityOptions([]);
+              formik.setFieldValue("city", "");
+            }
+          } else {
+            setCityOptions([]);
+            formik.setFieldValue("city", "");
+          }
+        } else {
+          setCityOptions([]);
+          formik.setFieldValue("city", "");
+        }
       } else {
         setProvinceOptions([]);
+        setCityOptions([]);
         formik.setFieldValue("province", data?.user?.province || "");
+        formik.setFieldValue("city", data?.user?.city || "");
       }
     } else {
       setProvinceOptions([]);
+      setCityOptions([]);
       formik.setFieldValue("province", "");
       formik.setFieldValue("city", "");
     }
   }, [selectedCountry, data]);
 
   useEffect(() => {
-    if (!formik.values.province) {
-      formik.setFieldValue("city", "");
-    }
-  }, [formik.values.province]);
+    console.log("Running province effect");
 
-  useEffect(() => {
     if (!formik.values.province) {
-      formik.setFieldValue("city", "");
       setCityOptions([]);
+      formik.setFieldValue("city", "");
     } else if (selectedProvince) {
       const cities = City.getCitiesOfState(
         selectedCountry.value,
@@ -220,11 +266,25 @@ export function Setting() {
         value: city.name,
       }));
 
-      formik.setFieldValue("city", "");
-      setCityOptions(cities);
+      if (cities.length > 0) {
+        setCityOptions(cities);
+
+        // Check if the user's saved city is still valid after province change
+        const defaultCity = cities.find(
+          (city) => city.label === data?.user?.city,
+        );
+        if (defaultCity) {
+          formik.setFieldValue("city", defaultCity);
+        } else {
+          formik.setFieldValue("city", "");
+        }
+      } else {
+        setCityOptions([]);
+        formik.setFieldValue("city", "");
+      }
     } else {
       setCityOptions([]);
-      formik.setFieldValue("city", data?.user?.city || "");
+      formik.setFieldValue("city", "");
     }
   }, [formik.values.province, selectedProvince, selectedCountry, data]);
 
