@@ -183,11 +183,6 @@ export function Setting() {
         }),
       );
 
-      formik.setFieldValue("province", "");
-      formik.setFieldValue("city", "");
-      setSelectedProvince(null);
-      setCityOptions([]);
-
       if (provinces.length > 0) {
         setProvinceOptions(provinces);
 
@@ -213,6 +208,7 @@ export function Setting() {
 
           if (cities.length > 0) {
             setCityOptions(cities);
+
             if (data?.user?.city) {
               const defaultCity = cities.find(
                 (city) => city.label === data.user.city,
@@ -257,19 +253,16 @@ export function Setting() {
           const defaultCity = cities.find(
             (city) => city.label === data.user.city,
           );
+
           if (defaultCity) {
             formik.setFieldValue("city", defaultCity);
+          } else {
+            formik.setFieldValue("city", data.user.city);
           }
         }
-      } else {
-        setCityOptions([]);
-        formik.setFieldValue("city", "");
       }
-    } else {
-      setCityOptions([]);
-      formik.setFieldValue("city", "");
     }
-  }, [selectedProvince, data]);
+  }, [selectedProvince, selectedCountry, data]);
 
   const handleAvatarChange = (e) => {
     const reader = new FileReader();
