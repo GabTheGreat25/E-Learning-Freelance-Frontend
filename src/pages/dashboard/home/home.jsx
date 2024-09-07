@@ -168,6 +168,7 @@ export function Home() {
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
   const [animationDirection, setAnimationDirection] = useState("");
+  const [mouseTimeout, setMouseTimeout] = useState(null);
 
   const containerRef = useRef(null);
 
@@ -205,24 +206,66 @@ export function Home() {
   }, [currentIndex, coursesPerPage]);
 
   const handleNext = () => {
-    if (currentIndex < courses.length - 1) {
+    if (currentIndex + coursesPerPage < courses.length) {
       setAnimationDirection("next");
       setTimeout(() => {
-        setCurrentIndex(currentIndex + 1);
+        setCurrentIndex(currentIndex + coursesPerPage);
         setAnimationDirection("");
       }, 500);
     }
   };
 
   const handleBack = () => {
-    if (currentIndex > 0) {
+    if (currentIndex >= coursesPerPage) {
       setAnimationDirection("back");
       setTimeout(() => {
-        setCurrentIndex(currentIndex - 1);
+        setCurrentIndex(currentIndex - coursesPerPage);
         setAnimationDirection("");
       }, 500);
     }
   };
+
+  const handleMouseMove = (e) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const { left, right, width } = container.getBoundingClientRect();
+    const mouseX = e.clientX;
+    const threshold = width * 0.1;
+
+    if (mouseX < left + threshold) {
+      if (!isBackDisabled) {
+        clearTimeout(mouseTimeout);
+        setMouseTimeout(
+          setTimeout(() => {
+            handleBack();
+          }, 300),
+        );
+      }
+    } else if (mouseX > right - threshold) {
+      if (!isNextDisabled) {
+        clearTimeout(mouseTimeout);
+        setMouseTimeout(
+          setTimeout(() => {
+            handleNext();
+          }, 300),
+        );
+      }
+    }
+  };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener("mousemove", handleMouseMove);
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("mousemove", handleMouseMove);
+      }
+    };
+  }, [isNextDisabled, isBackDisabled, mouseTimeout]);
 
   return (
     <>
