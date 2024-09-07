@@ -31,8 +31,6 @@ export function Setting() {
 
   const { data, refetch } = hooks.useGetProfileQuery(user._id);
 
-  console.log(data);
-
   const [updateProfile, { isLoading }] = hooks.useUpdateProfileMutation();
 
   const [updatePassword, { isLoading: isUpdatingPassword }] =
@@ -204,7 +202,16 @@ export function Setting() {
   }, [selectedCountry, data]);
 
   useEffect(() => {
-    if (selectedProvince) {
+    if (!formik.values.province) {
+      formik.setFieldValue("city", "");
+    }
+  }, [formik.values.province]);
+
+  useEffect(() => {
+    if (!formik.values.province) {
+      formik.setFieldValue("city", "");
+      setCityOptions([]);
+    } else if (selectedProvince) {
       const cities = City.getCitiesOfState(
         selectedCountry.value,
         selectedProvince.value,
@@ -219,7 +226,7 @@ export function Setting() {
       setCityOptions([]);
       formik.setFieldValue("city", data?.user?.city || "");
     }
-  }, [selectedProvince, selectedCountry, data]);
+  }, [formik.values.province, selectedProvince, selectedCountry, data]);
 
   const handleAvatarChange = (e) => {
     const reader = new FileReader();
