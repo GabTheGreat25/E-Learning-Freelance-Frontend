@@ -343,13 +343,11 @@ export function Setting() {
                     Profile Photo
                   </h1>
                   <div
-                    className={`flex flex-col items-center justify-center md:p-8 p-4 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default w-fit ${
-                      formik.errors.avatar && formik.touched.avatar
-                        ? "border-error-default"
-                        : "border-light-secondary"
-                    } focus:border-info-secondary focus:outline-none`}
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
+                    className={`flex flex-col items-center justify-center p-8 cursor-pointer rounded-xl  w-fit relative ${
+                      formik.values.avatar
+                        ? ""
+                        : "border-[.125rem] border-dashed border-light-secondary bg-dark-default"
+                    }`}
                   >
                     <input
                       type="file"
@@ -359,38 +357,60 @@ export function Setting() {
                       id="upload-photo"
                     />
                     <label htmlFor="upload-photo">
-                      <div className="flex flex-col items-center justify-center cursor-pointer">
-                        <img
-                          src={UploadImg}
-                          alt="UploadImg"
-                          className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
-                        />
-                        <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
-                          {formik.values.avatar
-                            ? "Change Profile Photo"
-                            : "Upload a Profile Photo"}
-                        </h1>
-                        <p className="text-xs text-center md:text-base text-light-secondary">
-                          jpg, jpeg, png files
-                        </p>
-                      </div>
-                      {formik.errors.avatar && formik.touched.avatar && (
-                        <p className="mt-2 text-lg font-semibold text-error-default">
-                          {formik.errors.avatar}
-                        </p>
+                      {formik.values.avatar ? (
+                        <div className="relative">
+                          <img
+                            src={formik.values.avatar}
+                            alt="Profile Preview"
+                            className="object-cover rounded-full xl:w-[12rem] xl:h-[12rem] w-[10rem] h-[10rem]"
+                          />
+                          <button
+                            type="button"
+                            className="absolute bottom-0 right-0 p-1 rounded-full bg-dark-secondary"
+                            onClick={() =>
+                              document.getElementById("upload-photo").click()
+                            }
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="w-6 h-6 text-white"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M12 4v16m8-8H4"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center cursor-pointer">
+                          <img
+                            src={UploadImg}
+                            alt="UploadImg"
+                            className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
+                          />
+                          <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
+                            Upload a Profile Photo
+                          </h1>
+                          <p className="text-xs text-center md:text-base text-light-secondary">
+                            jpg, jpeg, png files
+                          </p>
+                        </div>
                       )}
                     </label>
                   </div>
+
+                  {formik.errors.avatar && formik.touched.avatar && (
+                    <p className="mt-2 text-lg font-semibold text-error-default">
+                      {formik.errors.avatar}
+                    </p>
+                  )}
                 </div>
-                {formik.values.avatar ? (
-                  <div className="ml-4">
-                    <img
-                      src={formik.values.avatar}
-                      alt="Profile Preview"
-                      className="object-cover xl:w-[15rem] xl:h-[15rem] md:w-48 md:h-48 w-[9rem] h-[9rem]"
-                    />
-                  </div>
-                ) : null}
               </div>
 
               <div className="flex items-center justify-center 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8 gap-x-7">
