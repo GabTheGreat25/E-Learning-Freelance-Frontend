@@ -211,7 +211,7 @@ export function Home() {
       setTimeout(() => {
         setCurrentIndex(currentIndex + coursesPerPage);
         setAnimationDirection("");
-      }, 500);
+      }, 700);
     }
   };
 
@@ -221,7 +221,7 @@ export function Home() {
       setTimeout(() => {
         setCurrentIndex(currentIndex - coursesPerPage);
         setAnimationDirection("");
-      }, 500);
+      }, 700);
     }
   };
 
@@ -370,13 +370,13 @@ export function Home() {
               {visibleCourses.map((course, index) => (
                 <div
                   key={index}
-                  className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-500 ${
+                  className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-700 ${
                     animationDirection === "next"
-                      ? "transform translate-x-1/4"
+                      ? "transform translate-x-10"
                       : ""
                   } ${
                     animationDirection === "back"
-                      ? "transform -translate-x-1/4"
+                      ? "transform -translate-x-10"
                       : ""
                   }`}
                 >
