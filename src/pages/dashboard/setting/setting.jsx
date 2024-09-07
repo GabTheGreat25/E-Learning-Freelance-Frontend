@@ -154,7 +154,7 @@ export function Setting() {
           (option) => option.label === data.user.country,
         );
         setSelectedCountry(selectedCountry);
-        formik.setFieldValue("country", selectedCountry);
+        formik.setFieldValue("country", selectedCountry || null);
       }
 
       if (data.user.gender) {
@@ -175,10 +175,7 @@ export function Setting() {
   }, [data, countryOptions]);
 
   useEffect(() => {
-    console.log("Running country effect");
-
     if (selectedCountry) {
-      // Fetch provinces based on selected country
       const provinces = State.getStatesOfCountry(selectedCountry.value).map(
         (province) => ({
           label: province.name,
@@ -194,7 +191,6 @@ export function Setting() {
       if (provinces.length > 0) {
         setProvinceOptions(provinces);
 
-        // Check if user has a saved province
         if (data?.user?.province) {
           const defaultProvince = provinces.find(
             (option) => option.label === data.user.province,
@@ -203,39 +199,32 @@ export function Setting() {
           if (defaultProvince) {
             setSelectedProvince(defaultProvince);
             formik.setFieldValue("province", defaultProvince);
+          } else {
+            formik.setFieldValue("province", data.user.province);
+          }
 
-            // Fetch cities for the selected province
-            const cities = City.getCitiesOfState(
-              selectedCountry.value,
-              defaultProvince.value,
-            ).map((city) => ({
-              label: city.name,
-              value: city.name,
-            }));
+          const cities = City.getCitiesOfState(
+            selectedCountry.value,
+            defaultProvince ? defaultProvince.value : "",
+          ).map((city) => ({
+            label: city.name,
+            value: city.name,
+          }));
 
-            // Check if the user's saved city exists in the fetched city list
-            const defaultCity = cities.find(
-              (city) => city.label === data?.user?.city,
-            );
+          if (cities.length > 0) {
+            setCityOptions(cities);
+            if (data?.user?.city) {
+              const defaultCity = cities.find(
+                (city) => city.label === data.user.city,
+              );
 
-            if (cities.length > 0) {
-              setCityOptions(cities);
               if (defaultCity) {
                 formik.setFieldValue("city", defaultCity);
               } else {
-                formik.setFieldValue("city", "");
+                formik.setFieldValue("city", data.user.city);
               }
-            } else {
-              setCityOptions([]);
-              formik.setFieldValue("city", "");
             }
-          } else {
-            setCityOptions([]);
-            formik.setFieldValue("city", "");
           }
-        } else {
-          setCityOptions([]);
-          formik.setFieldValue("city", "");
         }
       } else {
         setProvinceOptions([]);
@@ -252,12 +241,7 @@ export function Setting() {
   }, [selectedCountry, data]);
 
   useEffect(() => {
-    console.log("Running province effect");
-
-    if (!formik.values.province) {
-      setCityOptions([]);
-      formik.setFieldValue("city", "");
-    } else if (selectedProvince) {
+    if (selectedProvince) {
       const cities = City.getCitiesOfState(
         selectedCountry.value,
         selectedProvince.value,
@@ -269,14 +253,13 @@ export function Setting() {
       if (cities.length > 0) {
         setCityOptions(cities);
 
-        // Check if the user's saved city is still valid after province change
-        const defaultCity = cities.find(
-          (city) => city.label === data?.user?.city,
-        );
-        if (defaultCity) {
-          formik.setFieldValue("city", defaultCity);
-        } else {
-          formik.setFieldValue("city", "");
+        if (data?.user?.city) {
+          const defaultCity = cities.find(
+            (city) => city.label === data.user.city,
+          );
+          if (defaultCity) {
+            formik.setFieldValue("city", defaultCity);
+          }
         }
       } else {
         setCityOptions([]);
@@ -286,7 +269,7 @@ export function Setting() {
       setCityOptions([]);
       formik.setFieldValue("city", "");
     }
-  }, [formik.values.province, selectedProvince, selectedCountry, data]);
+  }, [selectedProvince, data]);
 
   const handleAvatarChange = (e) => {
     const reader = new FileReader();
@@ -749,7 +732,7 @@ export function Setting() {
                       onChange={(e) =>
                         formik.setFieldValue("province", e.target.value)
                       }
-                      className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      className={`capitalize w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
                         formik.errors.province && formik.touched.province
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -796,7 +779,7 @@ export function Setting() {
                       onChange={(e) =>
                         formik.setFieldValue("city", e.target.value)
                       }
-                      className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                      className={`capitalize w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
                         formik.errors.city && formik.touched.city
                           ? "border-error-default"
                           : "border-light-secondary"
