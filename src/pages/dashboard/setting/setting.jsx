@@ -67,8 +67,10 @@ export function Setting() {
         ).toISOString(),
         address: values.address,
         country: values.country.label,
-        province: values.province.label,
-        city: values.city.label,
+        province: values.province
+          ? values.province.label || values.province
+          : "",
+        city: values.city ? values.city.label || values.city : "",
         gender: values.gender.value,
         bio: values.bio,
       };
