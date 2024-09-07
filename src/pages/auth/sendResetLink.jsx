@@ -7,19 +7,23 @@ export function SendResetLink() {
   const navigate = useNavigate();
 
   return (
-    <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
+    <section className="grid h-full grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
       <MyCarousel />
-      <div className="relative flex items-center justify-center p-6 lg:p-10 xl:p-32">
-        <div className="w-full max-w-lg mt-20 xl:mt-8 lg:mt-16">
-          <h1 className="mb-1 text-3xl font-semibol d lg:text-4xl">
+      <div className="relative flex items-center justify-center w-full h-screen p-6 overflow-y-auto lg:p-10 xl:px-32 scrollbar-thin">
+        <div className="w-full mt-20 xl:max-w-md lg:max-w-sm md:max-w-[20rem] xl:mt-8 lg:mt-16">
+          <h1 className="mb-1 text-lg font-semibold 2xl:text-4xl xl:text-3xl lg:text-2xl">
             Reset Password
           </h1>
-          <p className="mb-2 text-lg">
+          <p className="text-sm xl:text-lg">
             Check your email for reset password instruction
           </p>
 
           <div className="flex items-center justify-center">
-            <img src={VerifiedImg} alt="VerifiedImg" className="pt-12 pb-16" />
+            <img
+              src={VerifiedImg}
+              alt="VerifiedImg"
+              className="object-cover pt-12 pb-16 xl:w-fit xl:h-fit md:w-[55%] md:h-[55%]"
+            />
           </div>
 
           <button

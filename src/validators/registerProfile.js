@@ -44,20 +44,31 @@ export const registerProfileValidation = yup.object().shape({
     .default(null)
     .required("Country is required"),
   province: yup
-    .object()
-    .shape({
-      value: yup.string().required("Province value is required"),
-      label: yup.string().required("Province label is required"),
-    })
+    .mixed()
+    .test(
+      "is-object-or-string",
+      "Province must be a valid object or string",
+      (value) => {
+        return typeof value === "object" && value !== null
+          ? value.label && value.value
+          : typeof value === "string";
+      },
+    )
     .nullable()
     .default(null)
     .required("Province is required"),
+
   city: yup
-    .object()
-    .shape({
-      value: yup.string().required("City value is required"),
-      label: yup.string().required("City label is required"),
-    })
+    .mixed()
+    .test(
+      "is-object-or-string",
+      "City must be a valid object or string",
+      (value) => {
+        return typeof value === "object" && value !== null
+          ? value.label && value.value
+          : typeof value === "string";
+      },
+    )
     .nullable()
     .default(null)
     .required("City is required"),

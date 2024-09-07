@@ -28,7 +28,7 @@ export function MyCarousel() {
       className="items-center justify-center hidden w-full h-screen p-8 bg-center bg-cover md:flex"
       style={{ backgroundImage: `url(${AuthImg})` }}
     >
-      <div className="flex items-center justify-center w-full h-full lg:p-12 2xl:p-28">
+      <div className="flex items-center justify-center w-full h-full md:p-10 lg:p-[4.5rem] 2xl:p-28 xl:px-24">
         <div className="overflow-hidden rounded-3xl">
           {isLoading ? (
             <div className="loader">

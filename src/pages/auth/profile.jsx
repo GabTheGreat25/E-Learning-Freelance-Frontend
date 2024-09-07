@@ -25,7 +25,7 @@ export function RegisterProfile() {
   const [registerUser, { isLoading }] = hooks.useRegisterUserMutation();
 
   const profileForm = useSelector((state) => state.profile.formData);
-  console.log(profileForm);
+
   const form = useSelector((state) => state.location.formData);
 
   const [isFocused, setIsFocused] = useState(false);
@@ -41,9 +41,9 @@ export function RegisterProfile() {
   );
   const [selectedCity, setSelectedCity] = useState(profileForm.city || null);
   const [customProvince, setCustomProvince] = useState(
-    profileForm?.province?.value || "",
+    profileForm?.province?.label || "",
   );
-  const [customCity, setCustomCity] = useState(profileForm?.city?.value || "");
+  const [customCity, setCustomCity] = useState(profileForm?.city?.label || "");
   const [countryOptions, setCountryOptions] = useState([]);
   const [provinceOptions, setProvinceOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
@@ -105,8 +105,8 @@ export function RegisterProfile() {
       birthDate: profileForm.birthDate || "",
       address: profileForm.address || "",
       country: profileForm.country || null,
-      province: profileForm.province || null,
-      city: profileForm.city || null,
+      province: profileForm.province || "",
+      city: profileForm.city || "",
       gender: profileForm.gender || null,
       role: "admin",
     },
@@ -130,6 +130,7 @@ export function RegisterProfile() {
         gender: values.gender.value,
         role: values.role,
       };
+
       registerUser(formData)
         .unwrap()
         .then((res) => {
@@ -138,12 +139,13 @@ export function RegisterProfile() {
             navigate("/verification");
             dispatch(locationActions.clearFormData());
             dispatch(profileActions.clearProfileData(formData));
-          } else
+          } else {
             Toast(
               TOAST.ERROR,
               res.error?.data?.message ||
                 "Registration failed. Please try again.",
             );
+          }
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -371,7 +373,7 @@ export function RegisterProfile() {
                       value={selectedProvince}
                       onChange={(option) => {
                         setSelectedProvince(option);
-                        formik.setFieldValue("province", option || null);
+                        formik.setFieldValue("province", option || "");
                       }}
                       className={`w-full p-[.65rem] border rounded-md ${
                         formik.errors.province && formik.touched.province
@@ -390,10 +392,7 @@ export function RegisterProfile() {
                       onChange={(e) => {
                         const customValue = e.target.value;
                         setCustomProvince(customValue);
-                        formik.setFieldValue("province", {
-                          label: customValue,
-                          value: customValue,
-                        });
+                        formik.setFieldValue("province", customValue);
                       }}
                       className={`w-full p-4 ${
                         formik.errors.province && formik.touched.province
@@ -422,7 +421,7 @@ export function RegisterProfile() {
                       value={selectedCity}
                       onChange={(option) => {
                         setSelectedCity(option);
-                        formik.setFieldValue("city", option || null);
+                        formik.setFieldValue("city", option || "");
                       }}
                       className={`w-full p-[.65rem] border rounded-md ${
                         formik.errors.city && formik.touched.city
@@ -441,10 +440,7 @@ export function RegisterProfile() {
                       onChange={(e) => {
                         const customValue = e.target.value;
                         setCustomCity(customValue);
-                        formik.setFieldValue("city", {
-                          label: customValue,
-                          value: customValue,
-                        });
+                        formik.setFieldValue("city", customValue);
                       }}
                       className={`w-full p-4 ${
                         formik.errors.city && formik.touched.city
