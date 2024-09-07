@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,8 @@ import { TOAST } from "@constants";
 import { hooks } from "@api";
 import { locationActions } from "@hooks";
 
+const RESEND_TIMEOUT = 300;
+
 export function Verification() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -18,6 +20,78 @@ export function Verification() {
 
   const [verifyOTP, { isLoading }] = hooks.useVerifyOTPMutation();
   const [resendOTP, { isLoading: isResending }] = hooks.useResendOTPMutation();
+  const [countdown, setCountdown] = useState(0);
+  let countdownInterval;
+
+  const startCountdown = (initialTime) => {
+    countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          localStorage.removeItem("resendOTPTime");
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleResendOTP = () => {
+    if (formData.email) {
+      resendOTP({ email: formData.email })
+        .unwrap()
+        .then((res) => {
+          if (res.success) {
+            Toast(TOAST.SUCCESS, "OTP has been resent to your email.");
+            const expiryTime = Math.floor(Date.now() / 1000) + RESEND_TIMEOUT;
+            localStorage.setItem("resendOTPTime", expiryTime);
+            setCountdown(RESEND_TIMEOUT);
+            startCountdown(RESEND_TIMEOUT);
+          } else {
+            Toast(
+              TOAST.ERROR,
+              res.error?.data?.message ||
+                "Failed to resend OTP. Please try again.",
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Resend OTP error:", error);
+          Toast(
+            TOAST.ERROR,
+            error?.data?.message ||
+              "An unexpected error occurred. Please try again.",
+          );
+        });
+    } else {
+      Toast(TOAST.ERROR, "No email found. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    const timeNow = Math.floor(Date.now() / 1000);
+    const storedExpiryTime = localStorage.getItem("resendOTPTime");
+
+    if (storedExpiryTime) {
+      const remainingTime = storedExpiryTime - timeNow;
+      if (remainingTime > 0) {
+        setCountdown(remainingTime);
+        startCountdown(remainingTime);
+      } else {
+        localStorage.removeItem("resendOTPTime");
+      }
+    }
+
+    return () => {
+      clearInterval(countdownInterval);
+    };
+  }, []);
+
+  const formatCountdown = () => {
+    const minutes = Math.floor(countdown / 60);
+    const seconds = countdown % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -32,11 +106,13 @@ export function Verification() {
             Toast(TOAST.SUCCESS, res.message);
             navigate("/verified");
             dispatch(locationActions.clearEmailForm());
-          } else
+            localStorage.removeItem("resendOTPTime");
+          } else {
             Toast(
               TOAST.ERROR,
               res.error?.data?.message || "OTP is wrong. Please try again.",
             );
+          }
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -48,31 +124,6 @@ export function Verification() {
         });
     },
   });
-
-  const handleResendOTP = () => {
-    if (formData.email) {
-      resendOTP({ email: formData.email })
-        .unwrap()
-        .then((res) => {
-          if (res.success) {
-            Toast(TOAST.SUCCESS, "OTP has been resent to your email.");
-          } else
-            Toast(
-              TOAST.ERROR,
-              res.error?.data?.message ||
-                "Failed to resend OTP. Please try again.",
-            );
-        })
-        .catch((error) => {
-          console.error("Resend OTP error:", error);
-          Toast(
-            TOAST.ERROR,
-            error?.data?.message ||
-              "An unexpected error occurred while resending OTP. Please try again.",
-          );
-        });
-    } else Toast(TOAST.ERROR, "No email found. Please try again.");
-  };
 
   return (
     <section className="grid min-h-screen grid-cols-1 md:grid-cols-2 bg-dark-default text-light-default">
@@ -94,9 +145,12 @@ export function Verification() {
             </div>
 
             <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
-              <h1 className="mb-1 text-4xl font-semibold">OTP Verification</h1>
+              <h1 className="mb-1 text-4xl font-semibold">
+                Email Verification
+              </h1>
               <p className="mb-2 text-lg">
-                Enter the OTP sent to your registered contact.
+                We sent a verification to your email. Please see the OTP and
+                enter it below.
               </p>
               <hr className="mb-8" />
 
@@ -133,9 +187,11 @@ export function Verification() {
                     type="button"
                     className="underline text-light-secondary"
                     onClick={handleResendOTP}
-                    disabled={isResending}
+                    disabled={countdown > 0 || isResending}
                   >
-                    Resend OTP
+                    {countdown > 0
+                      ? `Resend OTP (${formatCountdown()})`
+                      : "Resend OTP"}
                   </button>
                 </div>
 
