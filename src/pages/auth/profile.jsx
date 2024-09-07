@@ -67,7 +67,11 @@ export function RegisterProfile() {
 
     setProvinceOptions(provinces);
 
-    if (provinces.length === 0) {
+    if (
+      provinces.length === 0 ||
+      (selectedProvince &&
+        !provinces.find((prov) => prov.value === selectedProvince.value))
+    ) {
       setSelectedProvince(null);
       setSelectedCity(null);
       formik.setFieldValue("province", null);
@@ -76,7 +80,7 @@ export function RegisterProfile() {
       setCustomProvince("");
       setCustomCity("");
     }
-  }, [selectedCountry]);
+  }, [selectedCountry, selectedProvince]);
 
   useEffect(() => {
     const cities = selectedProvince
