@@ -137,7 +137,7 @@ export function Verification() {
           <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
               <div className="grid grid-rows-2">
-                <p className="text-base font-medium text-end text-light-secondary">
+                <p className="text-lg font-medium text-end text-light-secondary">
                   STEP 03/03
                 </p>
                 <h3 className="text-lg font-medium">OTP Verification</h3>
@@ -158,7 +158,7 @@ export function Verification() {
                 <div className="mb-4">
                   <label
                     htmlFor="otp"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     OTP <span className="text-red-600">*</span>
                   </label>
@@ -166,7 +166,7 @@ export function Verification() {
                     type="text"
                     id="otp"
                     placeholder="Enter Your OTP"
-                    className={`w-full p-4 border rounded-md ${
+                    className={`text-lg w-full p-4 border rounded-md ${
                       formik.errors.otp && formik.touched.otp
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -176,7 +176,7 @@ export function Verification() {
                     value={formik.values.otp}
                   />
                   {formik.errors.otp && formik.touched.otp && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.otp}
                     </p>
                   )}
@@ -185,7 +185,7 @@ export function Verification() {
                 <div className="flex items-center justify-center pb-6">
                   <button
                     type="button"
-                    className="underline text-light-secondary"
+                    className="text-lg underline text-light-secondary"
                     onClick={handleResendOTP}
                     disabled={countdown > 0 || isResending}
                   >

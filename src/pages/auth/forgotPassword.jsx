@@ -56,10 +56,10 @@ export function ForgotPassword() {
             <div className="absolute top-0 left-0 p-8 cursor-pointer">
               <div
                 onClick={() => navigate("/")}
-                className="grid grid-cols-[50%_50%] items-end justify-center"
+                className="grid grid-cols-[40%_60%] items-center justify-center"
               >
-                <FaChevronLeft size={30} />
-                <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
+                <FaChevronLeft size={20} />
+                <p className="text-lg font-semibold text-light-secondary">
                   Back
                 </p>
               </div>
@@ -74,7 +74,7 @@ export function ForgotPassword() {
                 <div className="mb-4">
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     Email address <span className="text-red-600">*</span>
                   </label>
@@ -83,7 +83,7 @@ export function ForgotPassword() {
                     id="email"
                     name="email"
                     placeholder="Enter Your Email"
-                    className={`w-full p-4 border rounded-md ${
+                    className={`text-lg w-full p-4 border rounded-md ${
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -93,7 +93,7 @@ export function ForgotPassword() {
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.email}
                     </p>
                   )}

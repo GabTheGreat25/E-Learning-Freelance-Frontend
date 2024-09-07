@@ -45,17 +45,15 @@ export function Register() {
           className="absolute top-0 left-0 p-8 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <div className="grid grid-cols-[50%_50%] items-end justify-center">
-            <FaChevronLeft size={30} />
-            <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
-              Back
-            </p>
+          <div className="grid grid-cols-[40%_60%] items-center justify-center">
+            <FaChevronLeft size={20} />
+            <p className="text-lg font-semibold text-light-secondary">Back</p>
           </div>
         </div>
 
         <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
           <div className="grid grid-rows-2">
-            <p className="text-base font-medium text-end text-light-secondary">
+            <p className="text-lg font-medium text-end text-light-secondary">
               STEP 01/03
             </p>
             <h3 className="text-lg font-medium">Personal Info.</h3>
@@ -71,7 +69,7 @@ export function Register() {
             <div className="mb-4">
               <label
                 htmlFor="firstname"
-                className="block mb-2 text-base font-medium"
+                className="block mb-2 text-lg font-medium"
               >
                 First Name <span className="text-red-600">*</span>
               </label>
@@ -79,7 +77,7 @@ export function Register() {
                 type="text"
                 id="firstname"
                 placeholder="Enter your first name"
-                className={`w-full p-4 border rounded-md ${
+                className={`text-lg w-full p-4 border rounded-md ${
                   formik.errors.firstname && formik.touched.firstname
                     ? "border-error-default"
                     : "border-light-secondary"
@@ -89,7 +87,7 @@ export function Register() {
                 value={formik.values.firstname}
               />
               {formik.errors.firstname && formik.touched.firstname && (
-                <p className="mt-2 text-lg font-semibold text-error-default">
+                <p className="mt-2 text-lg text-error-default">
                   {formik.errors.firstname}
                 </p>
               )}
@@ -97,7 +95,7 @@ export function Register() {
             <div className="mb-4">
               <label
                 htmlFor="lastname"
-                className="block mb-2 text-base font-medium"
+                className="block mb-2 text-lg font-medium"
               >
                 Last Name <span className="text-red-600">*</span>
               </label>
@@ -105,7 +103,7 @@ export function Register() {
                 type="text"
                 id="lastname"
                 placeholder="Enter your last name"
-                className={`w-full p-4 border rounded-md ${
+                className={`text-lg w-full p-4 border rounded-md ${
                   formik.errors.lastname && formik.touched.lastname
                     ? "border-error-default"
                     : "border-light-secondary"
@@ -115,23 +113,20 @@ export function Register() {
                 value={formik.values.lastname}
               />
               {formik.errors.lastname && formik.touched.lastname && (
-                <p className="mt-2 text-lg font-semibold text-error-default">
+                <p className="mt-2 text-lg text-error-default">
                   {formik.errors.lastname}
                 </p>
               )}
             </div>
             <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-base font-medium"
-              >
+              <label htmlFor="email" className="block mb-2 text-lg font-medium">
                 Email address <span className="text-red-600">*</span>
               </label>
               <input
                 type="email"
                 id="email"
                 placeholder="Enter your email address"
-                className={`w-full p-4 border rounded-md ${
+                className={`text-lg w-full p-4 border rounded-md ${
                   formik.errors.email && formik.touched.email
                     ? "border-error-default"
                     : "border-light-secondary"
@@ -141,7 +136,7 @@ export function Register() {
                 value={formik.values.email}
               />
               {formik.errors.email && formik.touched.email && (
-                <p className="mt-2 text-lg font-semibold text-error-default">
+                <p className="mt-2 text-lg text-error-default">
                   {formik.errors.email}
                 </p>
               )}
@@ -149,7 +144,7 @@ export function Register() {
             <div className="mb-4">
               <label
                 htmlFor="password"
-                className="block mb-2 text-base font-medium"
+                className="block mb-2 text-lg font-medium"
               >
                 Create password <span className="text-red-600">*</span>
               </label>
@@ -158,7 +153,7 @@ export function Register() {
                   type={isPasswordVisible ? "text" : "password"}
                   id="password"
                   placeholder="Enter password"
-                  className={`w-full p-4 border rounded-md ${
+                  className={`text-lg w-full p-4 border rounded-md ${
                     formik.errors.password && formik.touched.password
                       ? "border-error-default"
                       : "border-light-secondary"
@@ -176,7 +171,7 @@ export function Register() {
                 </button>
               </div>
               {formik.errors.password && formik.touched.password && (
-                <p className="mt-2 text-lg font-semibold text-error-default">
+                <p className="mt-2 text-lg text-error-default">
                   {formik.errors.password}
                 </p>
               )}
@@ -192,7 +187,7 @@ export function Register() {
                 onChange={(e) => setIsChecked(e.target.checked)}
                 className="w-5 h-5 rounded-sm appearance-none cursor-pointer bg-light-default peer checked:bg-info-default checked:border-transparent checked:ring-2 checked:ring-info-default checked:ring-offset-2 checked:ring-offset-light-default"
               />
-              <span className="ml-4 text-light-default">
+              <span className="ml-4 text-lg text-light-default">
                 I agree to the
                 <a href="/terms" className="ml-1 underline">
                   terms & conditions
@@ -200,9 +195,7 @@ export function Register() {
               </span>
             </label>
             {termsError && (
-              <p className="mt-2 text-lg font-semibold text-error-default">
-                {termsError}
-              </p>
+              <p className="mt-2 text-lg text-error-default">{termsError}</p>
             )}
             <button
               type="submit"

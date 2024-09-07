@@ -406,7 +406,7 @@ export function Setting() {
                   </div>
 
                   {formik.errors.avatar && formik.touched.avatar && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.avatar}
                     </p>
                   )}
@@ -435,7 +435,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.firstname && formik.touched.firstname && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.firstname}
                     </p>
                   )}
@@ -470,7 +470,7 @@ export function Setting() {
                   />
                   {formik.errors.mobileNumber &&
                     formik.touched.mobileNumber && (
-                      <p className="mt-2 text-lg font-semibold text-error-default">
+                      <p className="mt-2 text-lg text-error-default">
                         {formik.errors.mobileNumber}
                       </p>
                     )}
@@ -499,7 +499,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.lastname && formik.touched.lastname && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.lastname}
                     </p>
                   )}
@@ -552,7 +552,7 @@ export function Setting() {
                     </div>
                   )}
                   {formik.errors.birthDate && formik.touched.birthDate && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.birthDate}
                     </p>
                   )}
@@ -582,7 +582,7 @@ export function Setting() {
                     readOnly
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.email}
                     </p>
                   )}
@@ -609,7 +609,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.address && formik.touched.address && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.address}
                     </p>
                   )}
@@ -642,7 +642,7 @@ export function Setting() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.gender && formik.touched.gender && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.gender}
                     </p>
                   )}
@@ -669,7 +669,7 @@ export function Setting() {
                     onBlur={formik.handleBlur}
                   />
                   {formik.errors.bio && formik.touched.bio && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.bio}
                     </p>
                   )}
@@ -705,7 +705,7 @@ export function Setting() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.country && formik.touched.country && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.country}
                     </p>
                   )}
@@ -753,7 +753,7 @@ export function Setting() {
                     />
                   )}
                   {formik.errors.province && formik.touched.province && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.province}
                     </p>
                   )}
@@ -800,7 +800,7 @@ export function Setting() {
                     />
                   )}
                   {formik.errors.city && formik.touched.city && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.city}
                     </p>
                   )}
@@ -852,7 +852,7 @@ export function Setting() {
                   </div>
                   {formikPassword.errors.password &&
                     formikPassword.touched.password && (
-                      <p className="mt-2 text-lg font-semibold text-error-default">
+                      <p className="mt-2 text-lg text-error-default">
                         {formikPassword.errors.password}
                       </p>
                     )}

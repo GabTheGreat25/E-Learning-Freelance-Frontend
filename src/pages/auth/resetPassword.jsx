@@ -66,14 +66,14 @@ export function ResetPassword() {
         </div>
       ) : (
         <>
-          <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
+          <div className="relative w-full h-screen py-32 overflow-y-auto text-lg scrollbar-thin">
             <div className="absolute top-0 left-0 p-8 cursor-pointer">
               <div
                 onClick={() => navigate("/forgotPassword")}
-                className="grid grid-cols-[50%_50%] items-end justify-center"
+                className="grid grid-cols-[40%_60%] items-center justify-center"
               >
-                <FaChevronLeft size={30} />
-                <p className="relative text-2xl font-semibold top-[.1rem] text-light-secondary">
+                <FaChevronLeft size={20} />
+                <p className="text-lg font-semibold text-light-secondary">
                   Back
                 </p>
               </div>
@@ -88,7 +88,7 @@ export function ResetPassword() {
                 <div className="mb-4">
                   <label
                     htmlFor="otp"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     OTP <span className="text-red-600">*</span>
                   </label>
@@ -97,7 +97,7 @@ export function ResetPassword() {
                     id="otp"
                     name="otp"
                     placeholder="Enter Your OTP"
-                    className={`w-full p-4 border rounded-md ${
+                    className={`text-lg w-full p-4 border rounded-md ${
                       formik.errors.otp && formik.touched.otp
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -107,7 +107,7 @@ export function ResetPassword() {
                     value={formik.values.otp}
                   />
                   {formik.errors.otp && formik.touched.otp && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.otp}
                     </p>
                   )}
@@ -116,7 +116,7 @@ export function ResetPassword() {
                 <div className="mb-4">
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     Password <span className="text-red-600">*</span>
                   </label>
@@ -126,7 +126,7 @@ export function ResetPassword() {
                       id="password"
                       name="password"
                       placeholder="Enter password"
-                      className={`w-full p-4 border rounded-md ${
+                      className={`text-lg w-full p-4 border rounded-md ${
                         formik.errors.password && formik.touched.password
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -144,7 +144,7 @@ export function ResetPassword() {
                     </button>
                   </div>
                   {formik.errors.password && formik.touched.password && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.password}
                     </p>
                   )}
@@ -153,7 +153,7 @@ export function ResetPassword() {
                 <div className="mb-4">
                   <label
                     htmlFor="confirmPassword"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     Confirm Password <span className="text-red-600">*</span>
                   </label>
@@ -163,7 +163,7 @@ export function ResetPassword() {
                       id="confirmPassword"
                       name="confirmPassword"
                       placeholder="Confirm New Password"
-                      className={`w-full p-4 border rounded-md ${
+                      className={`text-lg w-full p-4 border rounded-md ${
                         formik.errors.confirmPassword &&
                         formik.touched.confirmPassword
                           ? "border-error-default"
@@ -183,7 +183,7 @@ export function ResetPassword() {
                   </div>
                   {formik.errors.confirmPassword &&
                     formik.touched.confirmPassword && (
-                      <p className="mt-2 text-lg font-semibold text-error-default">
+                      <p className="mt-2 text-lg text-error-default">
                         {formik.errors.confirmPassword}
                       </p>
                     )}

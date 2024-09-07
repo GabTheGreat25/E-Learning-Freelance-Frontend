@@ -68,7 +68,7 @@ export function Login() {
                 <div className="mb-4">
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     Email address <span className="text-error-default">*</span>
                   </label>
@@ -76,7 +76,7 @@ export function Login() {
                     type="email"
                     id="email"
                     placeholder="Email"
-                    className={`w-full p-4 border rounded-md ${
+                    className={`text-lg w-full p-4 border rounded-md ${
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -85,7 +85,7 @@ export function Login() {
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.email}
                     </p>
                   )}
@@ -94,7 +94,7 @@ export function Login() {
                 <div className="mb-4">
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-base font-medium"
+                    className="block mb-2 text-lg font-medium"
                   >
                     Password <span className="text-error-default">*</span>
                   </label>
@@ -103,7 +103,7 @@ export function Login() {
                       type={isPasswordVisible ? "text" : "password"}
                       id="password"
                       placeholder="Enter password"
-                      className={`w-full p-4 border rounded-md ${
+                      className={`text-lg w-full p-4 border rounded-md ${
                         formik.errors.password && formik.touched.password
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -120,7 +120,7 @@ export function Login() {
                     </button>
                   </div>
                   {formik.errors.password && formik.touched.password && (
-                    <p className="mt-2 text-lg font-semibold text-error-default">
+                    <p className="mt-2 text-lg text-error-default">
                       {formik.errors.password}
                     </p>
                   )}
@@ -130,7 +130,7 @@ export function Login() {
                   <button
                     type="button"
                     onClick={() => navigate("/forgotPassword")}
-                    className="underline text-light-secondary"
+                    className="text-lg underline text-light-secondary"
                   >
                     Forgot Password
                   </button>

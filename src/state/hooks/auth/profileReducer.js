@@ -7,8 +7,8 @@ const profileSlice = createSlice({
     formData: {
       mobileNumber: "",
       birthDate: "",
-      gender: null,
-      country: null,
+      gender: "",
+      country: "",
       province: "",
       city: "",
       address: "",
@@ -25,8 +25,8 @@ const profileSlice = createSlice({
       state.formData = {
         mobileNumber: "",
         birthDate: "",
-        gender: null,
-        country: null,
+        gender: "",
+        country: "",
         province: "",
         city: "",
         address: "",
