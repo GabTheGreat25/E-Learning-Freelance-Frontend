@@ -57,7 +57,6 @@ export const registerProfileValidation = yup.object().shape({
     .nullable()
     .default(null)
     .required("Province is required"),
-
   city: yup
     .mixed()
     .test(

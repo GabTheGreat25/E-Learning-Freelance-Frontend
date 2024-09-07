@@ -41,9 +41,11 @@ export function RegisterProfile() {
   );
   const [selectedCity, setSelectedCity] = useState(profileForm.city || null);
   const [customProvince, setCustomProvince] = useState(
-    profileForm?.province?.label || "",
+    profileForm?.province?.label || profileForm?.province || "",
   );
-  const [customCity, setCustomCity] = useState(profileForm?.city?.label || "");
+  const [customCity, setCustomCity] = useState(
+    profileForm?.city?.label || profileForm?.city || "",
+  );
   const [countryOptions, setCountryOptions] = useState([]);
   const [provinceOptions, setProvinceOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
@@ -74,8 +76,13 @@ export function RegisterProfile() {
     ) {
       setSelectedProvince(null);
       setSelectedCity(null);
-      formik.setFieldValue("province", null);
-      formik.setFieldValue("city", null);
+
+      if (!formik.values.province && !customProvince) {
+        formik.setFieldValue("province", null);
+      }
+      if (!formik.values.city && !customCity) {
+        formik.setFieldValue("city", null);
+      }
     } else {
       setCustomProvince("");
       setCustomCity("");
@@ -97,7 +104,10 @@ export function RegisterProfile() {
 
     if (cities.length === 0) {
       setSelectedCity(null);
-      formik.setFieldValue("city", null);
+
+      if (!formik.values.city && !customCity) {
+        formik.setFieldValue("city", null);
+      }
     } else {
       setCustomCity("");
     }
@@ -109,8 +119,8 @@ export function RegisterProfile() {
       birthDate: profileForm.birthDate || "",
       address: profileForm.address || "",
       country: profileForm.country || null,
-      province: profileForm.province || "",
-      city: profileForm.city || "",
+      province: profileForm.province || customProvince,
+      city: profileForm.city || customCity,
       gender: profileForm.gender || null,
       role: "admin",
     },
@@ -129,12 +139,13 @@ export function RegisterProfile() {
         ).toISOString(),
         address: values.address,
         country: values.country.label,
-        province: values.province ? values.province.label : customProvince,
-        city: values.city ? values.city.label : customCity,
+        province: values.province
+          ? values.province.label || values.province
+          : customProvince,
+        city: values.city ? values.city.label || values.city : customCity,
         gender: values.gender.value,
         role: values.role,
       };
-
       registerUser(formData)
         .unwrap()
         .then((res) => {
@@ -182,6 +193,8 @@ export function RegisterProfile() {
                     birthDate: formik.values.birthDate
                       ? new Date(formik.values.birthDate).toISOString()
                       : null,
+                    province: formik.values.province || customProvince,
+                    city: formik.values.city || customCity,
                   };
                   dispatch(profileActions.updateProfileData(formikValues));
                   navigate("/register");
@@ -377,6 +390,7 @@ export function RegisterProfile() {
                       value={selectedProvince}
                       onChange={(option) => {
                         setSelectedProvince(option);
+                        setCustomProvince("");
                         formik.setFieldValue("province", option || "");
                       }}
                       className={`w-full p-[.65rem] border rounded-md ${
@@ -396,6 +410,7 @@ export function RegisterProfile() {
                       onChange={(e) => {
                         const customValue = e.target.value;
                         setCustomProvince(customValue);
+                        setSelectedProvince(null);
                         formik.setFieldValue("province", customValue);
                       }}
                       className={`w-full p-4 ${
@@ -425,6 +440,7 @@ export function RegisterProfile() {
                       value={selectedCity}
                       onChange={(option) => {
                         setSelectedCity(option);
+                        setCustomCity("");
                         formik.setFieldValue("city", option || "");
                       }}
                       className={`w-full p-[.65rem] border rounded-md ${
@@ -444,6 +460,7 @@ export function RegisterProfile() {
                       onChange={(e) => {
                         const customValue = e.target.value;
                         setCustomCity(customValue);
+                        setSelectedCity(null);
                         formik.setFieldValue("city", customValue);
                       }}
                       className={`w-full p-4 ${
