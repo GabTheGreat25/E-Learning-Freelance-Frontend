@@ -185,29 +185,21 @@ export function Setting() {
         }),
       );
 
+      formik.setFieldValue("province", "");
+      formik.setFieldValue("city", "");
+      setSelectedProvince(null);
+      setCityOptions([]);
+
       if (provinces.length > 0) {
         setProvinceOptions(provinces);
-        formik.setFieldValue("city", "");
-        setCityOptions([]);
       } else {
         setProvinceOptions([]);
         formik.setFieldValue("province", data?.user?.province || "");
       }
-
-      if (data?.user?.province && provinces.length > 0) {
-        const selectedProvince = provinces.find(
-          (province) => province.label === data.user.province,
-        );
-        if (selectedProvince) {
-          setSelectedProvince(selectedProvince);
-          formik.setFieldValue("province", selectedProvince);
-        } else {
-          formik.setFieldValue("province", data.user.province);
-        }
-      }
     } else {
       setProvinceOptions([]);
-      formik.setFieldValue("province", data?.user?.province || "");
+      formik.setFieldValue("province", "");
+      formik.setFieldValue("city", "");
     }
   }, [selectedCountry, data]);
 
@@ -221,23 +213,8 @@ export function Setting() {
         value: city.name,
       }));
 
-      if (cities.length > 0) {
-        setCityOptions(cities);
-      } else {
-        setCityOptions([]);
-        formik.setFieldValue("city", data?.user?.city || "");
-      }
-
-      if (data?.user?.city && cities.length > 0) {
-        const selectedCity = cities.find(
-          (city) => city.label === data.user.city,
-        );
-        if (selectedCity) {
-          formik.setFieldValue("city", selectedCity);
-        } else {
-          formik.setFieldValue("city", data.user.city);
-        }
-      }
+      formik.setFieldValue("city", "");
+      setCityOptions(cities);
     } else {
       setCityOptions([]);
       formik.setFieldValue("city", data?.user?.city || "");
