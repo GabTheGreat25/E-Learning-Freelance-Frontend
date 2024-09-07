@@ -31,6 +31,8 @@ export function Setting() {
 
   const { data, refetch } = hooks.useGetProfileQuery(user._id);
 
+  console.log(data);
+
   const [updateProfile, { isLoading }] = hooks.useUpdateProfileMutation();
 
   const [updatePassword, { isLoading: isUpdatingPassword }] =
@@ -64,24 +66,19 @@ export function Setting() {
           ),
         ).toISOString(),
         address: values.address,
-        country: values.country ? values.country.label || values.country : "",
-        province: values.province
-          ? values.province.label || values.province
-          : "",
-        city: values.city ? values.city.label || values.city : "",
+        country: values.country.label,
+        province: values.province.label,
+        city: values.city.label,
         gender: values.gender.value,
         bio: values.bio,
       };
 
       if (avatar && avatar.startsWith("data:image/")) formData.avatar = avatar;
 
-      console.log(formData);
-
       updateProfile(formData)
         .unwrap()
         .then((res) => {
           if (res.success) {
-            console.log(res);
             Toast(TOAST.SUCCESS, "Profile updated successfully.");
             refetch();
           } else Toast(TOAST.ERROR, res.error || "Failed to update profile.");
@@ -185,20 +182,30 @@ export function Setting() {
           value: province.isoCode,
         }),
       );
-      setProvinceOptions(provinces);
 
-      setCityOptions([]);
-      formik.setFieldValue("city", "");
+      if (provinces.length > 0) {
+        setProvinceOptions(provinces);
+        formik.setFieldValue("city", "");
+        setCityOptions([]);
+      } else {
+        setProvinceOptions([]);
+        formik.setFieldValue("province", data?.user?.province || "");
+      }
 
-      if (data?.user?.province) {
+      if (data?.user?.province && provinces.length > 0) {
         const selectedProvince = provinces.find(
           (province) => province.label === data.user.province,
         );
-        setSelectedProvince(selectedProvince);
-        formik.setFieldValue("province", selectedProvince);
+        if (selectedProvince) {
+          setSelectedProvince(selectedProvince);
+          formik.setFieldValue("province", selectedProvince);
+        } else {
+          formik.setFieldValue("province", data.user.province);
+        }
       }
     } else {
       setProvinceOptions([]);
+      formik.setFieldValue("province", data?.user?.province || "");
     }
   }, [selectedCountry, data]);
 
@@ -211,14 +218,27 @@ export function Setting() {
         label: city.name,
         value: city.name,
       }));
-      setCityOptions(cities);
 
-      if (data?.user?.city) {
+      if (cities.length > 0) {
+        setCityOptions(cities);
+      } else {
+        setCityOptions([]);
+        formik.setFieldValue("city", data?.user?.city || "");
+      }
+
+      if (data?.user?.city && cities.length > 0) {
         const selectedCity = cities.find(
           (city) => city.label === data.user.city,
         );
-        formik.setFieldValue("city", selectedCity);
+        if (selectedCity) {
+          formik.setFieldValue("city", selectedCity);
+        } else {
+          formik.setFieldValue("city", data.user.city);
+        }
       }
+    } else {
+      setCityOptions([]);
+      formik.setFieldValue("city", data?.user?.city || "");
     }
   }, [selectedProvince, selectedCountry, data]);
 
