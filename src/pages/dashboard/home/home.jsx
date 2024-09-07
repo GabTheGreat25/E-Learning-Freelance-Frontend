@@ -167,6 +167,7 @@ export function Home() {
   const limitedVideos = videos.slice(0, 8);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
+  const [animationDirection, setAnimationDirection] = useState("");
 
   const containerRef = useRef(null);
 
@@ -193,7 +194,6 @@ export function Home() {
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
 
-      // Disable next if at the end, disable back if at the start
       setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
       setIsBackDisabled(currentIndex === 0);
     };
@@ -206,13 +206,21 @@ export function Home() {
 
   const handleNext = () => {
     if (currentIndex < courses.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      setAnimationDirection("next");
+      setTimeout(() => {
+        setCurrentIndex(currentIndex + 1);
+        setAnimationDirection("");
+      }, 500);
     }
   };
 
   const handleBack = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      setAnimationDirection("back");
+      setTimeout(() => {
+        setCurrentIndex(currentIndex - 1);
+        setAnimationDirection("");
+      }, 500);
     }
   };
 
@@ -319,7 +327,15 @@ export function Home() {
               {visibleCourses.map((course, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default"
+                  className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-500 ${
+                    animationDirection === "next"
+                      ? "transform translate-x-1/4"
+                      : ""
+                  } ${
+                    animationDirection === "back"
+                      ? "transform -translate-x-1/4"
+                      : ""
+                  }`}
                 >
                   <h1 className="text-xl font-semibold">{course.title}</h1>
                   <p className="text-sm text-light-secondary">
