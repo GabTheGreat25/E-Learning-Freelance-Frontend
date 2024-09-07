@@ -82,6 +82,20 @@ const courses = [
     active: 10,
     imgSrc: VideoImg,
   },
+  {
+    title: "Success Course 11",
+    videos: 10,
+    views: 100,
+    active: 10,
+    imgSrc: VideoImg,
+  },
+  {
+    title: "Success Course 12",
+    videos: 10,
+    views: 100,
+    active: 10,
+    imgSrc: VideoImg,
+  },
 ];
 
 const videos = [
@@ -164,11 +178,12 @@ export function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCourses, setVisibleCourses] = useState([]);
   const [coursesPerPage, setCoursesPerPage] = useState(1);
-  const limitedVideos = videos.slice(0, 8);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
   const [animationDirection, setAnimationDirection] = useState("");
   const [mouseTimeout, setMouseTimeout] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const limitedVideos = videos.slice(0, 8);
 
   const containerRef = useRef(null);
 
@@ -206,21 +221,25 @@ export function Home() {
   }, [currentIndex, coursesPerPage]);
 
   const handleNext = () => {
-    if (currentIndex + coursesPerPage < courses.length) {
+    if (currentIndex + coursesPerPage < courses.length && !isTransitioning) {
+      setIsTransitioning(true);
       setAnimationDirection("next");
       setTimeout(() => {
         setCurrentIndex(currentIndex + coursesPerPage);
         setAnimationDirection("");
+        setIsTransitioning(false);
       }, 700);
     }
   };
 
   const handleBack = () => {
-    if (currentIndex >= coursesPerPage) {
+    if (currentIndex >= coursesPerPage && !isTransitioning) {
+      setIsTransitioning(true);
       setAnimationDirection("back");
       setTimeout(() => {
         setCurrentIndex(currentIndex - coursesPerPage);
         setAnimationDirection("");
+        setIsTransitioning(false);
       }, 700);
     }
   };
