@@ -504,7 +504,7 @@ export function Setting() {
                     type="text"
                     id="email"
                     placeholder="Enter your Email"
-                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none ${
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-light-secondary focus:outline-none ${
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -512,6 +512,7 @@ export function Setting() {
                     value={formik.values.email || ""}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
+                    readOnly
                   />
                   {formik.errors.email && formik.touched.email && (
                     <p className="mt-2 text-lg font-semibold text-error-default">
