@@ -167,7 +167,6 @@ export function Home() {
   const limitedVideos = videos.slice(0, 8);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
-  const [animationDirection, setAnimationDirection] = useState("");
 
   const containerRef = useRef(null);
 
@@ -193,13 +192,16 @@ export function Home() {
       setVisibleCourses(
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
+
+      setIsBackDisabled(currentIndex === 0);
+      setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
     };
 
     updateCoursesVisibility();
     window.addEventListener("resize", updateCoursesVisibility);
 
     return () => window.removeEventListener("resize", updateCoursesVisibility);
-  }, [currentIndex]);
+  }, [currentIndex, coursesPerPage]);
 
   const handleNext = () => {
     if (currentIndex + coursesPerPage < courses.length) {
