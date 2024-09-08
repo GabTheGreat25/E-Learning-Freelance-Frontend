@@ -82,20 +82,6 @@ const courses = [
     active: 10,
     imgSrc: VideoImg,
   },
-  {
-    title: "Success Course 11",
-    videos: 10,
-    views: 100,
-    active: 10,
-    imgSrc: VideoImg,
-  },
-  {
-    title: "Success Course 12",
-    videos: 10,
-    views: 100,
-    active: 10,
-    imgSrc: VideoImg,
-  },
 ];
 
 const videos = [
@@ -178,12 +164,10 @@ export function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCourses, setVisibleCourses] = useState([]);
   const [coursesPerPage, setCoursesPerPage] = useState(1);
+  const limitedVideos = videos.slice(0, 8);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
   const [animationDirection, setAnimationDirection] = useState("");
-  const [mouseTimeout, setMouseTimeout] = useState(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const limitedVideos = videos.slice(0, 8);
 
   const containerRef = useRef(null);
 
@@ -210,6 +194,10 @@ export function Home() {
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
 
+      console.log("Container Width:", containerWidth);
+      console.log("New Courses Per Page:", newCoursesPerPage);
+      console.log("Current Index:", currentIndex);
+
       setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
       setIsBackDisabled(currentIndex === 0);
     };
@@ -221,75 +209,65 @@ export function Home() {
   }, [currentIndex, coursesPerPage]);
 
   const handleNext = () => {
-    if (currentIndex + coursesPerPage < courses.length && !isTransitioning) {
-      setIsTransitioning(true);
-      setAnimationDirection("next");
-      setTimeout(() => {
-        setCurrentIndex(currentIndex + coursesPerPage);
-        setAnimationDirection("");
-        setIsTransitioning(false);
-      }, 700);
+    console.log("Next Button Pressed");
+    console.log("Current Index:", currentIndex);
+    console.log("Courses Length:", courses.length);
+
+    if (currentIndex + coursesPerPage < courses.length) {
+      containerRef.current.scrollBy({
+        left: containerRef.current.offsetWidth,
+        behavior: "smooth",
+      });
+      setCurrentIndex(currentIndex + 1);
+      console.log("Moved to Next");
     }
   };
 
   const handleBack = () => {
-    if (currentIndex >= coursesPerPage && !isTransitioning) {
-      setIsTransitioning(true);
-      setAnimationDirection("back");
-      setTimeout(() => {
-        setCurrentIndex(currentIndex - coursesPerPage);
-        setAnimationDirection("");
-        setIsTransitioning(false);
-      }, 700);
+    console.log("Back Button Pressed");
+    console.log("Current Index:", currentIndex);
+
+    if (currentIndex > 0) {
+      containerRef.current.scrollBy({
+        left: -containerRef.current.offsetWidth,
+        behavior: "smooth",
+      });
+      setCurrentIndex(currentIndex - 1);
+      console.log("Moved to Previous");
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleScroll = () => {
     const container = containerRef.current;
-    if (!container) return;
+    const scrollLeft = container.scrollLeft;
+    const scrollWidth = container.scrollWidth;
+    const offsetWidth = container.offsetWidth;
 
-    const { left, right, width } = container.getBoundingClientRect();
-    const mouseX = e.clientX;
-    const threshold = width * 0.1;
+    console.log("Scroll Left:", scrollLeft);
+    console.log("Scroll Width:", scrollWidth);
+    console.log("Offset Width:", offsetWidth);
 
-    if (mouseX < left + threshold) {
-      if (!isBackDisabled) {
-        clearTimeout(mouseTimeout);
-        setMouseTimeout(
-          setTimeout(() => {
-            handleBack();
-          }, 300),
-        );
-      }
-    } else if (mouseX > right - threshold) {
-      if (!isNextDisabled) {
-        clearTimeout(mouseTimeout);
-        setMouseTimeout(
-          setTimeout(() => {
-            handleNext();
-          }, 300),
-        );
-      }
+    // Simplified the logic to just check near the end
+    if (scrollLeft + offsetWidth >= scrollWidth - 50) {
+      console.log("Scroll End - Trigger Next");
+      handleNext();
+    } else if (scrollLeft <= 50) {
+      console.log("Scroll Start - Trigger Back");
+      handleBack();
     }
   };
 
   useEffect(() => {
     const container = containerRef.current;
-    if (container) {
-      container.addEventListener("mousemove", handleMouseMove);
-    }
+    container.addEventListener("scroll", handleScroll);
 
-    return () => {
-      if (container) {
-        container.removeEventListener("mousemove", handleMouseMove);
-      }
-    };
-  }, [isNextDisabled, isBackDisabled, mouseTimeout]);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-4 pt-12 pb-32 overflow-x-hidden overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Overview */}
         <TabNavigation
           activeTab={activeTab}
@@ -377,52 +355,54 @@ export function Home() {
             </div>
           </div>
 
-          <div
-            ref={containerRef}
-            className={`relative flex flex-col ${
-              visibleCourses.length <= 3
-                ? "md:items-start items-center"
-                : "items-center"
-            } justify-center  xl:px-0 lg:px-6 px-2 md:px-12`}
-          >
-            <div className="flex gap-4 pt-6 pb-2">
-              {visibleCourses.map((course, index) => (
-                <div
-                  key={index}
-                  className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-700 ${
-                    animationDirection === "next"
-                      ? "transform translate-x-10"
-                      : ""
-                  } ${
-                    animationDirection === "back"
-                      ? "transform -translate-x-10"
-                      : ""
-                  }`}
-                >
-                  <h1 className="text-xl font-semibold">{course.title}</h1>
-                  <p className="text-sm text-light-secondary">
-                    {course.videos} Videos
-                  </p>
-                  <p className="mt-2 text-sm">
-                    {truncateText(description, 22)}
-                  </p>
-                  <img
-                    src={course.imgSrc}
-                    alt="Video thumbnail"
-                    className="w-full mt-4 rounded-lg"
-                  />
-                  <div className="flex items-center justify-between mt-4 text-sm text-light-secondary">
-                    <div className="flex items-center gap-2">
-                      <FaEye className="text-light-secondary" />
-                      <span>{course.views} Views</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <HiOutlineChartBar className="text-light-secondary" />
-                      <span>{course.active} Active</span>
+          <div className="w-[110%]">
+            <div
+              ref={containerRef}
+              className={`relative flex flex-col ${
+                visibleCourses.length <= 3
+                  ? "md:items-start items-center"
+                  : "items-center"
+              } justify-center xl:pl-0 2xl:pr-40 lg:px-6 px-2 md:px-12`}
+            >
+              <div className="flex w-full gap-4 pt-6 pb-2 overflow-x-scroll scrollbar-thin">
+                {visibleCourses.map((course, index) => (
+                  <div
+                    key={index}
+                    className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-500 ${
+                      animationDirection === "next"
+                        ? "transform translate-x-10"
+                        : ""
+                    } ${
+                      animationDirection === "back"
+                        ? "transform -translate-x-10"
+                        : ""
+                    }`}
+                  >
+                    <h1 className="text-xl font-semibold">{course.title}</h1>
+                    <p className="text-sm text-light-secondary">
+                      {course.videos} Videos
+                    </p>
+                    <p className="mt-2 text-sm">
+                      {truncateText(description, 22)}
+                    </p>
+                    <img
+                      src={course.imgSrc}
+                      alt="Video thumbnail"
+                      className="w-full mt-4 rounded-lg"
+                    />
+                    <div className="flex items-center justify-between mt-4 text-sm text-light-secondary">
+                      <div className="flex items-center gap-2">
+                        <FaEye className="text-light-secondary" />
+                        <span>{course.views} Views</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <HiOutlineChartBar className="text-light-secondary" />
+                        <span>{course.active} Active</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
