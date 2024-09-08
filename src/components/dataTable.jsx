@@ -109,13 +109,21 @@ export function DataTable({
                 <tr
                   key={row._id}
                   className="cursor-pointer hover:bg-light-shadow"
-                  onClick={() => handleRowClick(row._id)}
+                  onClick={(e) => {
+                    if (e.target.type !== "checkbox") handleRowClick(row._id);
+                  }}
                 >
-                  <td className="px-4 py-2 border-b border-light-shadow">
+                  <td
+                    className="px-4 py-2 border-b border-light-shadow"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       checked={selectedRows.includes(row._id)}
-                      onChange={() => handleRowSelect(row._id)}
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        handleRowSelect(row._id);
+                      }}
                       className="h-5 w-5 p-1 text-[.6rem] bg-transparent border-2 rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
                     />
                   </td>
