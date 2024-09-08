@@ -164,9 +164,9 @@ export function Home() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCourses, setVisibleCourses] = useState([]);
   const [coursesPerPage, setCoursesPerPage] = useState(1);
-  const limitedVideos = videos.slice(0, 8);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [isBackDisabled, setIsBackDisabled] = useState(true);
+  const limitedVideos = videos.slice(0, 8);
 
   const containerRef = useRef(null);
 
@@ -186,20 +186,17 @@ export function Home() {
       const containerWidth = containerRef.current?.offsetWidth || 0;
       const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
       const itemWidth = isSmallScreen ? 250 : 300;
-
       const newCoursesPerPage = Math.floor(containerWidth / itemWidth);
       setCoursesPerPage(newCoursesPerPage);
       setVisibleCourses(
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
 
-      setIsBackDisabled(currentIndex === 0);
       setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
+      setIsBackDisabled(currentIndex === 0);
     };
-
     updateCoursesVisibility();
     window.addEventListener("resize", updateCoursesVisibility);
-
     return () => window.removeEventListener("resize", updateCoursesVisibility);
   }, [currentIndex, coursesPerPage]);
 
@@ -208,7 +205,6 @@ export function Home() {
       setCurrentIndex(currentIndex + coursesPerPage);
     }
   };
-
   const handleBack = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - coursesPerPage);
@@ -218,14 +214,13 @@ export function Home() {
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-x-hidden overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Overview */}
         <TabNavigation
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           tabs={homeTabs}
         />
-
         {/* First Button */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">
           <div
@@ -263,7 +258,6 @@ export function Home() {
               </button>
             </div>
           </div>
-
           <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default md:col-span-2 xl:col-span-1">
             <div className="overflow-hidden">
               <h1 className="text-3xl font-normal truncate text-light-default">
@@ -305,50 +299,46 @@ export function Home() {
               </button>
             </div>
           </div>
-
-          <div className="w-[110%]">
-            <div
-              ref={containerRef}
-              className={`relative flex flex-col ${
-                visibleCourses.length <= 3
-                  ? "md:items-start items-center"
-                  : "items-center"
-              } justify-center xl:pl-0 2xl:pr-40 lg:px-6 px-2 md:px-12`}
-            >
-              <div className="flex w-full gap-4 pt-6 pb-2 overflow-x-scroll scrollbar-thin">
-                {visibleCourses.map((course, index) => (
-                  <div
-                    key={index}
-                    className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default`}
-                  >
-                    <h1 className="text-xl font-semibold">{course.title}</h1>
-                    <p className="text-sm text-light-secondary">
-                      {course.videos} Videos
-                    </p>
-                    <p className="mt-2 text-sm">
-                      {truncateText(description, 22)}
-                    </p>
-                    <img
-                      src={course.imgSrc}
-                      alt="Video thumbnail"
-                      className="w-full mt-4 rounded-lg"
-                    />
-                    <div className="flex items-center justify-between mt-4 text-sm text-light-secondary">
-                      <div className="flex items-center gap-2">
-                        <FaEye className="text-light-secondary" />
-                        <span>{course.views} Views</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <HiOutlineChartBar className="text-light-secondary" />
-                        <span>{course.active} Active</span>
-                      </div>
+          <div
+            ref={containerRef}
+            className={`relative flex flex-col ${
+              visibleCourses.length <= 3
+                ? "md:items-start items-center"
+                : "items-center"
+            } justify-center  xl:px-0 lg:px-6 px-2 md:px-12`}
+          >
+            <div className="flex gap-4 pt-6 pb-2">
+              {visibleCourses.map((course, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default"
+                >
+                  <h1 className="text-xl font-semibold">{course.title}</h1>
+                  <p className="text-sm text-light-secondary">
+                    {course.videos} Videos
+                  </p>
+                  <p className="mt-2 text-sm">
+                    {truncateText(description, 22)}
+                  </p>
+                  <img
+                    src={course.imgSrc}
+                    alt="Video thumbnail"
+                    className="w-full mt-4 rounded-lg"
+                  />
+                  <div className="flex items-center justify-between mt-4 text-sm text-light-secondary">
+                    <div className="flex items-center gap-2">
+                      <FaEye className="text-light-secondary" />
+                      <span>{course.views} Views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <HiOutlineChartBar className="text-light-secondary" />
+                      <span>{course.active} Active</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-
           <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
             <button
               className={`bg-dark-secondary p-2 rounded-full ${
@@ -382,7 +372,6 @@ export function Home() {
             </div>
             <button className="px-8 py-1 border rounded-full">Add Video</button>
           </div>
-
           <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {limitedVideos.map((video, index) => (
               <div
@@ -441,7 +430,6 @@ export function Home() {
               </div>
             </div>
           </div>
-
           <div
             className="bg-center bg-no-repeat bg-cover rounded-lg"
             style={{ backgroundImage: `url(${GradientNotificationImg})` }}
@@ -454,7 +442,6 @@ export function Home() {
               </div>
             </div>
           </div>
-
           <div
             className="flex flex-col justify-between w-full h-full px-6 py-3 bg-center bg-no-repeat bg-cover border-2 border-transparent rounded-lg shadow-lg md:col-span-2 xl:col-span-1"
             style={{ backgroundImage: `url(${GradientTransactionImg})` }}
@@ -466,7 +453,6 @@ export function Home() {
             </div>
           </div>
         </div>
-
         <Footer />
       </section>
     </>
