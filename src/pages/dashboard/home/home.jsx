@@ -281,7 +281,7 @@ export function Home() {
           </div>
 
           <div className="relative w-full overflow-hidden cursor-pointer ">
-            <div className="relative flex flex-row h-[30rem] pt-6 pb-2 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-hide">
+            <div className="relative flex flex-row h-[29rem] pt-6 pb-2 overflow-x-auto overflow-y-hidden scrollbar-thin">
               {courses.map((course, index) => (
                 <div
                   key={index}
