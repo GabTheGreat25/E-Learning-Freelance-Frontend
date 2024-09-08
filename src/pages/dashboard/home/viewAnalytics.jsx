@@ -210,28 +210,26 @@ export function ViewAnalytics() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState("Analytics");
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [visibleCurrentVideos, setVisibleCurrentVideos] = useState([]);
-  const [currentVideosPerPage, setcurrentVideosPerPage] = useState(1);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
-  const [doneVideoIndex, setDoneVideoIndex] = useState(0);
-  const [visibleDoneVideos, setVisibleDoneVideos] = useState([]);
-  const [doneVideosPerPage, setdoneVideosPerPage] = useState(1);
-
-  const containerRef = useRef(null);
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const columns = ["ID", "Lesson", "Progress", "Started", "Finished", "Date"];
 
   const data = new Array(200).fill().map(() => ({
     _id: generateObjectId(),
-    Lesson: "How to be successfull",
+    Lesson: "How to be successful",
     Progress: "50%",
     Started: "Aug 5, 2024",
     Finished: "N/A",
     Date: "Aug 10 , 2024",
   }));
-
-  const finishedVideos = doneVideos.slice(0, 4);
 
   const description =
     "Learn why people think, feel, and behave the way they do; how to utilize advanced communication styles; and the fundamentals of leadership and management.";
@@ -244,71 +242,16 @@ export function ViewAnalytics() {
     return text;
   };
 
-  useEffect(() => {
-    const updateVideosVisibility = () => {
-      const containerWidth = containerRef.current?.offsetWidth || 0;
-      const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
-      const itemWidth = isSmallScreen ? 250 : 300;
-
-      const newcurrentVideosPerPage = Math.floor(containerWidth / itemWidth);
-      setcurrentVideosPerPage(newcurrentVideosPerPage);
-      setVisibleCurrentVideos(
-        currentVideos.slice(
-          currentVideoIndex,
-          currentVideoIndex + newcurrentVideosPerPage,
-        ),
-      );
-    };
-
-    updateVideosVisibility();
-
-    window.addEventListener("resize", updateVideosVisibility);
-
-    return () => window.removeEventListener("resize", updateVideosVisibility);
-  }, [currentVideoIndex]);
-
-  const handleCurrentNext = () => {
-    if (currentVideoIndex + currentVideosPerPage < currentVideos.length) {
-      setCurrentVideoIndex(currentVideoIndex + currentVideosPerPage);
-    }
-  };
-
-  const handleCurrentBack = () => {
-    if (currentVideoIndex > 0) {
-      setCurrentVideoIndex(currentVideoIndex - currentVideosPerPage);
-    }
-  };
-
-  useEffect(() => {
-    const updateVideosVisibility = () => {
-      const containerWidth = containerRef.current?.offsetWidth || 0;
-      const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
-      const itemWidth = isSmallScreen ? 250 : 300;
-
-      const newdoneVideosPerPage = Math.floor(containerWidth / itemWidth);
-      setdoneVideosPerPage(newdoneVideosPerPage);
-      setVisibleDoneVideos(
-        doneVideos.slice(doneVideoIndex, doneVideoIndex + newdoneVideosPerPage),
-      );
-    };
-
-    updateVideosVisibility();
-
-    window.addEventListener("resize", updateVideosVisibility);
-
-    return () => window.removeEventListener("resize", updateVideosVisibility);
-  }, [doneVideoIndex]);
-
-  const handleDoneNext = () => {
-    if (doneVideoIndex + doneVideosPerPage < doneVideos.length) {
-      setDoneVideoIndex(doneVideoIndex + doneVideosPerPage);
-    }
-  };
-
-  const handleDoneBack = () => {
-    if (doneVideoIndex > 0) {
-      setDoneVideoIndex(doneVideoIndex - doneVideosPerPage);
-    }
+  const calculateMarginLeft = (index) => {
+    if (screenWidth >= 1536) {
+      return `${index * 19.5}rem`;
+    } else if (screenWidth >= 1280) {
+      return `${index * 17.5}rem`;
+    } else if (screenWidth >= 1024) {
+      return `${index * 16.5}rem`;
+    } else if (screenWidth >= 768) {
+      return `${index * 16}rem`;
+    } else return `${index * 15.5}rem`;
   };
 
   return (
@@ -349,140 +292,100 @@ export function ViewAnalytics() {
           {/* Currently Watching */}
           <div className="w-full h-full">
             <h1 className="text-3xl">Currently Watching</h1>
-            <div
-              ref={containerRef}
-              className={`relative flex flex-col ${
-                visibleCurrentVideos.length <= 3
-                  ? "md:items-start items-center"
-                  : "items-center"
-              } justify-center xl:px-0 lg:px-6 px-2 md:px-12`}
-            >
-              <div className="flex gap-4 pt-6 pb-2">
-                {visibleCurrentVideos.map((video, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col p-4 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] rounded-lg shadow-lg text-light-default"
-                  >
-                    <div className="relative">
-                      <img
-                        src={video.imgSrc}
-                        alt="Video thumbnail"
-                        className="object-cover w-full h-48 rounded-lg"
-                      />
-                      <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
-                        <FaRegEdit className="text-light-default" /> Edit
-                      </button>
-                    </div>
-                    <div>
-                      <h1 className="text-lg font-semibold leading-tight">
-                        {truncateText(video.title, 6)}{" "}
-                      </h1>
-                      <p className="text-sm text-light-secondary">
-                        {video.videoName} <br />
-                        {video.duration}{" "}
-                        <span className="float-right">{video.date}</span>
-                      </p>
-                    </div>
+            <div className="relative flex flex-row h-[29rem] pt-6 pb-2 overflow-x-auto overflow-y-hidden scrollbar-thin">
+              {currentVideos.map((video, index) => (
+                <div
+                  key={index}
+                  className="absolute p-6 left-0 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[17.5rem] max-w-[16.5rem] text-light-default h-full w-full overflow-hidden"
+                  style={{
+                    marginLeft: calculateMarginLeft(index),
+                  }}
+                >
+                  <div className="relative">
+                    <img
+                      src={video.imgSrc}
+                      alt="Video thumbnail"
+                      className="object-cover w-full h-48 rounded-lg"
+                    />
+                    <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
+                      <FaRegEdit className="text-light-default" /> Edit
+                    </button>
+                  </div>
+                  <div>
+                    <h1 className="pt-2 text-lg font-semibold leading-tight">
+                      {truncateText(video.title, 6)}
+                    </h1>
                     <p className="text-sm text-light-secondary">
-                      {truncateText(description, 22)}{" "}
+                      {video.videoName} <br />
+                      {video.duration}
+                      <span className="float-right">{video.date}</span>
                     </p>
-                    <div className="flex items-center justify-between text-xs text-light-secondary">
-                      <div className="flex items-center gap-2">
-                        <FaEye className="text-light-secondary" />
-                        <span>{video.views} Views</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <HiOutlineChartBar className="text-light-secondary" />
-                        <span>{video.active} Active Viewers</span>
-                      </div>
+                  </div>
+                  <p className="py-4 text-sm text-light-secondary">
+                    {truncateText(description, 22)}
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-light-secondary">
+                    <div className="flex items-center gap-2">
+                      <FaEye className="text-light-secondary" />
+                      <span>{video.views} Views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <HiOutlineChartBar className="text-light-secondary" />
+                      <span>{video.active} Active Viewers</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
-              <button
-                className={`bg-dark-secondary p-2 rounded-full`}
-                onClick={handleCurrentBack}
-              >
-                <FaArrowLeft className="text-xl text-light-default" />
-              </button>
-              <button
-                className={`bg-dark-secondary p-2 rounded-full`}
-                onClick={handleCurrentNext}
-              >
-                <FaArrowRight className="text-xl text-light-default" />
-              </button>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* Finished Videos */}
           <div className="w-full h-full pt-16">
             <h1 className="text-3xl">Finished Videos</h1>
-            <div
-              ref={containerRef}
-              className={`relative flex flex-col ${
-                visibleDoneVideos.length <= 3
-                  ? "md:items-start items-center"
-                  : "items-center"
-              } justify-center xl:px-0 lg:px-6 px-2 md:px-12`}
-            >
-              <div className="flex gap-4 pt-6 pb-2">
-                {visibleDoneVideos.map((video, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col p-4 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] rounded-lg shadow-lg text-light-default"
-                  >
-                    <div className="relative">
-                      <img
-                        src={video.imgSrc}
-                        alt="Video thumbnail"
-                        className="object-cover w-full h-48 rounded-lg"
-                      />
-                      <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
-                        <FaRegEdit className="text-light-default" /> Edit
-                      </button>
-                    </div>
-                    <div>
-                      <h1 className="text-lg font-semibold leading-tight">
-                        {truncateText(video.title, 6)}{" "}
-                      </h1>
-                      <p className="text-sm text-light-secondary">
-                        {video.videoName} <br />
-                        {video.duration}{" "}
-                        <span className="float-right">{video.date}</span>
-                      </p>
-                    </div>
+            <div className="relative flex flex-row h-[29rem] pt-6 pb-2 overflow-x-auto overflow-y-hidden scrollbar-thin">
+              {doneVideos.map((video, index) => (
+                <div
+                  key={index}
+                  className="absolute p-6 left-0 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[17.5rem] max-w-[16.5rem] text-light-default h-full w-full overflow-hidden"
+                  style={{
+                    marginLeft: calculateMarginLeft(index),
+                  }}
+                >
+                  <div className="relative">
+                    <img
+                      src={video.imgSrc}
+                      alt="Video thumbnail"
+                      className="object-cover w-full h-48 rounded-lg"
+                    />
+                    <button className="absolute top-0 right-0 flex items-center px-2 py-1 text-sm bg-black gap-x-1 rounded-bl-md text-light-default ">
+                      <FaRegEdit className="text-light-default" /> Edit
+                    </button>
+                  </div>
+                  <div>
+                    <h1 className="pt-2 text-lg font-semibold leading-tight">
+                      {truncateText(video.title, 6)}
+                    </h1>
                     <p className="text-sm text-light-secondary">
-                      {truncateText(description, 22)}{" "}
+                      {video.videoName} <br />
+                      {video.duration}
+                      <span className="float-right">{video.date}</span>
                     </p>
-                    <div className="flex items-center justify-between text-xs text-light-secondary">
-                      <div className="flex items-center gap-2">
-                        <FaEye className="text-light-secondary" />
-                        <span>{video.views} Views</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <HiOutlineChartBar className="text-light-secondary" />
-                        <span>{video.active} Active Viewers</span>
-                      </div>
+                  </div>
+                  <p className="py-4 text-sm text-light-secondary">
+                    {truncateText(description, 22)}
+                  </p>
+                  <div className="flex items-center justify-between text-xs text-light-secondary">
+                    <div className="flex items-center gap-2">
+                      <FaEye className="text-light-secondary" />
+                      <span>{video.views} Views</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <HiOutlineChartBar className="text-light-secondary" />
+                      <span>{video.active} Active Viewers</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
-              <button
-                className={`bg-dark-secondary p-2 rounded-full`}
-                onClick={handleDoneBack}
-              >
-                <FaArrowLeft className="text-xl text-light-default" />
-              </button>
-              <button
-                className={`bg-dark-secondary p-2 rounded-full`}
-                onClick={handleDoneNext}
-              >
-                <FaArrowRight className="text-xl text-light-default" />
-              </button>
+                </div>
+              ))}
             </div>
           </div>
 
