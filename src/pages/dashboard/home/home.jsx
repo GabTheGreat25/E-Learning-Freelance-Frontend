@@ -193,76 +193,25 @@ export function Home() {
       setVisibleCourses(
         courses.slice(currentIndex, currentIndex + newCoursesPerPage),
       );
-
-      console.log("Container Width:", containerWidth);
-      console.log("New Courses Per Page:", newCoursesPerPage);
-      console.log("Current Index:", currentIndex);
-
-      setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
-      setIsBackDisabled(currentIndex === 0);
     };
 
     updateCoursesVisibility();
     window.addEventListener("resize", updateCoursesVisibility);
 
     return () => window.removeEventListener("resize", updateCoursesVisibility);
-  }, [currentIndex, coursesPerPage]);
+  }, [currentIndex]);
 
   const handleNext = () => {
-    console.log("Next Button Pressed");
-    console.log("Current Index:", currentIndex);
-    console.log("Courses Length:", courses.length);
-
     if (currentIndex + coursesPerPage < courses.length) {
-      containerRef.current.scrollBy({
-        left: containerRef.current.offsetWidth,
-        behavior: "smooth",
-      });
-      setCurrentIndex(currentIndex + 1);
-      console.log("Moved to Next");
+      setCurrentIndex(currentIndex + coursesPerPage);
     }
   };
 
   const handleBack = () => {
-    console.log("Back Button Pressed");
-    console.log("Current Index:", currentIndex);
-
     if (currentIndex > 0) {
-      containerRef.current.scrollBy({
-        left: -containerRef.current.offsetWidth,
-        behavior: "smooth",
-      });
-      setCurrentIndex(currentIndex - 1);
-      console.log("Moved to Previous");
+      setCurrentIndex(currentIndex - coursesPerPage);
     }
   };
-
-  const handleScroll = () => {
-    const container = containerRef.current;
-    const scrollLeft = container.scrollLeft;
-    const scrollWidth = container.scrollWidth;
-    const offsetWidth = container.offsetWidth;
-
-    console.log("Scroll Left:", scrollLeft);
-    console.log("Scroll Width:", scrollWidth);
-    console.log("Offset Width:", offsetWidth);
-
-    // Simplified the logic to just check near the end
-    if (scrollLeft + offsetWidth >= scrollWidth - 50) {
-      console.log("Scroll End - Trigger Next");
-      handleNext();
-    } else if (scrollLeft <= 50) {
-      console.log("Scroll Start - Trigger Back");
-      handleBack();
-    }
-  };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    container.addEventListener("scroll", handleScroll);
-
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <>
@@ -368,15 +317,7 @@ export function Home() {
                 {visibleCourses.map((course, index) => (
                   <div
                     key={index}
-                    className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default transition-transform duration-500 ${
-                      animationDirection === "next"
-                        ? "transform translate-x-10"
-                        : ""
-                    } ${
-                      animationDirection === "back"
-                        ? "transform -translate-x-10"
-                        : ""
-                    }`}
+                    className={`flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default`}
                   >
                     <h1 className="text-xl font-semibold">{course.title}</h1>
                     <p className="text-sm text-light-secondary">
