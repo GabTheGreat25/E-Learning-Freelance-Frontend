@@ -160,15 +160,20 @@ const videos = [
 ];
 
 export function Home() {
-  const [activeTab, setActiveTab] = useState("Overview");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleCourses, setVisibleCourses] = useState([]);
-  const [coursesPerPage, setCoursesPerPage] = useState(1);
-  const [isNextDisabled, setIsNextDisabled] = useState(false);
-  const [isBackDisabled, setIsBackDisabled] = useState(true);
-  const limitedVideos = videos.slice(0, 8);
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
-  const containerRef = useRef(null);
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [activeTab, setActiveTab] = useState("Overview");
+  const limitedVideos = videos.slice(0, 8);
 
   const description =
     "Learn why people think, feel, and behave the way they do; how to utilize advanced communication styles; and the fundamentals of leadership and management.";
@@ -181,46 +186,29 @@ export function Home() {
     return text;
   };
 
-  useEffect(() => {
-    const updateCoursesVisibility = () => {
-      const containerWidth = containerRef.current?.offsetWidth || 0;
-      const isSmallScreen = window.matchMedia("(max-width: 600px)").matches;
-      const itemWidth = isSmallScreen ? 250 : 300;
-      const newCoursesPerPage = Math.floor(containerWidth / itemWidth);
-      setCoursesPerPage(newCoursesPerPage);
-      setVisibleCourses(
-        courses.slice(currentIndex, currentIndex + newCoursesPerPage),
-      );
-
-      setIsNextDisabled(currentIndex + newCoursesPerPage >= courses.length);
-      setIsBackDisabled(currentIndex === 0);
-    };
-    updateCoursesVisibility();
-    window.addEventListener("resize", updateCoursesVisibility);
-    return () => window.removeEventListener("resize", updateCoursesVisibility);
-  }, [currentIndex, coursesPerPage]);
-
-  const handleNext = () => {
-    if (currentIndex + coursesPerPage < courses.length) {
-      setCurrentIndex(currentIndex + coursesPerPage);
-    }
-  };
-  const handleBack = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - coursesPerPage);
-    }
+  const calculateMarginLeft = (index) => {
+    if (screenWidth >= 1536) {
+      return `${index * 21.5}rem`;
+    } else if (screenWidth >= 1280) {
+      return `${index * 19.5}rem`;
+    } else if (screenWidth >= 1024) {
+      return `${index * 19}rem`;
+    } else if (screenWidth >= 768) {
+      return `${index * 18.75}rem`;
+    } else return `${index * 18}rem`;
   };
 
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-4 pt-12 pb-32 overflow-x-hidden overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
         {/* Overview */}
         <TabNavigation
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           tabs={homeTabs}
         />
+
         {/* First Button */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">
           <div
@@ -258,6 +246,7 @@ export function Home() {
               </button>
             </div>
           </div>
+
           <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default md:col-span-2 xl:col-span-1">
             <div className="overflow-hidden">
               <h1 className="text-3xl font-normal truncate text-light-default">
@@ -278,40 +267,28 @@ export function Home() {
         </div>
 
         {/* Active Courses */}
-        <div className="pt-12">
+        <div className="relative pt-12">
           <div className="flex items-center justify-between md:gap-x-0 gap-x-2">
-            <div className="flex gap-x-6">
-              <div>
-                <h1 className="pb-1 md:text-3xl">Active Courses</h1>
-                <p className="text-xs md:text-sm text-light-secondary">
-                  See all your active courses here
-                </p>
-              </div>
+            <div>
+              <h1 className="pb-1 md:text-3xl">Active Courses</h1>
+              <p className="text-xs md:text-sm text-light-secondary">
+                See all your active courses here
+              </p>
             </div>
-            <div className="flex items-center justify-center md:gap-x-10 gap-x-3">
-              <div>
-                <button className="px-4 py-1 text-sm border rounded-full md:text-base md:px-8">
-                  Add Course
-                </button>
-              </div>
-              <button className="flex items-center text-sm md:items-end md:text-xl text-light-default">
-                See All <span className="ml-3 text-3xl">&#8250;</span>
-              </button>
-            </div>
+            <button className="flex items-center text-sm md:items-end md:text-xl text-light-default">
+              See All <span className="ml-3 text-3xl">&#8250;</span>
+            </button>
           </div>
-          <div
-            ref={containerRef}
-            className={`relative flex flex-col ${
-              visibleCourses.length <= 3
-                ? "md:items-start items-center"
-                : "items-center"
-            } justify-center  xl:px-0 lg:px-6 px-2 md:px-12`}
-          >
-            <div className="flex gap-4 pt-6 pb-2">
-              {visibleCourses.map((course, index) => (
+
+          <div className="relative w-full overflow-hidden cursor-pointer ">
+            <div className="relative flex flex-row h-[30rem] pt-6 pb-2 overflow-x-auto overflow-y-hidden scrollbar-thin scrollbar-hide">
+              {courses.map((course, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 p-6 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[18.5rem] max-w-[17.5rem] bg-dark-secondary text-light-default"
+                  className="absolute p-6 left-0 rounded-lg shadow-lg 2xl:max-w-xs xl:max-w-[17.5rem] max-w-[16.5rem] bg-dark-secondary text-light-default h-full w-full overflow-hidden"
+                  style={{
+                    marginLeft: calculateMarginLeft(index),
+                  }}
                 >
                   <h1 className="text-xl font-semibold">{course.title}</h1>
                   <p className="text-sm text-light-secondary">
@@ -323,7 +300,7 @@ export function Home() {
                   <img
                     src={course.imgSrc}
                     alt="Video thumbnail"
-                    className="w-full mt-4 rounded-lg"
+                    className="object-cover w-full mt-4 rounded-lg"
                   />
                   <div className="flex items-center justify-between mt-4 text-sm text-light-secondary">
                     <div className="flex items-center gap-2">
@@ -339,26 +316,6 @@ export function Home() {
               ))}
             </div>
           </div>
-          <div className="flex items-end justify-end px-2 mt-4 gap-x-4">
-            <button
-              className={`bg-dark-secondary p-2 rounded-full ${
-                isBackDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={handleBack}
-              disabled={isBackDisabled}
-            >
-              <FaArrowLeft className="text-xl text-light-default" />
-            </button>
-            <button
-              className={`bg-dark-secondary p-2 rounded-full ${
-                isNextDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={handleNext}
-              disabled={isNextDisabled}
-            >
-              <FaArrowRight className="text-xl text-light-default" />
-            </button>
-          </div>
         </div>
 
         {/* Active Videos */}
@@ -372,6 +329,7 @@ export function Home() {
             </div>
             <button className="px-8 py-1 border rounded-full">Add Video</button>
           </div>
+
           <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {limitedVideos.map((video, index) => (
               <div
@@ -430,6 +388,7 @@ export function Home() {
               </div>
             </div>
           </div>
+
           <div
             className="bg-center bg-no-repeat bg-cover rounded-lg"
             style={{ backgroundImage: `url(${GradientNotificationImg})` }}
@@ -442,6 +401,7 @@ export function Home() {
               </div>
             </div>
           </div>
+
           <div
             className="flex flex-col justify-between w-full h-full px-6 py-3 bg-center bg-no-repeat bg-cover border-2 border-transparent rounded-lg shadow-lg md:col-span-2 xl:col-span-1"
             style={{ backgroundImage: `url(${GradientTransactionImg})` }}
@@ -453,6 +413,7 @@ export function Home() {
             </div>
           </div>
         </div>
+
         <Footer />
       </section>
     </>
