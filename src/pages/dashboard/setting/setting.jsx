@@ -626,8 +626,8 @@ export function Setting() {
                   </label>
                   <Select
                     options={[
-                      { label: "Male", value: "male" },
-                      { label: "Female", value: "female" },
+                      { label: "Male", value: "Male" },
+                      { label: "Female", value: "Female" },
                     ]}
                     value={formik.values.gender}
                     onChange={(option) =>
