@@ -571,10 +571,10 @@ export function Setting() {
                     type="text"
                     id="email"
                     placeholder="Enter your Email"
-                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-light-secondary focus:outline-none ${
+                    className={`w-full p-4 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-shadow placeholder-light-secondary focus:border-light-shadow focus:outline-none ${
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
-                        : "border-light-secondary"
+                        : "border-light-shadow"
                     }`}
                     value={formik.values.email || ""}
                     onChange={formik.handleChange}

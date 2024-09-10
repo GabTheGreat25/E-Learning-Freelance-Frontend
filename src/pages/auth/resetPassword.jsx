@@ -138,7 +138,7 @@ export function ResetPassword() {
                     <button
                       type="button"
                       onClick={togglePasswordVisibility}
-                      className="absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
+                      className="text-[15px] absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
                     >
                       {isPasswordVisible ? "Hide" : "Show"}
                     </button>
@@ -176,7 +176,7 @@ export function ResetPassword() {
                     <button
                       type="button"
                       onClick={toggleConfirmPasswordVisibility}
-                      className="absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
+                      className="text-[15px] absolute transform -translate-y-1/2 right-8 top-1/2 text-light-secondary"
                     >
                       {isConfirmPasswordVisible ? "Hide" : "Show"}
                     </button>
