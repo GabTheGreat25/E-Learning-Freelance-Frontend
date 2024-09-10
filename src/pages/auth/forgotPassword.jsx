@@ -59,22 +59,22 @@ export function ForgotPassword() {
                 className="grid grid-cols-[40%_60%] items-center justify-center"
               >
                 <FaChevronLeft size={20} />
-                <p className="text-lg font-semibold text-light-secondary">
-                  Back
-                </p>
+                <p className="text-[15px] text-light-secondary">Back</p>
               </div>
             </div>
 
             <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
-              <h1 className="mb-1 text-4xl font-semibold">Forgot Password</h1>
-              <p className="mb-2 text-lg">Enter your email to continue</p>
+              <h1 className="mb-1 text-[30px] font-semibold">
+                Forgot Password
+              </h1>
+              <p className="mb-2 text-[15px]">Enter your email to continue</p>
               <hr className="mb-8" />
 
               <form onSubmit={formik.handleSubmit}>
                 <div className="mb-4">
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Email address <span className="text-red-600">*</span>
                   </label>
@@ -83,7 +83,7 @@ export function ForgotPassword() {
                     id="email"
                     name="email"
                     placeholder="Enter Your Email"
-                    className={`text-lg w-full p-4 border rounded-md ${
+                    className={`text-[15px] w-full p-4 border rounded-md ${
                       formik.errors.email && formik.touched.email
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -93,7 +93,7 @@ export function ForgotPassword() {
                     value={formik.values.email}
                   />
                   {formik.errors.email && formik.touched.email && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.email}
                     </p>
                   )}
@@ -101,7 +101,7 @@ export function ForgotPassword() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 my-6 text-lg rounded-md bg-dark-secondary text-light-default"
+                  className="w-full py-3 my-6 text-[15px] rounded-md bg-dark-secondary text-light-default"
                 >
                   Submit
                 </button>

@@ -11,6 +11,7 @@ const defaultToastProps = {
   closeOnClick: true,
   pauseOnFocusLoss: true,
   transition: Slide,
+  style: { color: "black" },
 };
 
 export const Toast = (type, message, options = {}) => {

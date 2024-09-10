@@ -151,7 +151,9 @@ export function RegisterProfile() {
         .then((res) => {
           if (res.success) {
             Toast(TOAST.SUCCESS, res.message);
-            navigate("/verification");
+            const expiryTime = Math.floor(Date.now() / 1000) + 300;
+            localStorage.setItem("resendOTPTime", expiryTime);
+            navigate("/verification", { state: { fromStep2: true } });
             dispatch(locationActions.clearFormData(formData));
             dispatch(profileActions.clearProfileData(formData));
           } else {
@@ -202,26 +204,24 @@ export function RegisterProfile() {
                 className="grid grid-cols-[40%_60%] items-center justify-center"
               >
                 <FaChevronLeft size={20} />
-                <p className="text-lg font-semibold text-light-secondary">
-                  Back
-                </p>
+                <p className="text-[15px] text-light-secondary">Back</p>
               </div>
             </div>
 
             <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
               <div className="grid grid-rows-2">
-                <p className="text-lg font-medium text-start text-light-secondary">
+                <p className="text-[15px] font-medium text-start text-light-secondary">
                   STEP 02/03
                 </p>
-                <h3 className="text-lg font-medium text-end">Address</h3>
+                <h3 className="text-[15px] font-medium text-end">Address</h3>
               </div>
             </div>
 
             <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
-              <h1 className="mb-1 text-4xl font-semibold">
+              <h1 className="mb-1 text-[30px] font-semibold">
                 Complete Your Profile!
               </h1>
-              <p className="mb-2 text-lg">
+              <p className="mb-2 text-[15px]">
                 For the purpose of industry regulation, your details are
                 required.
               </p>
@@ -231,7 +231,7 @@ export function RegisterProfile() {
                 <div className="mb-4">
                   <label
                     htmlFor="mobileNumber"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Mobile Number <span className="text-red-600">*</span>
                   </label>
@@ -245,7 +245,7 @@ export function RegisterProfile() {
                     onChange={(value) =>
                       formik.setFieldValue("mobileNumber", value)
                     }
-                    className={`text-lg w-full p-4 border rounded-md ${
+                    className={`text-[15px] w-full p-4 border rounded-md ${
                       formik.errors.mobileNumber && formik.touched.mobileNumber
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -258,7 +258,7 @@ export function RegisterProfile() {
                   />
                   {formik.errors.mobileNumber &&
                     formik.touched.mobileNumber && (
-                      <p className="mt-2 text-lg text-error-default">
+                      <p className="mt-2 text-[15px] text-error-default">
                         {formik.errors.mobileNumber}
                       </p>
                     )}
@@ -267,7 +267,7 @@ export function RegisterProfile() {
                 <div className="relative mb-4">
                   <label
                     htmlFor="birthDate"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Birth Date <span className="text-red-600">*</span>
                   </label>
@@ -277,7 +277,7 @@ export function RegisterProfile() {
                       id="birthDate"
                       value={startDate ? startDate.toLocaleDateString() : ""}
                       readOnly
-                      className={`text-lg w-full p-4 border ${
+                      className={`text-[15px] w-full p-4 border ${
                         formik.errors.birthDate && formik.touched.birthDate
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -310,7 +310,7 @@ export function RegisterProfile() {
                     </div>
                   )}
                   {formik.errors.birthDate && formik.touched.birthDate && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.birthDate}
                     </p>
                   )}
@@ -319,7 +319,7 @@ export function RegisterProfile() {
                 <div className="relative mb-4">
                   <label
                     htmlFor="gender"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Gender <span className="text-red-600">*</span>
                   </label>
@@ -332,7 +332,7 @@ export function RegisterProfile() {
                     onChange={(option) =>
                       formik.setFieldValue("gender", option)
                     }
-                    className={`text-lg w-full p-[.65rem] border rounded-md ${
+                    className={`text-[15px] w-full p-[.65rem] border rounded-md ${
                       formik.errors.gender && formik.touched.gender
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -342,7 +342,7 @@ export function RegisterProfile() {
                   />
 
                   {formik.errors.gender && formik.touched.gender && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.gender}
                     </p>
                   )}
@@ -351,7 +351,7 @@ export function RegisterProfile() {
                 <div className="relative mb-4">
                   <label
                     htmlFor="country"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Country <span className="text-red-600">*</span>
                   </label>
@@ -362,7 +362,7 @@ export function RegisterProfile() {
                       setSelectedCountry(option);
                       formik.setFieldValue("country", option || null);
                     }}
-                    className={`text-lg w-full p-[.65rem] border rounded-md ${
+                    className={`text-[15px] w-full p-[.65rem] border rounded-md ${
                       formik.errors.country && formik.touched.country
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -371,7 +371,7 @@ export function RegisterProfile() {
                     styles={SelectStyles()}
                   />
                   {formik.errors.country && formik.touched.country && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.country}
                     </p>
                   )}
@@ -380,7 +380,7 @@ export function RegisterProfile() {
                 <div className="relative mb-4">
                   <label
                     htmlFor="province"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Province <span className="text-red-600">*</span>
                   </label>
@@ -393,7 +393,7 @@ export function RegisterProfile() {
                         setCustomProvince("");
                         formik.setFieldValue("province", option || "");
                       }}
-                      className={`text-lg w-full p-[.65rem] border rounded-md ${
+                      className={`text-[15px] w-full p-[.65rem] border rounded-md ${
                         formik.errors.province && formik.touched.province
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -413,7 +413,7 @@ export function RegisterProfile() {
                         setSelectedProvince(null);
                         formik.setFieldValue("province", customValue);
                       }}
-                      className={`text-lg w-full p-4 ${
+                      className={`text-[15px] w-full p-4 ${
                         formik.errors.province && formik.touched.province
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -421,7 +421,7 @@ export function RegisterProfile() {
                     />
                   )}
                   {formik.errors.province && formik.touched.province && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.province}
                     </p>
                   )}
@@ -430,7 +430,7 @@ export function RegisterProfile() {
                 <div className="relative mb-4">
                   <label
                     htmlFor="city"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     City <span className="text-red-600">*</span>
                   </label>
@@ -443,7 +443,7 @@ export function RegisterProfile() {
                         setCustomCity("");
                         formik.setFieldValue("city", option || "");
                       }}
-                      className={`text-lg w-full p-[.65rem] border rounded-md ${
+                      className={`text-[15px] w-full p-[.65rem] border rounded-md ${
                         formik.errors.city && formik.touched.city
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -463,7 +463,7 @@ export function RegisterProfile() {
                         setSelectedCity(null);
                         formik.setFieldValue("city", customValue);
                       }}
-                      className={`text-lg w-full p-4 ${
+                      className={`text-[15px] w-full p-4 ${
                         formik.errors.city && formik.touched.city
                           ? "border-error-default"
                           : "border-light-secondary"
@@ -471,7 +471,7 @@ export function RegisterProfile() {
                     />
                   )}
                   {formik.errors.city && formik.touched.city && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.city}
                     </p>
                   )}
@@ -480,7 +480,7 @@ export function RegisterProfile() {
                 <div className="relative mb-8">
                   <label
                     htmlFor="address"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     Address <span className="text-red-600">*</span>
                   </label>
@@ -490,14 +490,14 @@ export function RegisterProfile() {
                     placeholder="Enter your address"
                     value={formik.values.address}
                     onChange={formik.handleChange}
-                    className={`text-lg w-full p-4 border rounded-md ${
+                    className={`text-[15px] w-full p-4 border rounded-md ${
                       formik.errors.address && formik.touched.address
                         ? "border-error-default"
                         : "border-light-secondary"
                     } text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
                   />
                   {formik.errors.address && formik.touched.address && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.address}
                     </p>
                   )}
@@ -505,7 +505,7 @@ export function RegisterProfile() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 my-3 text-lg rounded-md bg-dark-secondary text-light-default"
+                  className="w-full py-3 my-3 text-[15px] rounded-md bg-dark-secondary text-light-default"
                 >
                   Save & Continue
                 </button>

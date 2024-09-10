@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { FadeLoader } from "react-spinners";
@@ -15,20 +15,26 @@ const RESEND_TIMEOUT = 300;
 
 export function Verification() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.location.formData);
 
   const [verifyOTP, { isLoading }] = hooks.useVerifyOTPMutation();
   const [resendOTP, { isLoading: isResending }] = hooks.useResendOTPMutation();
   const [countdown, setCountdown] = useState(0);
+  const [timerStarted, setTimerStarted] = useState(false);
+
   let countdownInterval;
 
-  const startCountdown = (initialTime) => {
+  const startCountdown = (remainingTime) => {
+    setTimerStarted(true);
+    setCountdown(remainingTime || RESEND_TIMEOUT);
     countdownInterval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(countdownInterval);
           localStorage.removeItem("resendOTPTime");
+          setTimerStarted(false);
           return 0;
         }
         return prev - 1;
@@ -45,7 +51,6 @@ export function Verification() {
             Toast(TOAST.SUCCESS, "OTP has been resent to your email.");
             const expiryTime = Math.floor(Date.now() / 1000) + RESEND_TIMEOUT;
             localStorage.setItem("resendOTPTime", expiryTime);
-            setCountdown(RESEND_TIMEOUT);
             startCountdown(RESEND_TIMEOUT);
           } else {
             Toast(
@@ -68,30 +73,29 @@ export function Verification() {
     }
   };
 
-  useEffect(() => {
-    const timeNow = Math.floor(Date.now() / 1000);
-    const storedExpiryTime = localStorage.getItem("resendOTPTime");
-
-    if (storedExpiryTime) {
-      const remainingTime = storedExpiryTime - timeNow;
-      if (remainingTime > 0) {
-        setCountdown(remainingTime);
-        startCountdown(remainingTime);
-      } else {
-        localStorage.removeItem("resendOTPTime");
-      }
-    }
-
-    return () => {
-      clearInterval(countdownInterval);
-    };
-  }, []);
-
   const formatCountdown = () => {
     const minutes = Math.floor(countdown / 60);
     const seconds = countdown % 60;
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
+
+  useEffect(() => {
+    const timeNow = Math.floor(Date.now() / 1000);
+    const storedExpiryTime = localStorage.getItem("resendOTPTime");
+
+    if (location.state && location.state.fromStep2) {
+      if (storedExpiryTime) {
+        const remainingTime = storedExpiryTime - timeNow;
+        if (remainingTime > 0) {
+          startCountdown(remainingTime);
+        }
+      } else {
+        startCountdown();
+      }
+    }
+
+    return () => clearInterval(countdownInterval);
+  }, [location.state]);
 
   const formik = useFormik({
     initialValues: {
@@ -137,18 +141,18 @@ export function Verification() {
           <div className="relative w-full h-screen py-32 overflow-y-auto scrollbar-thin">
             <div className="absolute top-0 right-0 flex p-8 mt-2 text-sm">
               <div className="grid grid-rows-2">
-                <p className="text-lg font-medium text-end text-light-secondary">
+                <p className="text-[15px] font-medium text-end text-light-secondary">
                   STEP 03/03
                 </p>
-                <h3 className="text-lg font-medium">OTP Verification</h3>
+                <h3 className="text-[15px] font-medium">OTP Verification</h3>
               </div>
             </div>
 
             <div className="px-6 2xl:px-36 xl:px-28 lg:px-20 md:px-10">
-              <h1 className="mb-1 text-4xl font-semibold">
+              <h1 className="mb-1 text-[30px] font-semibold">
                 Email Verification
               </h1>
-              <p className="mb-2 text-lg">
+              <p className="mb-2 text-[15px]">
                 We sent a verification to your email. Please see the OTP and
                 enter it below.
               </p>
@@ -158,7 +162,7 @@ export function Verification() {
                 <div className="mb-4">
                   <label
                     htmlFor="otp"
-                    className="block mb-2 text-lg font-medium"
+                    className="block mb-2 text-[15px] font-medium"
                   >
                     OTP <span className="text-red-600">*</span>
                   </label>
@@ -166,7 +170,7 @@ export function Verification() {
                     type="text"
                     id="otp"
                     placeholder="Enter Your OTP"
-                    className={`text-lg w-full p-4 border rounded-md ${
+                    className={`text-[15px] w-full p-4 border rounded-md ${
                       formik.errors.otp && formik.touched.otp
                         ? "border-error-default"
                         : "border-light-secondary"
@@ -176,7 +180,7 @@ export function Verification() {
                     value={formik.values.otp}
                   />
                   {formik.errors.otp && formik.touched.otp && (
-                    <p className="mt-2 text-lg text-error-default">
+                    <p className="mt-2 text-[15px] text-error-default">
                       {formik.errors.otp}
                     </p>
                   )}
@@ -185,7 +189,7 @@ export function Verification() {
                 <div className="flex items-center justify-center pb-6">
                   <button
                     type="button"
-                    className="text-lg underline text-light-secondary"
+                    className="text-[15px] underline text-light-secondary"
                     onClick={handleResendOTP}
                     disabled={countdown > 0 || isResending}
                   >
@@ -197,7 +201,7 @@ export function Verification() {
 
                 <button
                   type="submit"
-                  className="w-full py-3 my-6 text-lg rounded-md bg-dark-secondary text-light-default"
+                  className="w-full py-3 my-6 text-[15px] rounded-md bg-dark-secondary text-light-default"
                 >
                   Verify OTP
                 </button>
