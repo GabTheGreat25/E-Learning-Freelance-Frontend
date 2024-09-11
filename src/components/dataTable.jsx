@@ -6,6 +6,7 @@ export function DataTable({
   data,
   initialRowsPerPage = 15,
   handleRowClick,
+  maxHeight = "650px",
 }) {
   const [selectedColumns, setSelectedColumns] = useState(
     columns.filter((column) => column !== "ID"),
@@ -58,9 +59,9 @@ export function DataTable({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center w-full my-4">
-        <h1 className="pb-2 mr-4 xl:pb-0">Columns:</h1>
-        <div className="flex flex-wrap w-full gap-4">
+      <div className="flex flex-wrap items-center justify-center w-full my-4">
+        <div className="flex flex-wrap items-start justify-start w-full gap-x-4">
+          <h1 className="pb-2 mr-4 xl:pb-0">Columns:</h1>
           {columns
             .filter((column) => column !== "ID")
             .map((column) => (
@@ -80,7 +81,10 @@ export function DataTable({
         </div>
       </div>
 
-      <div className="rounded-md scrollbar-thin max-h-[650px] overflow-y-auto">
+      <div
+        className="overflow-y-auto rounded-md scrollbar-thin"
+        style={{ maxHeight }}
+      >
         <div className="overflow-x-auto 2xl:w-[120%] w-[200%]">
           <table className="w-full text-left table-auto">
             <thead>
