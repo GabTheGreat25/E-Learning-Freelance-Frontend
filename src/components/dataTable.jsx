@@ -8,6 +8,7 @@ export function DataTable({
   handleRowClick,
   maxHeight = "650px",
 }) {
+  const [originalColumns] = useState(columns);
   const [selectedColumns, setSelectedColumns] = useState(
     columns.filter((column) => column.name !== "ID"),
   );
@@ -18,14 +19,21 @@ export function DataTable({
   const totalPages = Math.ceil(totalRows / rowsPerPage);
 
   const handleColumnToggle = (columnName) => {
-    setSelectedColumns((prevSelectedColumns) =>
-      prevSelectedColumns.find((col) => col.name === columnName)
-        ? prevSelectedColumns.filter((col) => col.name !== columnName)
-        : [
-            ...prevSelectedColumns,
-            columns.find((col) => col.name === columnName),
-          ],
-    );
+    setSelectedColumns((prevSelectedColumns) => {
+      if (prevSelectedColumns.find((col) => col.name === columnName)) {
+        return prevSelectedColumns.filter((col) => col.name !== columnName);
+      } else {
+        const newSelectedColumns = [...prevSelectedColumns];
+        const originalColumn = originalColumns.find(
+          (col) => col.name === columnName,
+        );
+        const originalIndex = originalColumns.indexOf(originalColumn);
+
+        newSelectedColumns.splice(originalIndex - 1, 0, originalColumn);
+
+        return newSelectedColumns;
+      }
+    });
   };
 
   const handlePageChange = (pageNumber) => {
@@ -66,7 +74,7 @@ export function DataTable({
       <div className="flex flex-wrap items-center justify-center w-full my-4">
         <div className="flex flex-wrap items-center justify-start w-full gap-x-4">
           <h1 className="pb-2 mr-4 xl:pb-0">Columns:</h1>
-          {columns
+          {originalColumns
             .filter((column) => column.name !== "ID")
             .map((column) => (
               <label
