@@ -147,7 +147,7 @@ export function AddVideos() {
   return (
     <>
       <Navbar title="Content" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-16 pt-12 pb-32 overflow-y-auto scrollbar-thin text-light-default">
         {/* Content */}
         <TabNavigation
           activeTab={activeTab}

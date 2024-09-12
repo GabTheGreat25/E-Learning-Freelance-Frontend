@@ -51,7 +51,7 @@ export function Analytics() {
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-16 pt-12 pb-32 overflow-y-auto bg-black scrollbar-thin text-light-default">
         {/* Analytics */}
         <TabNavigation
           activeTab={activeTab}
