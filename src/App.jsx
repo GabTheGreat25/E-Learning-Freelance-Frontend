@@ -22,6 +22,7 @@ import {
   AddCourses,
   Videos,
   AddVideos,
+  ViewVideos,
   Promotions,
   AddPromotions,
   Setting,
@@ -61,6 +62,7 @@ export default function App() {
                   <Route path="promotions/create" element={<AddPromotions />} />
                   <Route path="videos" element={<Videos />} />
                   <Route path="videos/create" element={<AddVideos />} />
+                  <Route path="videos/view" element={<ViewVideos />} />
                   <Route path="settings" element={<Setting />} />
                   <Route path="test" element={<Test />} />
                 </Route>

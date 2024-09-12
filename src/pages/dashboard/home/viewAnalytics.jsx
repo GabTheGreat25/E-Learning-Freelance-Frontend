@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaArrowLeft, FaArrowRight, FaRegEdit } from "react-icons/fa";
+import { FaEye, FaRegEdit } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { homeTabs } from "@utils";
@@ -220,7 +220,14 @@ export function ViewAnalytics() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const columns = ["ID", "Lesson", "Progress", "Started", "Finished", "Date"];
+  const columns = [
+    { name: "ID" },
+    { name: "Lesson" },
+    { name: "Progress" },
+    { name: "Started" },
+    { name: "Finished" },
+    { name: "Date" },
+  ];
 
   const data = new Array(200).fill().map(() => ({
     _id: generateObjectId(),

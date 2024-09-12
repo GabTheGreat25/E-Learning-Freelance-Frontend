@@ -170,7 +170,10 @@ export function AddVideos() {
         {/* Form Title */}
         <div className="flex items-center justify-between pb-4">
           <h1 className="text-3xl">New Video</h1>
-          <button className="py-1 border rounded-full px- md:text-base md:px-12">
+          <button
+            onClick={() => navigate("/dashboard/videos/view")}
+            className="py-1 border rounded-full px- md:text-base md:px-12"
+          >
             <span className="text-lg">Save</span>
           </button>
         </div>
@@ -203,7 +206,7 @@ export function AddVideos() {
                     <h1 className="pt-3 text-xs text-center md:text-base text-light-default">
                       Drag MP4 files here
                     </h1>
-                    <p className="text-xs text-center md:text-base text-light-tertiary">
+                    <p className="text-xs text-center md:text-base text-light-secondary">
                       {fileName
                         ? truncateText(fileName, 30)
                         : "MP4 files supported"}
@@ -373,7 +376,7 @@ export function AddVideos() {
                         <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
                           Banner Photo
                         </h1>
-                        <p className="text-xs text-center md:text-base text-light-tertiary">
+                        <p className="text-xs text-center md:text-base text-light-secondary">
                           {bannerFileName
                             ? truncateText(bannerFileName, 20)
                             : "jpg, jpeg, png files"}
@@ -409,7 +412,7 @@ export function AddVideos() {
                         <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
                           Thumbnail Photo
                         </h1>
-                        <p className="text-xs text-center md:text-base text-light-tertiary">
+                        <p className="text-xs text-center md:text-base text-light-secondary">
                           {thumbnailFileName
                             ? truncateText(thumbnailFileName, 20)
                             : "jpg, jpeg, png files"}

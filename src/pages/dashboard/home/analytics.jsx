@@ -23,14 +23,14 @@ export function Analytics() {
   const [activeTab, setActiveTab] = useState("Analytics");
 
   const columns = [
-    "ID",
-    "First Name",
-    "Last Name",
-    "Age",
-    "Gender",
-    "Last Active",
-    "Date Registered",
-    "Last Video",
+    { name: "ID" },
+    { name: "First Name" },
+    { name: "Last Name" },
+    { name: "Age" },
+    { name: "Gender" },
+    { name: "Last Active" },
+    { name: "Date Registered" },
+    { name: "Last Video" },
   ];
 
   const data = new Array(200).fill().map(() => ({

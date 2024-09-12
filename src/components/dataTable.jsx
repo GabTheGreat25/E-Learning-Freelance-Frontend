@@ -9,7 +9,7 @@ export function DataTable({
   maxHeight = "650px",
 }) {
   const [selectedColumns, setSelectedColumns] = useState(
-    columns.filter((column) => column !== "ID"),
+    columns.filter((column) => column.name !== "ID"),
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
@@ -17,11 +17,14 @@ export function DataTable({
   const totalRows = data.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
 
-  const handleColumnToggle = (column) => {
+  const handleColumnToggle = (columnName) => {
     setSelectedColumns((prevSelectedColumns) =>
-      prevSelectedColumns.includes(column)
-        ? prevSelectedColumns.filter((col) => col !== column)
-        : [...prevSelectedColumns, column],
+      prevSelectedColumns.find((col) => col.name === columnName)
+        ? prevSelectedColumns.filter((col) => col.name !== columnName)
+        : [
+            ...prevSelectedColumns,
+            columns.find((col) => col.name === columnName),
+          ],
     );
   };
 
@@ -59,28 +62,32 @@ export function DataTable({
 
   return (
     <div>
+      {/* Column Selector */}
       <div className="flex flex-wrap items-center justify-center w-full my-4">
-        <div className="flex flex-wrap items-start justify-start w-full gap-x-4">
+        <div className="flex flex-wrap items-center justify-start w-full gap-x-4">
           <h1 className="pb-2 mr-4 xl:pb-0">Columns:</h1>
           {columns
-            .filter((column) => column !== "ID")
+            .filter((column) => column.name !== "ID")
             .map((column) => (
               <label
-                key={column}
+                key={column.name}
                 className="flex items-center gap-x-2 text-light-default"
               >
                 <input
                   type="checkbox"
-                  checked={selectedColumns.includes(column)}
-                  onChange={() => handleColumnToggle(column)}
+                  checked={selectedColumns.find(
+                    (col) => col.name === column.name,
+                  )}
+                  onChange={() => handleColumnToggle(column.name)}
                   className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-2 rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
                 />
-                <span>{column}</span>
+                <span>{column.name}</span>
               </label>
             ))}
         </div>
       </div>
 
+      {/* Table */}
       <div
         className="overflow-y-auto rounded-md scrollbar-thin"
         style={{ maxHeight }}
@@ -100,10 +107,10 @@ export function DataTable({
                 <th className="px-4 py-2 border-b border-light-shadow">ID</th>
                 {selectedColumns.map((column) => (
                   <th
-                    key={column}
+                    key={column.name}
                     className="px-4 py-2 border-b border-light-shadow"
                   >
-                    {column}
+                    {column.name}
                   </th>
                 ))}
               </tr>
@@ -136,10 +143,18 @@ export function DataTable({
                   </td>
                   {selectedColumns.map((column) => (
                     <td
-                      key={`${row._id}-${column}`}
+                      key={`${row._id}-${column.name}`}
                       className="px-4 py-2 border-b border-light-shadow"
                     >
-                      {row[column]}
+                      {column.isImage ? (
+                        <img
+                          src={row[column.name]}
+                          alt={column.name}
+                          className="object-cover w-32 h-20 rounded"
+                        />
+                      ) : (
+                        row[column.name] || "N/A"
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -149,6 +164,7 @@ export function DataTable({
         </div>
       </div>
 
+      {/* Pagination */}
       <div className="flex items-center justify-end mt-4 text-light-default">
         <div className="flex items-center gap-4">
           <label className="mr-2">Rows per page:</label>
