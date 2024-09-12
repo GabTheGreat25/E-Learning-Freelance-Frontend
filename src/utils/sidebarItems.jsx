@@ -40,8 +40,7 @@ export function SidebarItems() {
       label: "Notifications",
       icon: images.NotificationImg,
       onClick: () => {
-        console.log("Navigating to Notifications");
-        // navigate("/notifications");
+        navigate("/dashboard/activities");
       },
     },
     {

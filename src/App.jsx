@@ -26,6 +26,8 @@ import {
   Promotions,
   AddPromotions,
   ViewPromotions,
+  Activities,
+  Messages,
   Setting,
 } from "@/pages";
 import { AdminLayout, HomeLayout, NotFound, RootLayout } from "@/layouts";
@@ -65,6 +67,8 @@ export default function App() {
                   <Route path="videos" element={<Videos />} />
                   <Route path="videos/create" element={<AddVideos />} />
                   <Route path="videos/view" element={<ViewVideos />} />
+                  <Route path="activities" element={<Activities />} />
+                  <Route path="messages" element={<Messages />} />
                   <Route path="settings" element={<Setting />} />
                   <Route path="test" element={<Test />} />
                 </Route>
