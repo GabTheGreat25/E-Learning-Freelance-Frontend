@@ -18,3 +18,4 @@ export * from "./dashboard/content/addCourses.jsx";
 export * from "./dashboard/content/addPromotions.jsx";
 export * from "./dashboard/content/addVideos.jsx";
 export * from "./dashboard/content/viewVideos.jsx";
+export * from "./dashboard/content/viewPromotions.jsx";

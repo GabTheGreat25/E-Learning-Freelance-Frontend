@@ -176,7 +176,7 @@ export const ViewVideos = () => {
   };
 
   const handleButtonClick = () => {
-    alert("Button Clicked!");
+    navigate("/dashboard/videos/create");
   };
 
   return (
