@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
+import { HiOutlineTrash } from "react-icons/hi";
 
 export function DataTable({
   columns,
@@ -15,8 +16,19 @@ export function DataTable({
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [selectedRows, setSelectedRows] = useState([]);
-  const totalRows = data.length;
+  const [tableData, setTableData] = useState(data);
+
+  const totalRows = tableData.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+  const handleDelete = () => {
+    const newData = tableData.filter((row) => !selectedRows.includes(row._id));
+    setTableData(newData);
+    setSelectedRows([]);
+
+    const selectAllCheckbox = document.querySelector("#selectAllCheckbox");
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+  };
 
   const handleColumnToggle = (columnName) => {
     setSelectedColumns((prevSelectedColumns) => {
@@ -50,9 +62,11 @@ export function DataTable({
 
   const handleSelectAll = (event) => {
     if (event.target.checked) {
-      const allRows = data.map((row) => row._id);
+      const allRows = slicedData.map((row) => row._id);
       setSelectedRows(allRows);
-    } else setSelectedRows([]);
+    } else {
+      setSelectedRows([]);
+    }
   };
 
   const handleRowSelect = (id) => {
@@ -63,7 +77,7 @@ export function DataTable({
     );
   };
 
-  const slicedData = data.slice(
+  const slicedData = tableData.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage,
   );
@@ -106,9 +120,13 @@ export function DataTable({
               <tr className="text-light-default bg-dark-default">
                 <th className="px-4 py-2 border-b border-light-shadow">
                   <input
+                    id="selectAllCheckbox"
                     type="checkbox"
                     onChange={handleSelectAll}
-                    checked={selectedRows.length === data.length}
+                    checked={
+                      slicedData.length > 0 &&
+                      selectedRows.length === slicedData.length
+                    }
                     className="h-5 w-5 p-1 text-[.6rem] bg-transparent border-2 rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
                   />
                 </th>
@@ -172,8 +190,22 @@ export function DataTable({
         </div>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-end mt-4 text-light-default">
+      <div className="flex items-center justify-between mt-4 text-light-default">
+        {/* Delete Button */}
+        <div className="py-4">
+          <button
+            onClick={handleDelete}
+            className={`flex text-lg items-center gap-x-2 px-4 py-2 bg-red-500 text-white rounded ${
+              selectedRows.length === 0
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }`}
+            disabled={selectedRows.length === 0}
+          >
+            Delete <HiOutlineTrash size={24} />
+          </button>
+        </div>
+        {/* Pagination */}
         <div className="flex items-center gap-4">
           <label className="mr-2">Rows per page:</label>
           <select

@@ -4,18 +4,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { contentTabs, SelectStyles, Toast } from "@utils";
+import { contentTabs, SelectStyles } from "@utils";
 import { Navbar, Footer, TabNavigation } from "@components";
-import { UploadImg, CalendarImg } from "@assets";
-import { TOAST } from "@constants";
+import { CalendarImg, VideoImg } from "@assets";
 
 export function AddCourses() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Courses");
-  const [banner, setBanner] = useState(null);
-  const [bannerFileName, setBannerFileName] = useState("");
-  const [thumbnail, setThumbnail] = useState(null);
-  const [thumbnailFileName, setThumbnailFileName] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const dropdownRef = useRef(null);
@@ -38,95 +33,6 @@ export function AddCourses() {
   const handleDateChange = (date) => {
     setStartDate(date);
     setShowDatePicker(false);
-  };
-
-  const truncateText = (text, charLimit) => {
-    if (text.length > charLimit) {
-      return `${text.slice(0, charLimit)}...`;
-    }
-    return text;
-  };
-
-  const handleBannerChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setBanner(reader.result);
-          setBannerFileName(file.name);
-        }
-      };
-      reader.readAsDataURL(file);
-    } else {
-      Toast(TOAST.ERROR, "Only image files are supported for the banner.");
-    }
-  };
-
-  const handleBannerFileSelect = (file) => {
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setBanner(reader.result);
-        setBannerFileName(file.name);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      Toast(TOAST.ERROR, "Please upload a valid image file for the banner.");
-    }
-  };
-
-  const handleBannerDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleBannerFileSelect(files[0]);
-    }
-  };
-
-  const handleBannerDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleThumbnailChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setThumbnail(reader.result);
-          setThumbnailFileName(file.name);
-        }
-      };
-      reader.readAsDataURL(file);
-    } else {
-      Toast(TOAST.ERROR, "Only image files are supported for the thumbnail.");
-    }
-  };
-
-  const handleThumbnailFileSelect = (file) => {
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnail(reader.result);
-        setThumbnailFileName(file.name);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      Toast(TOAST.ERROR, "Please upload a valid image file for the thumbnail.");
-    }
-  };
-
-  const handleThumbnailDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleThumbnailFileSelect(files[0]);
-    }
-  };
-
-  const handleThumbnailDragOver = (e) => {
-    e.preventDefault();
   };
 
   const conditionOptions = [
@@ -405,78 +311,7 @@ export function AddCourses() {
                 </div>
               </div>
               <div className="grid gap-y-8">
-                {/* Banner Section */}
-                <div className="w-full">
-                  <h1 className="pb-3 text-sm xs:text-xl text-light-default">
-                    Banner
-                  </h1>
-                  <div
-                    className={`flex items-center justify-center w-full p-6 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default focus:border-info-secondary focus:outline-none`}
-                    onDragOver={handleBannerDragOver}
-                    onDrop={handleBannerDrop}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleBannerChange}
-                      className="hidden"
-                      id="upload-banner"
-                    />
-                    <label htmlFor="upload-banner">
-                      <div className="flex flex-col items-center justify-center cursor-pointer">
-                        <img
-                          src={UploadImg}
-                          alt="UploadImg"
-                          className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
-                        />
-                        <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
-                          Banner Photo
-                        </h1>
-                        <p className="text-xs text-center md:text-base text-light-secondary">
-                          {bannerFileName
-                            ? truncateText(bannerFileName, 20)
-                            : "jpg, jpeg, png files"}
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-                {/* Thumbnail Section */}
-                <div className="w-full">
-                  <h1 className="pb-3 text-sm xs:text-xl text-light-default">
-                    Thumbnail
-                  </h1>
-                  <div
-                    className={`flex items-center justify-center w-full p-6 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default focus:border-info-secondary focus:outline-none`}
-                    onDragOver={handleThumbnailDragOver}
-                    onDrop={handleThumbnailDrop}
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleThumbnailChange}
-                      className="hidden"
-                      id="upload-thumbnail"
-                    />
-                    <label htmlFor="upload-thumbnail">
-                      <div className="flex flex-col items-center justify-center cursor-pointer">
-                        <img
-                          src={UploadImg}
-                          alt="UploadImg"
-                          className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
-                        />
-                        <h1 className="pt-3 pb-1 text-xs text-center md:text-base text-light-default">
-                          Thumbnail Photo
-                        </h1>
-                        <p className="text-xs text-center md:text-base text-light-secondary">
-                          {thumbnailFileName
-                            ? truncateText(thumbnailFileName, 20)
-                            : "jpg, jpeg, png files"}
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-                </div>
+                <h1>I am working</h1>
               </div>
             </div>
           </form>
