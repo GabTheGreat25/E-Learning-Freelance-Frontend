@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navbar, Footer, TabNavigation, DataTable } from "@components";
+import { Navbar, Footer, TabNavigation } from "@components";
 import { notificationTabs } from "@utils";
 
 export function Messages() {

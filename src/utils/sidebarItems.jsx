@@ -48,8 +48,7 @@ export function SidebarItems() {
       label: "Transactions",
       icon: images.EmptyWalletImg,
       onClick: () => {
-        console.log("Navigating to Transactions");
-        // navigate("/transactions");
+        navigate("/dashboard/transactions");
       },
     },
     {

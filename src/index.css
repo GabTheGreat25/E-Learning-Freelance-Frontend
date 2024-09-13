@@ -87,3 +87,11 @@ input[type="checkbox"].peer:checked::before {
 .Toastify {
   @apply duration-100 ease-in-out !important;
 }
+
+.apexcharts-legend-series {
+  @apply flex gap-x-1 !important;
+}
+
+.apexcharts-legend-text {
+  @apply text-sm !important;
+}
