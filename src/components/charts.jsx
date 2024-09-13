@@ -49,10 +49,8 @@ export function LineChart() {
             colors: "#fff",
           },
           formatter: function (val) {
-            if (val === 0) {
-              return "Php " + val.toFixed(2);
-            }
-            return val.toFixed(2);
+            // Return the value with "Php" without decimal places
+            return `Php ${Math.round(val).toLocaleString()}`;
           },
         },
       },
