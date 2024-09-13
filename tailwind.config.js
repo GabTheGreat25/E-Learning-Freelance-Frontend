@@ -29,6 +29,7 @@ module.exports = {
           default: "#101010",
           shadow: "#00000075",
           secondary: "#242426",
+          tertiary: "#3A3A3A",
           variant: "#020202",
         },
         error: {

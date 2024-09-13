@@ -1,24 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { HiOutlineTrash } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 import { contentTabs, SelectStyles, Toast } from "@utils";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { UploadImg, CalendarImg } from "@assets";
-import { useNavigate } from "react-router-dom";
 import { TOAST } from "@constants";
 
 export function AddCourses() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Courses");
-  const [video, setVideo] = useState(null);
-  const [fileName, setFileName] = useState("");
   const [banner, setBanner] = useState(null);
   const [bannerFileName, setBannerFileName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailFileName, setThumbnailFileName] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const dropdownRef = useRef(null);
+  const [conditions, setConditions] = useState([]);
+  const [isConditionDropdownVisible, setConditionDropdownVisible] =
+    useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setConditionDropdownVisible(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   const handleDateChange = (date) => {
     setStartDate(date);
@@ -30,36 +45,6 @@ export function AddCourses() {
       return `${text.slice(0, charLimit)}...`;
     }
     return text;
-  };
-
-  const handleVideoFileSelect = (file) => {
-    if (file && file.type === "video/mp4") {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setVideo(reader.result);
-        setFileName(file.name);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      Toast(TOAST.ERROR, "Only MP4 files are supported for the video.");
-    }
-  };
-
-  const handleVideo = (e) => {
-    const file = e.target.files[0];
-    handleVideoFileSelect(file);
-  };
-
-  const handleVideoDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const handleVideoDrop = (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleVideoFileSelect(files[0]);
-    }
   };
 
   const handleBannerChange = (e) => {
@@ -144,6 +129,53 @@ export function AddCourses() {
     e.preventDefault();
   };
 
+  const conditionOptions = [
+    {
+      label: "Required Months Subscribed",
+      value: "requiredMonthsSubscribed",
+    },
+    { label: "Required Finished Course", value: "requiredFinishedCourse" },
+  ];
+
+  const handleConditionSelect = (option) => {
+    let dynamicOptions;
+
+    if (option.value === "requiredMonthsSubscribed") {
+      dynamicOptions = [
+        { label: "1 Month", value: "1_month" },
+        { label: "3 Months", value: "3_months" },
+        { label: "6 Months", value: "6_months" },
+      ];
+    } else if (option.value === "requiredFinishedCourse") {
+      dynamicOptions = [
+        { label: "Intro to Programming", value: "intro_programming" },
+        { label: "Advanced JavaScript", value: "advanced_javascript" },
+        { label: "Web Development", value: "web_development" },
+      ];
+    }
+
+    setConditions([
+      ...conditions,
+      {
+        ...option,
+        selectedValue: dynamicOptions[0],
+        options: dynamicOptions,
+      },
+    ]);
+    setConditionDropdownVisible(false);
+  };
+
+  const handleSelectChange = (index, selectedOption) => {
+    const updatedConditions = [...conditions];
+    updatedConditions[index].selectedValue = selectedOption;
+    setConditions(updatedConditions);
+  };
+
+  const handleDeleteCondition = (index) => {
+    const updatedConditions = conditions.filter((_, i) => i !== index);
+    setConditions(updatedConditions);
+  };
+
   return (
     <>
       <Navbar title="Content" />
@@ -178,7 +210,7 @@ export function AddCourses() {
           </button>
         </div>
         {/* Form */}
-        <div className="rounded-xl bg-dark-secondary">
+        <div className="rounded-xl bg-dark-secondary" ref={dropdownRef}>
           <form className="px-10 py-6">
             <div className="grid grid-cols-[60%_40%] items-start justify-center gap-x-10 px-6">
               <div className="w-full">
@@ -281,13 +313,95 @@ export function AddCourses() {
                     )}
                   </div>
                 </div>
-                <h1 className="text-xl">Conditions</h1>
-                <p className="text-sm text-light-secondary">
-                  Subscribers should watch this course on the selected month
-                </p>
-                <div>
-                  <div></div>
-                  <div></div>
+                <div className="relative">
+                  {/* Button to toggle dropdown */}
+                  <div className="flex items-end justify-between">
+                    <h1 className="text-xl">Conditions</h1>
+                    <div className="px-8 py-[.1rem] border border-light-default rounded-full">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setConditionDropdownVisible(
+                            !isConditionDropdownVisible,
+                          );
+                        }}
+                        className="flex items-center text-lg"
+                      >
+                        Add Condition
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Immediately show conditions as buttons */}
+                  {isConditionDropdownVisible && (
+                    <div className="absolute right-0 z-50 py-2 mt-2 border rounded-lg bg-dark-tertiary">
+                      {conditionOptions.map((option, index, array) => (
+                        <div key={option.value}>
+                          <button
+                            className={`block w-full p-2 pl-5 pr-20 text-start ${
+                              conditions.some(
+                                (condition) => condition.value === option.value,
+                              )
+                                ? "text-light-secondary cursor-not-allowed"
+                                : "text-light-default"
+                            }`}
+                            onClick={() =>
+                              !conditions.some(
+                                (condition) => condition.value === option.value,
+                              ) && handleConditionSelect(option)
+                            }
+                            disabled={conditions.some(
+                              (condition) => condition.value === option.value,
+                            )}
+                          >
+                            {option.label}
+                          </button>
+                          {index < array.length - 1 && (
+                            <hr className="my-2 border-t border-light-secondary" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Display selected conditions */}
+                  <div>
+                    {conditions.length === 0 ? (
+                      <p className="pt-10 text-lg text-center text-light-secondary">
+                        No conditions
+                      </p>
+                    ) : (
+                      <ul className="pt-4 cursor-pointer">
+                        {conditions.map((condition, index) => (
+                          <div
+                            key={index}
+                            className="grid grid-cols-[47%_47%_6%] py-[.4rem]"
+                          >
+                            <div className="flex items-center justify-start w-full py-1 pl-4 border rounded-tl-lg rounded-bl-lg bg-dark-default">
+                              <li>{condition.label}</li>
+                            </div>
+                            <div className="w-full py-1 pl-4 pr-2 border bg-dark-default">
+                              <Select
+                                options={condition.options}
+                                value={condition.selectedValue}
+                                onChange={(selectedOption) =>
+                                  handleSelectChange(index, selectedOption)
+                                }
+                                placeholder="Select value"
+                                styles={SelectStyles()}
+                              />
+                            </div>
+                            <div className="flex items-center justify-center w-full py-1 border rounded-tr-lg rounded-br-lg bg-dark-default">
+                              <HiOutlineTrash
+                                className="text-2xl cursor-pointer text-light-secondary"
+                                onClick={() => handleDeleteCondition(index)}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="grid gap-y-8">
