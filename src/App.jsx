@@ -20,6 +20,7 @@ import {
   ViewAnalytics,
   Courses,
   AddCourses,
+  ViewCourses,
   Videos,
   AddVideos,
   ViewVideos,
@@ -62,6 +63,7 @@ export default function App() {
                   <Route path="analytics/:id" element={<ViewAnalytics />} />
                   <Route path="courses" element={<Courses />} />
                   <Route path="courses/create" element={<AddCourses />} />
+                  <Route path="courses/view" element={<ViewCourses />} />
                   <Route path="promotions" element={<Promotions />} />
                   <Route path="promotions/create" element={<AddPromotions />} />
                   <Route path="promotions/view" element={<ViewPromotions />} />

@@ -10,7 +10,7 @@ import { TOAST } from "@constants";
 
 export function AddPromotions() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Videos");
+  const [activeTab, setActiveTab] = useState("Promotions");
   const [video, setVideo] = useState(null);
   const [fileName, setFileName] = useState("");
   const [banner, setBanner] = useState(null);
@@ -160,16 +160,16 @@ export function AddPromotions() {
             onClick={() => navigate(-1)}
             className="text-lg underline text-light-default"
           >
-            Videos
+            Promotions
           </button>
           <span className="text-2xl"> &#8250; </span>
           <span className="text-lg underline text-light-default">
-            Add new video
+            Add new promotions
           </span>
         </div>
         {/* Form Title */}
         <div className="flex items-center justify-between pb-4">
-          <h1 className="text-3xl">New Video</h1>
+          <h1 className="text-3xl">New Promotions</h1>
           <button
             onClick={() => navigate("/dashboard/promotions/view")}
             className="py-1 border rounded-full px- md:text-base md:px-12"

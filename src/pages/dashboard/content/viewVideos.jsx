@@ -4,7 +4,7 @@ import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { contentTabs } from "@utils";
 import { useNavigate } from "react-router-dom";
-import { VideoImg } from "@assets";
+import { VideoImg, AddVideoImg } from "@assets";
 
 const currentVideos = [
   {
@@ -258,6 +258,7 @@ export const ViewVideos = () => {
           showButton={true}
           onButtonClick={handleButtonClick}
           buttonTitle={"Add Video"}
+          buttonIcon={AddVideoImg}
         />
       </section>
     </div>

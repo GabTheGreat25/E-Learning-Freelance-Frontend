@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { contentTabs } from "@utils";
 import { useNavigate } from "react-router-dom";
-import { VideoImg, AddVideoImg } from "@assets";
+import { VideoImg, DocumentFilterImg } from "@assets";
 
 const generateObjectId = () => {
   return (
@@ -18,9 +18,9 @@ const generateObjectId = () => {
   );
 };
 
-export const ViewPromotions = () => {
+export const ViewCourses = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Promotions");
+  const [activeTab, setActiveTab] = useState("Videos");
 
   const columns = [
     { name: "ID" },
@@ -49,7 +49,7 @@ export const ViewPromotions = () => {
   }));
 
   const handleButtonClick = () => {
-    navigate("/dashboard/promotions/create");
+    navigate("/dashboard/courses/create");
   };
 
   return (
@@ -65,7 +65,7 @@ export const ViewPromotions = () => {
 
         {/* All Video Title */}
         <div className="pt-6">
-          <h1 className="text-3xl">All Promotions</h1>
+          <h1 className="text-3xl">All Courses</h1>
         </div>
 
         <DataTable columns={columns} data={data} maxHeight={1000} />
@@ -73,8 +73,8 @@ export const ViewPromotions = () => {
         <Footer
           showButton={true}
           onButtonClick={handleButtonClick}
-          buttonTitle={"Add Promotion"}
-          buttonIcon={AddVideoImg}
+          buttonTitle={"Add Course"}
+          buttonIcon={DocumentFilterImg}
         />
       </section>
     </div>

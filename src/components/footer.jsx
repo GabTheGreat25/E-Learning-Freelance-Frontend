@@ -1,7 +1,20 @@
 import React from "react";
-import { AddVideoImg } from "@assets";
 
-export function Footer({ showButton = false, onButtonClick, buttonTitle }) {
+export function Footer({
+  showButton = false,
+  onButtonClick,
+  buttonTitle,
+  buttonIcon,
+}) {
+  const getAltText = (iconSrc) => {
+    if (iconSrc) {
+      const parts = iconSrc.split("/");
+      const fileName = parts[parts.length - 1];
+      return fileName.split(".")[0];
+    }
+    return "Icon";
+  };
+
   return (
     <div>
       <div className="flex items-center justify-center pt-12 text-light-default 2xl:gap-x-16 xl:gap-x-12 lg:gap-x-10 md:gap-x-8">
@@ -37,8 +50,8 @@ export function Footer({ showButton = false, onButtonClick, buttonTitle }) {
           >
             <div className="flex items-center justify-center gap-x-3">
               <img
-                src={AddVideoImg}
-                alt="AddVideoImg"
+                src={buttonIcon}
+                alt={getAltText(buttonIcon)}
                 className="object-cover w-5 h-5"
               />
               <span className="text-lg">{buttonTitle}</span>

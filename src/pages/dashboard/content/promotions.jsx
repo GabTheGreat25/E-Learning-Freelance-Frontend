@@ -19,7 +19,7 @@ export function Promotions() {
           setActiveTab={setActiveTab}
           tabs={contentTabs}
         />
-        <h1 className="py-10 text-3xl">All Videos</h1>
+        <h1 className="py-10 text-3xl">All Promotions</h1>
         <div className="grid items-center justify-center pb-24 text-center">
           <img
             src={PromotionUploadImg}

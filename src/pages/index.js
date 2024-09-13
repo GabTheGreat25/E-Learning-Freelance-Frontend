@@ -19,6 +19,7 @@ export * from "./dashboard/content/addPromotions.jsx";
 export * from "./dashboard/content/addVideos.jsx";
 export * from "./dashboard/content/viewVideos.jsx";
 export * from "./dashboard/content/viewPromotions.jsx";
+export * from "./dashboard/content/viewCourses.jsx";
 export * from "./dashboard/notification/activities.jsx";
 export * from "./dashboard/notification/messages.jsx";
 export * from "./dashboard/transactions/transactions.jsx";
