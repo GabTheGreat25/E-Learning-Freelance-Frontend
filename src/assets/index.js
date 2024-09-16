@@ -25,3 +25,4 @@ export { default as AddVideoImg } from "../assets/video-add.png";
 export { default as DocumentFilterImg } from "../assets/document-filter.png";
 export { default as CourseUploadImg } from "../assets/course-upload.png";
 export { default as PromotionUploadImg } from "../assets/promotion-upload.png";
+export { default as ChatHeadImg } from "../assets/chat-head.png";
