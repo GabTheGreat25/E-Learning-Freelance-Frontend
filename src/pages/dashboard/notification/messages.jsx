@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { notificationTabs } from "@utils";
@@ -28,6 +28,7 @@ export function Messages() {
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
+  const inputRef = useRef(null);
 
   const users = [
     { name: "Jack Harrow", senderType: "Student", unread: 0 },
@@ -55,14 +56,14 @@ export function Messages() {
         time: "Just now",
         senderType: "Student",
       };
-      setMessages([...messages, newMessage]);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
       setInputMessage("");
+      inputRef.current.focus();
     }
   };
 
   const handleUserClick = (user) => {
     setActiveUser(user.name);
-
     setMessages([
       {
         text: `Chat with ${user.name} starts here.`,
@@ -71,6 +72,13 @@ export function Messages() {
         senderType: user.senderType,
       },
     ]);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.code === "Enter") {
+      event.preventDefault();
+      handleSendMessage();
+    }
   };
 
   return (
@@ -193,9 +201,11 @@ export function Messages() {
             <div className="p-4 border-b-2 border-l-2 border-r-2 rounded-b-lg bg-dark-default">
               <div className="flex">
                 <input
+                  ref={inputRef}
                   type="text"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Type a message..."
                   className="flex-grow p-3 rounded-l-lg text-light-default placeholder:text-light-default bg-dark-secondary focus:outline-none"
                 />
