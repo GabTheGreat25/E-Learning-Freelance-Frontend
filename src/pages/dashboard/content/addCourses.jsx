@@ -50,6 +50,8 @@ export function AddCourses() {
   const [conditions, setConditions] = useState([]);
   const [isConditionDropdownVisible, setConditionDropdownVisible] =
     useState(false);
+  const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -115,14 +117,21 @@ export function AddCourses() {
     setConditions(updatedConditions);
   };
 
-  const [selectedVideos, setSelectedVideos] = useState([]);
-
   const toggleCheckbox = (videoId) => {
     setSelectedVideos((prevSelected) =>
       prevSelected.includes(videoId)
         ? prevSelected.filter((id) => id !== videoId)
-        : [prevSelected, videoId],
+        : [...prevSelected, videoId],
     );
+  };
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedVideos([]);
+    } else {
+      setSelectedVideos(videoData.map((video) => video.id));
+    }
+    setSelectAll(!selectAll);
   };
 
   const isVideoSelected = (videoId) => selectedVideos.includes(videoId);
@@ -365,9 +374,19 @@ export function AddCourses() {
               <div className="grid">
                 <div className="w-full h-full rounded-lg text-light-default">
                   <h1 className="pb-2 text-xl">Videos</h1>
+
                   {/* Header Section */}
-                  <div className="flex items-center justify-between px-4 py-3 bg-black rounded-tl-xl rounded-tr-xl">
-                    <h3 className="text-xl">Videos</h3>
+                  <div className="flex items-center justify-between px-6 py-3 bg-black rounded-tl-xl rounded-tr-xl">
+                    <div className="flex items-center justify-center gap-x-4">
+                      <input
+                        type="checkbox"
+                        className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-[3px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                      />
+                      <h3 className="text-xl">Video</h3>
+                    </div>
+
                     <span className="text-xl font-light">
                       {videoData.length}
                     </span>
