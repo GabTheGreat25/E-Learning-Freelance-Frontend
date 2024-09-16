@@ -8,6 +8,39 @@ import { contentTabs, SelectStyles } from "@utils";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { CalendarImg, VideoImg } from "@assets";
 
+const videoData = [
+  {
+    id: 1,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+  {
+    id: 2,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+  {
+    id: 3,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+  {
+    id: 4,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+  {
+    id: 5,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+  {
+    id: 6,
+    title: "Things to master if you want to be SUCCESSFUL",
+    description: "Learn why people think, feel, and behave",
+  },
+];
+
 export function AddCourses() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Courses");
@@ -82,6 +115,25 @@ export function AddCourses() {
     setConditions(updatedConditions);
   };
 
+  const [selectedVideos, setSelectedVideos] = useState([]);
+
+  const toggleCheckbox = (videoId) => {
+    setSelectedVideos((prevSelected) =>
+      prevSelected.includes(videoId)
+        ? prevSelected.filter((id) => id !== videoId)
+        : [prevSelected, videoId],
+    );
+  };
+
+  const isVideoSelected = (videoId) => selectedVideos.includes(videoId);
+
+  const truncateText = (text, charLimit) => {
+    if (text.length > charLimit) {
+      return `${text.slice(0, charLimit)}...`;
+    }
+    return text;
+  };
+
   return (
     <>
       <Navbar title="Content" />
@@ -117,9 +169,9 @@ export function AddCourses() {
         </div>
         {/* Form */}
         <div className="rounded-xl bg-dark-secondary" ref={dropdownRef}>
-          <form className="px-10 py-6">
-            <div className="grid grid-cols-[60%_40%] items-start justify-center gap-x-10 px-6">
-              <div className="w-full">
+          <form className="px-10 py-6 xl:px-12">
+            <div className="grid items-start justify-center xl:grid-cols-[55%_45%] gap-x-10">
+              <div className="w-full pb-6 xl:pb-0">
                 <div className="relative mb-8">
                   <label
                     htmlFor="title"
@@ -219,7 +271,7 @@ export function AddCourses() {
                     )}
                   </div>
                 </div>
-                <div className="relative">
+                <div className="relative pt-2">
                   {/* Button to toggle dropdown */}
                   <div className="flex items-end justify-between">
                     <h1 className="text-xl">Conditions</h1>
@@ -273,7 +325,7 @@ export function AddCourses() {
                   {/* Display selected conditions */}
                   <div>
                     {conditions.length === 0 ? (
-                      <p className="pt-10 text-lg text-center text-light-secondary">
+                      <p className="pt-10 pb-5 text-lg text-center text-light-secondary">
                         No conditions
                       </p>
                     ) : (
@@ -310,8 +362,59 @@ export function AddCourses() {
                   </div>
                 </div>
               </div>
-              <div className="grid gap-y-8">
-                <h1>I am working</h1>
+              <div className="grid">
+                <div className="w-full h-full rounded-lg text-light-default">
+                  <h1 className="pb-2 text-xl">Videos</h1>
+                  {/* Header Section */}
+                  <div className="flex items-center justify-between px-4 py-3 bg-black rounded-tl-xl rounded-tr-xl">
+                    <h3 className="text-xl">Videos</h3>
+                    <span className="text-xl font-light">
+                      {videoData.length}
+                    </span>
+                  </div>
+
+                  {/* Video List Section */}
+                  <div className="grid bg-dark-default h-[530px] overflow-hidden overflow-y-scroll scrollbar-thin">
+                    {videoData.map((video) => (
+                      <>
+                        <div key={video.id} className="py-3 rounded-lg">
+                          <div className="grid items-center justify-between grid-cols-[5%_auto_50%] px-6 pt-2 pb-5 gap-x-6">
+                            <input
+                              type="checkbox"
+                              className="w-6 h-6 p-1 text-[.6rem] bg-transparent border-[3px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                              checked={isVideoSelected(video.id)}
+                              onChange={() => toggleCheckbox(video.id)}
+                            />
+                            <img
+                              src={VideoImg}
+                              alt="Video thumbnail"
+                              className="object-cover w-40 h-24 mr-4 rounded-lg"
+                            />
+                            <div>
+                              <h4 className="text-base 2xl:text-lg">
+                                {truncateText(video.title, 50)}
+                              </h4>
+                              <p className="text-sm text-light-secondary">
+                                {truncateText(video.description, 50)}
+                              </p>
+                            </div>
+                          </div>
+                          <hr className="w-full border-light-shadow" />
+                        </div>
+                      </>
+                    ))}
+                  </div>
+
+                  {/* Footer Section */}
+                  <div className="flex items-center justify-center px-4 py-3 bg-black rounded-bl-xl rounded-br-xl">
+                    <button
+                      type="button"
+                      className="text-xl text-light-default"
+                    >
+                      Add Video
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </form>

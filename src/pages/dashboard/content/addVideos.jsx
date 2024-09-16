@@ -215,7 +215,7 @@ export function AddVideos() {
                 </label>
               </div>
             </div>
-            <div className="grid grid-cols-[60%_40%] items-start justify-center gap-x-10 px-6">
+            <div className="grid xl:grid-cols-[60%_40%] xl:items-start xl:justify-center xl:gap-x-10 xl:px-6">
               <div className="w-full">
                 <div className="relative mb-8">
                   <label

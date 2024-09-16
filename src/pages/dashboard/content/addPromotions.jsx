@@ -250,8 +250,8 @@ export function AddPromotions() {
         {/* Form */}
         <div className="rounded-xl bg-dark-secondary">
           <form className="px-10 py-6">
-            <div className="grid grid-cols-[60%_40%] items-start justify-center gap-x-10 px-6">
-              <div className="w-full">
+            <div className="grid xl:grid-cols-[60%_40%] xl:items-start xl:justify-center xl:gap-x-10 xl:px-6">
+              <div className="w-full pb-6 xl:pb-0">
                 <div className="relative mb-8">
                   <label
                     htmlFor="title"
@@ -353,7 +353,7 @@ export function AddPromotions() {
                 </div>
                 <div className="relative">
                   {/* Button to toggle dropdown */}
-                  <div className="flex items-end justify-between">
+                  <div className="grid items-start justify-between grid-cols-[60%_40%] gap-x-6">
                     <div>
                       <h1 className="text-xl">Conditions</h1>
                       <p className="text-sm text-light-secondary">
@@ -369,7 +369,7 @@ export function AddPromotions() {
                             !isConditionDropdownVisible,
                           );
                         }}
-                        className="flex items-center text-lg"
+                        className="w-full text-lg text-center"
                       >
                         Add Condition
                       </button>
@@ -378,7 +378,7 @@ export function AddPromotions() {
 
                   {/* Immediately show conditions as buttons */}
                   {isConditionDropdownVisible && (
-                    <div className="absolute right-0 z-50 py-2 mt-2 border rounded-lg bg-dark-tertiary">
+                    <div className="absolute right-0 z-50 py-2 mt-2 border rounded-lg top-8 bg-dark-tertiary">
                       {conditionOptions.map((option, index, array) => (
                         <div key={option.value}>
                           <button
@@ -411,7 +411,7 @@ export function AddPromotions() {
                   {/* Display selected conditions */}
                   <div>
                     {conditions.length === 0 ? (
-                      <p className="pt-10 text-lg text-center text-light-secondary">
+                      <p className="pt-10 pb-5 text-lg text-center text-light-secondary">
                         No conditions
                       </p>
                     ) : (
