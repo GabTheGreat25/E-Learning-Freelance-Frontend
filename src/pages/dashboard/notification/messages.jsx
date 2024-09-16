@@ -30,7 +30,7 @@ export function Messages() {
   const [inputMessage, setInputMessage] = useState("");
   const inputRef = useRef(null);
 
-  const users = [
+  const [users, setUsers] = useState([
     { name: "Jack Harrow", senderType: "Student", unread: 0 },
     { name: "Veli Dincer", senderType: "Student", unread: 1 },
     { name: "Theresa Webb", senderType: "Student", unread: 3 },
@@ -46,7 +46,7 @@ export function Messages() {
     { name: "Liam Miller", senderType: "Student", unread: 5 },
     { name: "Emily Johnson", senderType: "Student", unread: 2 },
     { name: "Alisha Marie", senderType: "Student", unread: 0 },
-  ];
+  ]);
 
   const handleSendMessage = () => {
     if (inputMessage.trim()) {
@@ -63,6 +63,10 @@ export function Messages() {
   };
 
   const handleUserClick = (user) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((u) => (u.name === user.name ? { ...u, unread: 0 } : u)),
+    );
+
     setActiveUser(user.name);
     setMessages([
       {
