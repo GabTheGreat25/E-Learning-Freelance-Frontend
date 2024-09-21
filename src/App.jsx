@@ -27,6 +27,7 @@ import {
   Promotions,
   AddPromotions,
   ViewPromotions,
+  Customization,
   Activities,
   Messages,
   Transactions,
@@ -70,6 +71,7 @@ export default function App() {
                   <Route path="videos" element={<Videos />} />
                   <Route path="videos/create" element={<AddVideos />} />
                   <Route path="videos/view" element={<ViewVideos />} />
+                  <Route path="customization" element={<Customization />} />
                   <Route path="activities" element={<Activities />} />
                   <Route path="messages" element={<Messages />} />
                   <Route path="transactions" element={<Transactions />} />

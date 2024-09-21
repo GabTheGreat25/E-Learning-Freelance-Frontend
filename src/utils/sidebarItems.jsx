@@ -31,8 +31,7 @@ export function SidebarItems() {
       label: "Customization",
       icon: images.BrushImg,
       onClick: () => {
-        console.log("Navigating to Customization");
-        // navigate("/customization");
+        navigate("/dashboard/customization");
       },
     },
     {

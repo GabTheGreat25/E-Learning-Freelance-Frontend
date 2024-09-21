@@ -23,3 +23,4 @@ export * from "./dashboard/content/viewCourses.jsx";
 export * from "./dashboard/notification/activities.jsx";
 export * from "./dashboard/notification/messages.jsx";
 export * from "./dashboard/transactions/transactions.jsx";
+export * from "./dashboard/customization/customization.jsx";
