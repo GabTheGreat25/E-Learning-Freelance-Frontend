@@ -190,9 +190,9 @@ export function Home() {
     if (screenWidth >= 1536) {
       return `${index * 21.5}rem`;
     } else if (screenWidth >= 1280) {
-      return `${index * 19.5}rem`;
-    } else if (screenWidth >= 1024) {
       return `${index * 19}rem`;
+    } else if (screenWidth >= 1024) {
+      return `${index * 18.25}rem`;
     } else if (screenWidth >= 768) {
       return `${index * 18.75}rem`;
     } else return `${index * 18}rem`;
@@ -201,7 +201,7 @@ export function Home() {
   return (
     <>
       <Navbar title="Home" />
-      <section className="h-screen px-4 pt-12 pb-32 overflow-x-hidden overflow-y-auto scrollbar-thin sm:px-10 2xl:px-28 xl:px-24 lg:px-12 text-light-default">
+      <section className="h-screen px-16 pt-12 pb-32 overflow-x-hidden overflow-y-auto scrollbar-thin text-light-default">
         {/* Overview */}
         <TabNavigation
           activeTab={activeTab}
