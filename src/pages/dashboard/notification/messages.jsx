@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IoSearchOutline } from "react-icons/io5";
+import { FiPaperclip } from "react-icons/fi";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { notificationTabs } from "@utils";
 import { ChatHeadImg } from "@assets";
@@ -28,7 +29,11 @@ export function Messages() {
     },
   ]);
   const [inputMessage, setInputMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
   const inputRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const modalRef = useRef(null);
 
   const [users, setUsers] = useState([
     { name: "Jack Harrow", senderType: "Student", unread: 0 },
@@ -49,16 +54,36 @@ export function Messages() {
   ]);
 
   const handleSendMessage = () => {
-    if (inputMessage.trim()) {
+    if (inputMessage.trim() || selectedFile) {
       const newMessage = {
-        text: inputMessage,
+        text: inputMessage || "",
         sender: "Me",
         time: "Just now",
+        file: selectedFile ? URL.createObjectURL(selectedFile) : null,
         senderType: "Student",
+        fileType: selectedFile ? selectedFile.type : null,
       };
+
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       setInputMessage("");
+      setSelectedFile(null);
       inputRef.current.focus();
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(null);
+      setShowSuccessModal(false);
+
+      setTimeout(() => {
+        setSelectedFile(file);
+        setShowSuccessModal(true);
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 2000);
+      }, 100);
     }
   };
 
@@ -85,11 +110,26 @@ export function Messages() {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowSuccessModal(false);
+      }
+    };
+
+    if (showSuccessModal) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [showSuccessModal]);
+
   return (
     <>
       <Navbar title="Notifications" />
       <section className="h-screen px-16 pt-12 pb-32 overflow-y-auto bg-black text-light-default">
-        {/* Tab Navigation */}
         <TabNavigation
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -97,7 +137,6 @@ export function Messages() {
         />
 
         <div className="flex mt-8 h-[800px]">
-          {/* Sidebar */}
           <div className="w-[30%] bg-dark-default text-light-default">
             <div className="flex items-center justify-between mb-4 bg-transparent border rounded-md cursor-pointer border-light-default">
               <input
@@ -145,9 +184,7 @@ export function Messages() {
             </ul>
           </div>
 
-          {/* Message Area */}
           <div className="flex flex-col flex-1 ml-8 rounded-lg bg-dark-default">
-            {/* Chat Header */}
             <div className="flex items-center justify-between p-4 border-t-2 border-l-2 border-r-2 rounded-t-lg bg-dark-default border-light-default">
               <div className="flex items-center">
                 <img
@@ -172,7 +209,6 @@ export function Messages() {
               </div>
             </div>
 
-            {/* Chat Messages */}
             <div className="flex-grow p-4 space-y-4 overflow-y-auto border-2 border-light-default">
               {messages.map((message, index) => (
                 <div
@@ -181,7 +217,22 @@ export function Messages() {
                     message.sender === "Me" ? "justify-end" : ""
                   }`}
                 >
-                  <div className="flex flex-col p-3 my-2 rounded-lg bg-dark-secondary">
+                  <div className="flex flex-col flex-wrap p-3 my-2 rounded-lg bg-dark-secondary">
+                    {message.file && message.fileType.startsWith("image/") && (
+                      <img
+                        src={message.file}
+                        alt="Uploaded"
+                        className="object-contain w-full h-auto max-w-xs mb-2 md:max-w-sm lg:max-w-md"
+                      />
+                    )}
+                    {message.file && message.fileType.startsWith("video/") && (
+                      <video
+                        controls
+                        src={message.file}
+                        className="object-contain w-full h-auto max-w-xs mb-2 md:max-w-sm lg:max-w-md"
+                      />
+                    )}
+
                     <p
                       className={`text-light-default text-base max-w-md ${
                         message.sender === "Me" ? "self-end" : "self-start"
@@ -201,21 +252,32 @@ export function Messages() {
               ))}
             </div>
 
-            {/* Message Input */}
-            <div className="p-4 border-b-2 border-l-2 border-r-2 rounded-b-lg bg-dark-default">
-              <div className="flex">
+            <div className="p-4 border-b-2 border-l-2 border-r-2 rounded-b-lg bg-dark-default border-light-default">
+              <div className="flex items-center space-x-4">
                 <input
-                  ref={inputRef}
                   type="text"
+                  ref={inputRef}
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type a message..."
-                  className="flex-grow p-3 rounded-l-lg text-light-default placeholder:text-light-default bg-dark-secondary focus:outline-none"
+                  placeholder="Type your message here..."
+                  className="flex-grow px-4 py-2 rounded-full bg-dark-secondary text-light-default placeholder-light-default"
+                />
+                <button onClick={() => fileInputRef.current.click()}>
+                  <FiPaperclip
+                    size={24}
+                    className="cursor-pointer text-light-default"
+                  />
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange}
                 />
                 <button
                   onClick={handleSendMessage}
-                  className="px-6 py-3 rounded-r-lg bg-light-shadow text-light-default hover:bg-dark-tertiary"
+                  className="px-6 py-3 rounded-lg bg-light-shadow text-light-default hover:bg-dark-tertiary"
                 >
                   Send
                 </button>
@@ -223,9 +285,19 @@ export function Messages() {
             </div>
           </div>
         </div>
-
-        <Footer />
       </section>
+      <Footer />
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            ref={modalRef}
+            className="p-16 rounded-lg bg-dark-secondary text-light-default"
+          >
+            <p className="text-2xl">File uploaded successfully!</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
