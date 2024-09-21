@@ -7,3 +7,4 @@ export * from "./privateRoute.jsx";
 export * from "./publicRoute.jsx";
 export * from "./dataTable.jsx";
 export * from "./charts.jsx";
+export * from "./customizationSidebar.jsx";

@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Navbar, Footer } from "@components";
+import React, { useState } from "react";
+import { Navbar, Footer, CustomizationSidebar } from "@components";
 import { AddVideoImg } from "@assets";
 
 export function Customization() {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   const handleButtonClick = () => {
-    console.log("Add Section");
+    setSidebarOpen(true);
+  };
+
+  const handleCloseSidebar = () => {
+    setSidebarOpen(false);
   };
 
   return (
@@ -18,6 +24,12 @@ export function Customization() {
           buttonIcon={AddVideoImg}
         />
       </section>
+
+      {/* Sidebar component */}
+      <CustomizationSidebar
+        isOpen={isSidebarOpen}
+        onClose={handleCloseSidebar}
+      />
     </>
   );
 }
