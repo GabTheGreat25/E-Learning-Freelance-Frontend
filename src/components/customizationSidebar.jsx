@@ -38,7 +38,7 @@ export function CustomizationSidebar({ isOpen, onClose }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[26rem] bg-dark-default text-light-default shadow-lg transform transition-transform duration-300 ease-in-out p-6 ${
+      className={`fixed top-0 right-0 h-full w-[30rem] bg-dark-default text-light-default shadow-lg transform transition-transform duration-300 ease-in-out p-6 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >

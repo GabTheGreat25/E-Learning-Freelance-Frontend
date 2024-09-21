@@ -24,8 +24,6 @@ export function Customization() {
           buttonIcon={AddVideoImg}
         />
       </section>
-
-      {/* Sidebar component */}
       <CustomizationSidebar
         isOpen={isSidebarOpen}
         onClose={handleCloseSidebar}

@@ -380,7 +380,7 @@ export function AddCourses() {
                     <div className="flex items-center justify-center gap-x-4">
                       <input
                         type="checkbox"
-                        className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-[3px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                        className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-[2px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
                         checked={selectAll}
                         onChange={handleSelectAll}
                       />
@@ -400,7 +400,7 @@ export function AddCourses() {
                           <div className="grid items-center justify-between grid-cols-[5%_auto_50%] px-6 pt-2 pb-5 gap-x-6">
                             <input
                               type="checkbox"
-                              className="w-6 h-6 p-1 text-[.6rem] bg-transparent border-[3px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                              className="w-6 h-6 p-1 text-[.6rem] bg-transparent border-[2px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
                               checked={isVideoSelected(video.id)}
                               onChange={() => toggleCheckbox(video.id)}
                             />
