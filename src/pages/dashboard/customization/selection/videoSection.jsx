@@ -70,7 +70,7 @@ const videoData = [
   },
 ];
 
-export function VideoSection({ setSelectedVideos }) {
+export function VideoSection({ setSelectedData }) {
   const [selectedVideosState, setSelectedVideosState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -80,7 +80,7 @@ export function VideoSection({ setSelectedVideos }) {
         ? prevSelected.filter((v) => v.id !== video.id)
         : [...prevSelected, video];
 
-      setSelectedVideos(newSelected);
+      setSelectedData(newSelected); // Pass selected video data up using setSelectedData
       return newSelected;
     });
   };
@@ -88,7 +88,7 @@ export function VideoSection({ setSelectedVideos }) {
   const handleSelectAll = () => {
     const newSelected = selectAll ? [] : videoData;
     setSelectedVideosState(newSelected);
-    setSelectedVideos(newSelected);
+    setSelectedData(newSelected); // Pass all selected video data up using setSelectedData
     setSelectAll(!selectAll);
   };
 

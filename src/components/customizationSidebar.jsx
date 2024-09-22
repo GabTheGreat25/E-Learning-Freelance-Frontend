@@ -5,6 +5,7 @@ import {
   ImageSection,
   TwoColumnsImageSection,
   VideoUiSection,
+  TextUiSection,
 } from "@components";
 import {
   TextSection,
@@ -52,7 +53,7 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       title: "Text Section",
       icon: GalleryImg,
       component: TextSection,
-      ui: null,
+      ui: TextUiSection,
     },
     { title: "Spacer Section", icon: GalleryImg, component: null, ui: null },
     { title: "Divider Section", icon: GalleryImg, component: null, ui: null },
@@ -60,12 +61,16 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
 
   const [activeSection, setActiveSection] = useState(null);
   const [hoveredSection, setHoveredSection] = useState(null);
-  const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
 
   const handleSectionChange = (sectionTitle) => {
+    // Clear selected data when switching sections
+    setSelectedData(null);
+
     const selectedSection = sections.find(
       (section) => section.title === sectionTitle,
     );
+
     if (selectedSection.component) {
       setActiveSection(sectionTitle);
     } else if (selectedSection.ui) {
@@ -73,9 +78,10 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
     }
   };
 
-  const handleSave = (savedData) => {
-    if (selectedVideos.length === 0) {
-      Toast(TOAST.WARN, "No videos selected, cannot save!");
+  const handleSave = () => {
+    // Prevent saving if no data is provided
+    if (!selectedData || Object.keys(selectedData).length === 0) {
+      Toast(TOAST.WARN, "No data provided, cannot be saved!");
       return;
     }
 
@@ -84,16 +90,19 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
     );
 
     if (currentSection.component) {
-      onSectionChange(activeSection, currentSection.ui, savedData);
+      onSectionChange(activeSection, currentSection.ui, selectedData);
     } else {
       onSectionChange(activeSection, currentSection.ui);
     }
 
+    // Reset active section and selected data after saving
     setActiveSection(null);
+    setSelectedData(null); // Clear selectedData after save
   };
 
   const handleBack = () => {
     setActiveSection(null);
+    setSelectedData(null); // Clear selectedData when going back
   };
 
   const CurrentSectionComponent = sections.find(
@@ -102,17 +111,19 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-[30rem] bg-dark-default text-light-default shadow-lg transform transition-transform duration-300 ease-in-out p-6 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+      className={`fixed top-0 right-0 h-full w-[30rem] bg-dark-default text-light-default shadow-lg transform transition-transform duration-300 ease-in-out p-6 ${
+        isOpen ? "translate-x-0" : "translate-x-full"
+      }`}
     >
       <CustomizationSidebarHeader
         activeSection={activeSection}
         onClose={onClose}
         onBack={handleBack}
-        onSave={() => handleSave(selectedVideos)}
+        onSave={handleSave}
       />
       <div className="grid gap-y-6">
         {activeSection && CurrentSectionComponent ? (
-          <CurrentSectionComponent setSelectedVideos={setSelectedVideos} />
+          <CurrentSectionComponent setSelectedData={setSelectedData} />
         ) : (
           sections.map((section, index) => (
             <div
@@ -134,9 +145,7 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
                 />
                 <span className="mt-[0.25rem]">{section.title}</span>
               </div>
-              <span className="flex items-center">
-                Add <FaChevronRight size={12} className="ml-1" />
-              </span>
+              <FaChevronRight size={12} className="ml-1" />
             </div>
           ))
         )}

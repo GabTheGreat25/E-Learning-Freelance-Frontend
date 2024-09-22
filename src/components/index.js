@@ -11,3 +11,4 @@ export * from "./customizationSidebar.jsx";
 export * from "./imageSection.jsx";
 export * from "./twoColumnsImageSection.jsx";
 export * from "./videoUiSection.jsx";
+export * from "./textUiSection.jsx";

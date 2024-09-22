@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { VideoImg } from "@assets";
+import { CoverImg } from "@assets";
 
 const videoData = [
   {
@@ -94,9 +94,9 @@ export function CourseSection() {
                   onChange={() => toggleCheckbox(video.id)}
                 />
                 <img
-                  src={VideoImg}
+                  src={CoverImg}
                   alt="Video thumbnail"
-                  className="object-cover w-32 h-24 mr-4 rounded-lg"
+                  className="mr-4 rounded-lg w-28"
                 />
                 <div>
                   <h4 className="text-base">{truncateText(video.title, 50)}</h4>
