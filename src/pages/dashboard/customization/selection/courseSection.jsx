@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CoverImg } from "@assets";
 
 const courseData = [
@@ -53,6 +54,8 @@ const courseData = [
 ];
 
 export function CourseSection({ setSelectedData }) {
+  const navigate = useNavigate();
+
   const [selectedCoursesState, setSelectedCoursesState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -127,7 +130,10 @@ export function CourseSection({ setSelectedData }) {
 
       {/* Footer Section */}
       <div className="flex items-center justify-center px-4 py-3 bg-black rounded-bl-xl rounded-br-xl">
-        <button type="button" className="text-xl text-light-default">
+        <button
+          onClick={() => navigate("/dashboard/courses/create")}
+          className="text-xl text-light-default"
+        >
           Add Course
         </button>
       </div>

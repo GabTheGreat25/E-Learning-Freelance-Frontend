@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { VideoImg } from "@assets";
 
 const videoData = [
@@ -71,6 +72,8 @@ const videoData = [
 ];
 
 export function VideoSection({ setSelectedData }) {
+  const navigate = useNavigate();
+
   const [selectedVideosState, setSelectedVideosState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
@@ -80,7 +83,7 @@ export function VideoSection({ setSelectedData }) {
         ? prevSelected.filter((v) => v.id !== video.id)
         : [...prevSelected, video];
 
-      setSelectedData(newSelected); // Pass selected video data up using setSelectedData
+      setSelectedData(newSelected);
       return newSelected;
     });
   };
@@ -88,7 +91,7 @@ export function VideoSection({ setSelectedData }) {
   const handleSelectAll = () => {
     const newSelected = selectAll ? [] : videoData;
     setSelectedVideosState(newSelected);
-    setSelectedData(newSelected); // Pass all selected video data up using setSelectedData
+    setSelectedData(newSelected);
     setSelectAll(!selectAll);
   };
 
@@ -141,7 +144,10 @@ export function VideoSection({ setSelectedData }) {
       </div>
 
       <div className="flex items-center justify-center px-4 py-3 bg-black rounded-bl-xl rounded-br-xl">
-        <button type="button" className="text-xl text-light-default">
+        <button
+          onClick={() => navigate("/dashboard/videos/create")}
+          className="text-xl text-light-default"
+        >
           Add Videos
         </button>
       </div>
