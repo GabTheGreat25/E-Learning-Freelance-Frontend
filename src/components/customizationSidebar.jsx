@@ -4,15 +4,13 @@ import { FaChevronRight } from "react-icons/fa";
 import {
   ImageSection,
   TwoColumnsImageSection,
+  SingleVideoSection,
+  SpacerSection,
+  DividerSection,
   VideoUiSection,
   TextUiSection,
 } from "@components";
-import {
-  TextSection,
-  CourseSection,
-  SingleVideoSection,
-  VideoSection,
-} from "@pages";
+import { TextSection, CourseSection, VideoSection } from "@pages";
 import { Toast } from "@utils";
 import { TOAST } from "@constants";
 import { GalleryImg, GalleryDarkImg } from "@assets";
@@ -46,8 +44,8 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
     {
       title: "Single Video Section",
       icon: GalleryImg,
-      component: SingleVideoSection,
-      ui: null,
+      component: null,
+      ui: SingleVideoSection,
     },
     {
       title: "Text Section",
@@ -55,8 +53,18 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       component: TextSection,
       ui: TextUiSection,
     },
-    { title: "Spacer Section", icon: GalleryImg, component: null, ui: null },
-    { title: "Divider Section", icon: GalleryImg, component: null, ui: null },
+    {
+      title: "Spacer Section",
+      icon: GalleryImg,
+      component: null,
+      ui: SpacerSection,
+    },
+    {
+      title: "Divider Section",
+      icon: GalleryImg,
+      component: null,
+      ui: DividerSection,
+    },
   ];
 
   const [activeSection, setActiveSection] = useState(null);
@@ -64,7 +72,6 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
   const [selectedData, setSelectedData] = useState(null);
 
   const handleSectionChange = (sectionTitle) => {
-    // Clear selected data when switching sections
     setSelectedData(null);
 
     const selectedSection = sections.find(
@@ -79,7 +86,6 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
   };
 
   const handleSave = () => {
-    // Prevent saving if no data is provided
     if (!selectedData || Object.keys(selectedData).length === 0) {
       Toast(TOAST.WARN, "No data provided, cannot be saved!");
       return;
@@ -95,14 +101,13 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       onSectionChange(activeSection, currentSection.ui);
     }
 
-    // Reset active section and selected data after saving
     setActiveSection(null);
-    setSelectedData(null); // Clear selectedData after save
+    setSelectedData(null);
   };
 
   const handleBack = () => {
     setActiveSection(null);
-    setSelectedData(null); // Clear selectedData when going back
+    setSelectedData(null);
   };
 
   const CurrentSectionComponent = sections.find(

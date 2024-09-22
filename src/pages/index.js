@@ -26,5 +26,4 @@ export * from "./dashboard/transactions/transactions.jsx";
 export * from "./dashboard/customization/customization.jsx";
 export * from "./dashboard/customization/selection/textSection.jsx";
 export * from "./dashboard/customization/selection/courseSection.jsx";
-export * from "./dashboard/customization/selection/singleVideoSection.jsx";
 export * from "./dashboard/customization/selection/videoSection.jsx";

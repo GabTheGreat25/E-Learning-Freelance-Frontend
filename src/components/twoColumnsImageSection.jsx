@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { UploadImg } from "@assets";
 import { FaArrowUp, FaArrowDown, FaCog } from "react-icons/fa";
 import { HiOutlineTrash } from "react-icons/hi";
+import { Toast } from "@utils";
+import { TOAST } from "@constants";
 
 export function TwoColumnsImageSection({
   id,

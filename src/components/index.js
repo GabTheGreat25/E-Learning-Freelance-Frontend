@@ -12,3 +12,6 @@ export * from "./imageSection.jsx";
 export * from "./twoColumnsImageSection.jsx";
 export * from "./videoUiSection.jsx";
 export * from "./textUiSection.jsx";
+export * from "./singleVideoSection.jsx";
+export * from "./spacerSection.jsx";
+export * from "./dividerSection.jsx";
