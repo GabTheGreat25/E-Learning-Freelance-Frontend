@@ -54,7 +54,7 @@ export function Footer({
                 alt={getAltText(buttonIcon)}
                 className="object-cover w-5 h-5"
               />
-              <span className="text-lg">{buttonTitle}</span>
+              <span className="text-lg text-light-default">{buttonTitle}</span>
             </div>
           </button>
         </div>
