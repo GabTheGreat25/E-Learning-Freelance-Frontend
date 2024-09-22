@@ -1,7 +1,12 @@
 import React from "react";
 import { FaChevronLeft } from "react-icons/fa";
 
-export function CustomizationSidebarHeader({ activeSection, onClose, onBack }) {
+export function CustomizationSidebarHeader({
+  activeSection,
+  onClose,
+  onBack,
+  onSave,
+}) {
   return (
     <div className="flex items-center justify-between pb-6">
       {activeSection ? (
@@ -11,7 +16,10 @@ export function CustomizationSidebarHeader({ activeSection, onClose, onBack }) {
           </button>
           <div className="flex items-center gap-x-4">
             <h1 className="text-lg">{activeSection}</h1>
-            <button className="text-sm px-8 py-[0.1rem] border rounded-full">
+            <button
+              className="text-sm px-8 py-[0.1rem] border rounded-full"
+              onClick={onSave}
+            >
               Save
             </button>
           </div>

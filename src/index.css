@@ -95,3 +95,15 @@ input[type="checkbox"].peer:checked::before {
 .apexcharts-legend-text {
   @apply text-sm !important;
 }
+
+.section {
+  @apply transition-transform duration-500 ease-in-out;
+}
+
+.section-up {
+  @apply -translate-y-2.5;
+}
+
+.section-down {
+  @apply translate-y-2.5;
+}

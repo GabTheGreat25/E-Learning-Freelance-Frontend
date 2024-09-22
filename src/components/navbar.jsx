@@ -6,7 +6,7 @@ export function Navbar({ title }) {
       <div className="absolute inset-0 bg-black rounded-lg opacity-75"></div>
       <div className="absolute inset-0 bg-black rounded-lg opacity-40"></div>
 
-      <div className="relative flex items-end h-full px-12 pb-2">
+      <div className="relative flex items-end h-full px-16 pb-2">
         <h1 className="text-4xl font-medium text-light-default">{title}</h1>
       </div>
     </div>

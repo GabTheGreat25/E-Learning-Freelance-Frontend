@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaEye, FaArrowLeft, FaArrowRight, FaRegEdit } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaEye, FaRegEdit } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { homeTabs } from "@utils";
