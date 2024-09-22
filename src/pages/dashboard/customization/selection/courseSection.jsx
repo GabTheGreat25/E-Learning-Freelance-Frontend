@@ -1,68 +1,84 @@
 import React, { useState } from "react";
 import { CoverImg } from "@assets";
 
-const videoData = [
+const courseData = [
   {
     id: 1,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
   {
     id: 2,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
   {
     id: 3,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
   {
     id: 4,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
   {
     id: 5,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
   {
     id: 6,
     title: "Things to master if you want to be SUCCESSFUL",
     description: "Learn why people think, feel, and behave",
+    speaker: "Speaker Name",
+    duration: "2 hr 1 min",
+    image: CoverImg,
   },
 ];
 
-export function CourseSection() {
-  const [selectedVideos, setSelectedVideos] = useState([]);
+export function CourseSection({ setSelectedData }) {
+  const [selectedCoursesState, setSelectedCoursesState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
-  const toggleCheckbox = (videoId) => {
-    setSelectedVideos((prevSelected) =>
-      prevSelected.includes(videoId)
-        ? prevSelected.filter((id) => id !== videoId)
-        : [...prevSelected, videoId],
-    );
+  const toggleCheckbox = (course) => {
+    setSelectedCoursesState((prevSelected) => {
+      const newSelected = prevSelected.some((v) => v.id === course.id)
+        ? prevSelected.filter((v) => v.id !== course.id)
+        : [...prevSelected, course];
+
+      setSelectedData(newSelected);
+      return newSelected;
+    });
   };
 
   const handleSelectAll = () => {
-    if (selectAll) {
-      setSelectedVideos([]);
-    } else {
-      setSelectedVideos(videoData.map((video) => video.id));
-    }
+    const newSelected = selectAll ? [] : courseData;
+    setSelectedCoursesState(newSelected);
+    setSelectedData(newSelected);
     setSelectAll(!selectAll);
   };
 
-  const isVideoSelected = (videoId) => selectedVideos.includes(videoId);
+  const isCourseSelected = (courseId) =>
+    selectedCoursesState.some((course) => course.id === courseId);
 
-  const truncateText = (text, charLimit) => {
-    if (text.length > charLimit) {
-      return `${text.slice(0, charLimit)}...`;
-    }
-    return text;
-  };
+  const truncateText = (text, charLimit) =>
+    text.length > charLimit ? `${text.slice(0, charLimit)}...` : text;
 
   return (
     <div>
@@ -78,36 +94,34 @@ export function CourseSection() {
           <h3 className="text-xl">Selected Courses</h3>
         </div>
 
-        <span className="text-xl font-light">{videoData.length}</span>
+        <span className="text-xl font-light">{courseData.length}</span>
       </div>
 
-      {/* Video List Section */}
+      {/* Course List Section */}
       <div className="grid bg-dark-default h-[750px] overflow-hidden overflow-y-scroll scrollbar-thin">
-        {videoData.map((video) => (
-          <>
-            <div key={video.id} className="py-3 rounded-lg">
-              <div className="grid items-center justify-between grid-cols-[5%_auto_50%] px-6 pt-2 pb-5 gap-x-6">
-                <input
-                  type="checkbox"
-                  className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-[2px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
-                  checked={isVideoSelected(video.id)}
-                  onChange={() => toggleCheckbox(video.id)}
-                />
-                <img
-                  src={CoverImg}
-                  alt="Video thumbnail"
-                  className="mr-4 rounded-lg w-28"
-                />
-                <div>
-                  <h4 className="text-base">{truncateText(video.title, 50)}</h4>
-                  <p className="text-sm text-light-secondary">
-                    {truncateText(video.description, 50)}
-                  </p>
-                </div>
+        {courseData.map((course) => (
+          <div key={course.id} className="py-3 rounded-lg">
+            <div className="grid items-center justify-between grid-cols-[5%_auto_50%] px-6 pt-2 pb-5 gap-x-6">
+              <input
+                type="checkbox"
+                className="w-5 h-5 p-1 text-[.6rem] bg-transparent border-[2px] rounded-md appearance-none cursor-pointer border-light-default peer checked:border-light-default checked:ring-0"
+                checked={isCourseSelected(course.id)}
+                onChange={() => toggleCheckbox(course)}
+              />
+              <img
+                src={course.image}
+                alt="Course thumbnail"
+                className="object-cover w-32 h-24 mr-4 rounded-lg"
+              />
+              <div>
+                <h4 className="text-base">{truncateText(course.title, 50)}</h4>
+                <p className="text-sm text-light-secondary">
+                  {truncateText(course.description, 50)}
+                </p>
               </div>
-              <hr className="w-full border-light-shadow" />
             </div>
-          </>
+            <hr className="w-full border-light-shadow" />
+          </div>
         ))}
       </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { GoVirtualImg } from "@assets";
 import { SidebarHeader, SidebarContents } from "@utils";
@@ -6,8 +6,18 @@ import { SidebarHeader, SidebarContents } from "@utils";
 export function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const [activeItem, setActiveItem] = useState("home");
 
+  // Fetch active item from localStorage on component mount
+  useEffect(() => {
+    const savedItem = localStorage.getItem("activeSidebarItem");
+    if (savedItem) {
+      setActiveItem(savedItem);
+    }
+  }, []);
+
+  // Save active item to localStorage when it changes
   const handleItemClick = (item) => {
     setActiveItem(item);
+    localStorage.setItem("activeSidebarItem", item);
   };
 
   return (
@@ -32,7 +42,7 @@ export function Sidebar({ isSidebarOpen, toggleSidebar }) {
         )}
       </div>
       <div
-        className={`fixed top-0  left-0 bg-dark-default shadow-xl transform transition-transform duration-300 ease-in-out z-20 ${
+        className={`fixed top-0 left-0 bg-dark-default shadow-xl transform transition-transform duration-300 ease-in-out z-20 ${
           !isSidebarOpen && "-translate-x-full"
         } xxs:w-64 sm:w-72 md:w-80 lg:w-80 lg:translate-x-0 lg:relative lg:block h-screen overflow-auto scrollbar-thin scrollbar-hide`}
       >

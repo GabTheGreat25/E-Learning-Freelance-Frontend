@@ -9,6 +9,7 @@ import {
   DividerSection,
   VideoUiSection,
   TextUiSection,
+  CourseUiSection,
 } from "@components";
 import { TextSection, CourseSection, VideoSection } from "@pages";
 import { Toast } from "@utils";
@@ -33,7 +34,7 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       title: "Course Section",
       icon: GalleryImg,
       component: CourseSection,
-      ui: null,
+      ui: CourseUiSection,
     },
     {
       title: "Video Section",

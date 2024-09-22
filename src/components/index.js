@@ -15,3 +15,4 @@ export * from "./textUiSection.jsx";
 export * from "./singleVideoSection.jsx";
 export * from "./spacerSection.jsx";
 export * from "./dividerSection.jsx";
+export * from "./courseUiSection.jsx";

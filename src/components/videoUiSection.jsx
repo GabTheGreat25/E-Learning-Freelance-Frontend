@@ -56,7 +56,7 @@ export function VideoUiSection({ id, data, onDelete, onMoveUp, onMoveDown }) {
       </div>
 
       {/* Video content section */}
-      <div className="w-full px-8 py-6">
+      <div className="w-full px-8 pb-6">
         <div className="relative flex flex-row h-[24rem] pt-6 overflow-x-auto overflow-y-hidden scrollbar-thin">
           {data.map((video, index) => (
             <div
