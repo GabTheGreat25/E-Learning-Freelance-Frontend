@@ -6,15 +6,16 @@ import { SidebarHeader, SidebarContents } from "@utils";
 export function Sidebar({ isSidebarOpen, toggleSidebar }) {
   const [activeItem, setActiveItem] = useState("home");
 
-  // Fetch active item from localStorage on component mount
   useEffect(() => {
     const savedItem = localStorage.getItem("activeSidebarItem");
     if (savedItem) {
       setActiveItem(savedItem);
+    } else {
+      setActiveItem("home");
+      localStorage.setItem("activeSidebarItem", "home");
     }
   }, []);
 
-  // Save active item to localStorage when it changes
   const handleItemClick = (item) => {
     setActiveItem(item);
     localStorage.setItem("activeSidebarItem", item);

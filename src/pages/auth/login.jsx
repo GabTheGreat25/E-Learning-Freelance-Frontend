@@ -25,6 +25,7 @@ export function Login() {
         .unwrap()
         .then((res) => {
           if (res.success) {
+            localStorage.setItem("activeSidebarItem", "home");
             Toast(TOAST.SUCCESS, "Login successful!");
             navigate("/dashboard");
           } else
