@@ -180,9 +180,18 @@ export function AddPromotions() {
 
     if (option.value === "requiredMonthsSubscribed") {
       dynamicOptions = [
-        { label: "1 Month", value: "1_month" },
-        { label: "3 Months", value: "3_months" },
-        { label: "6 Months", value: "6_months" },
+        { label: "1 Month", value: "1 Month" },
+        { label: "2 Months", value: "2 Months" },
+        { label: "3 Months", value: "3 Months" },
+        { label: "4 Months", value: "4 Months" },
+        { label: "5 Months", value: "5 Months" },
+        { label: "6 Months", value: "6 Months" },
+        { label: "7 Months", value: "7 Months" },
+        { label: "8 Months", value: "8 Months" },
+        { label: "9 Months", value: "9 Months" },
+        { label: "10 Months", value: "10 Months" },
+        { label: "11 Months", value: "11 Months" },
+        { label: "12 Months", value: "12 Months" },
       ];
     } else if (option.value === "requiredFinishedCourse") {
       dynamicOptions = [
@@ -314,15 +323,15 @@ export function AddPromotions() {
                   </div>
                   <div className="relative w-full mb-4">
                     <label
-                      htmlFor="birthDate"
+                      htmlFor="publishing"
                       className="block mb-2 text-xl font-medium"
                     >
-                      Birth Date <span className="text-red-600">*</span>
+                      Publishing <span className="text-red-600">*</span>
                     </label>
                     <div className="flex items-center">
                       <input
                         type="text"
-                        id="birthDate"
+                        id="publishing"
                         value={startDate ? startDate.toLocaleDateString() : ""}
                         readOnly
                         className={`w-full p-[1.1rem] border rounded-md focus:border-info-secondary focus:outline-none bg-transparent text-light-secondary placeholder-light-secondary`}
@@ -353,7 +362,7 @@ export function AddPromotions() {
                 </div>
                 <div className="relative">
                   {/* Button to toggle dropdown */}
-                  <div className="grid items-start justify-between grid-cols-[60%_40%] gap-x-6">
+                  <div className="grid xl:items-start items-center justify-between grid-cols-[60%_auto] xl:gap-x-6">
                     <div>
                       <h1 className="text-xl">Conditions</h1>
                       <p className="text-sm text-light-secondary">

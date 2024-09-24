@@ -310,15 +310,15 @@ export function AddVideos() {
                   </div>
                   <div className="relative w-full mb-8">
                     <label
-                      htmlFor="birthDate"
+                      htmlFor="publishing"
                       className="block mb-2 text-xl font-medium"
                     >
-                      Birth Date <span className="text-red-600">*</span>
+                      Publishing <span className="text-red-600">*</span>
                     </label>
                     <div className="flex items-center">
                       <input
                         type="text"
-                        id="birthDate"
+                        id="publishing"
                         value={startDate ? startDate.toLocaleDateString() : ""}
                         readOnly
                         className={`w-full p-[1.1rem] border rounded-md focus:border-info-secondary focus:outline-none bg-transparent text-light-secondary placeholder-light-secondary`}
