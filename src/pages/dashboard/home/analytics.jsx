@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Navbar, Footer, TabNavigation, DataTable } from "@components";
 import { homeTabs } from "@utils";
 import { GradientVideoImg } from "@assets";
@@ -19,8 +19,13 @@ const generateObjectId = () => {
 };
 
 export function Analytics() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState(
+    location.state?.activeSection || "Active Users",
+  );
   const [activeTab, setActiveTab] = useState("Analytics");
+  const [tableData, setTableData] = useState([]);
 
   const columns = [
     { name: "ID" },
@@ -33,7 +38,7 @@ export function Analytics() {
     { name: "Last Video" },
   ];
 
-  const data = new Array(200).fill().map(() => ({
+  const activeUsersData = new Array(40).fill().map(() => ({
     _id: generateObjectId(),
     "First Name": "Juan",
     "Last Name": "Dela Cruz",
@@ -43,6 +48,71 @@ export function Analytics() {
     "Date Registered": "June 10, 2024",
     "Last Video": "Things to master if you...",
   }));
+
+  const inactiveUsersData = new Array(109).fill().map(() => ({
+    _id: generateObjectId(),
+    "First Name": "Maria",
+    "Last Name": "Santos",
+    Age: 21,
+    Gender: "Female",
+    "Last Active": "July 12, 2024",
+    "Date Registered": "May 5, 2024",
+    "Last Video": "How to start programming...",
+  }));
+
+  const completedStudentsData = new Array(40).fill().map(() => ({
+    _id: generateObjectId(),
+    "First Name": "Carlos",
+    "Last Name": "Reyes",
+    Age: 22,
+    Gender: "Male",
+    "Last Active": "July 5, 2024",
+    "Date Registered": "March 10, 2024",
+    "Last Video": "Top Skills for Web Dev",
+  }));
+
+  const bookDownloadsData = new Array(34).fill().map(() => ({
+    _id: generateObjectId(),
+    "First Name": "Anna",
+    "Last Name": "Luna",
+    Age: 19,
+    Gender: "Female",
+    "Last Active": "Aug 15, 2024",
+    "Date Registered": "April 18, 2024",
+    "Last Video": "Mastering Python",
+  }));
+
+  const totalStudentsData = new Array(213).fill().map(() => ({
+    _id: generateObjectId(),
+    "First Name": "Lucas",
+    "Last Name": "Fernandez",
+    Age: 23,
+    Gender: "Male",
+    "Last Active": "Aug 20, 2024",
+    "Date Registered": "Feb 10, 2024",
+    "Last Video": "Advanced JavaScript",
+  }));
+
+  const getDataBySection = () => {
+    switch (activeSection) {
+      case "Active Users":
+        return activeUsersData;
+      case "Inactive Users":
+        return inactiveUsersData;
+      case "Completed Students":
+        return completedStudentsData;
+      case "Book Downloads":
+        return bookDownloadsData;
+      case "Total Students":
+        return totalStudentsData;
+      default:
+        return activeUsersData;
+    }
+  };
+
+  useEffect(() => {
+    setTableData(getDataBySection());
+  }, [activeSection]);
 
   const handleRowClick = (id) => {
     navigate(`/dashboard/analytics/${id}`);
@@ -59,13 +129,29 @@ export function Analytics() {
           tabs={homeTabs}
         />
 
-        {/* First Button */}
+        {/* Dashboard Cards */}
         <div className="grid grid-cols-1 gap-6 pt-8 md:grid-cols-2 xl:grid-cols-3">
+          {/* Active Users Section */}
           <div
-            className="bg-center bg-no-repeat bg-cover rounded-lg"
-            style={{ backgroundImage: `url(${GradientVideoImg})` }}
+            className={`${
+              activeSection === "Active Users"
+                ? "bg-center bg-no-repeat bg-cover"
+                : "bg-dark-default"
+            } rounded-lg`}
+            style={{
+              backgroundImage:
+                activeSection === "Active Users"
+                  ? `url(${GradientVideoImg})`
+                  : "none",
+            }}
           >
-            <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg">
+            <div
+              className={`flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg shadow-lg ${
+                activeSection === "Active Users"
+                  ? "border-transparent"
+                  : "border-light-secondary"
+              }`}
+            >
               <div className="overflow-hidden">
                 <h1 className="text-3xl font-normal truncate text-light-default">
                   Active Users
@@ -75,92 +161,203 @@ export function Analytics() {
                   platform
                 </p>
               </div>
-              <h1 className="text-5xl font-bold text-light-default">40</h1>
+              <div className="flex items-end justify-between mt-4">
+                <h1 className="text-5xl font-bold text-light-default">40</h1>
+                {activeSection !== "Active Users" && (
+                  <button
+                    onClick={() => setActiveSection("Active Users")}
+                    className="flex items-center text-lg text-light-default"
+                  >
+                    See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
-            <div className="overflow-hidden">
-              <h1 className="text-3xl font-normal truncate text-light-default">
-                Total Completed Students
-              </h1>
-              <p className="mt-1 text-sm truncate text-light-secondary">
-                Total number of students currently <br /> registered on the
-                platform
-              </p>
-            </div>
-            <div className="flex items-end justify-between mt-4">
-              <h1 className="text-5xl font-bold text-light-default">40</h1>
-              <button className="flex items-center text-lg text-light-default">
-                See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
-              </button>
+          {/* Total Completed Students Section */}
+          <div
+            className={`${
+              activeSection === "Completed Students"
+                ? "bg-center bg-no-repeat bg-cover"
+                : "bg-dark-default"
+            } rounded-lg`}
+            style={{
+              backgroundImage:
+                activeSection === "Completed Students"
+                  ? `url(${GradientVideoImg})`
+                  : "none",
+            }}
+          >
+            <div
+              className={`flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg shadow-lg ${
+                activeSection === "Completed Students"
+                  ? "border-transparent"
+                  : "border-light-secondary"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <h1 className="text-3xl font-normal truncate text-light-default">
+                  Total Completed Students
+                </h1>
+                <p className="mt-1 text-sm truncate text-light-secondary">
+                  Total number of students who have completed <br /> their
+                  courses
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-4">
+                <h1 className="text-5xl font-bold text-light-default">40</h1>
+                {activeSection !== "Completed Students" && (
+                  <button
+                    onClick={() => setActiveSection("Completed Students")}
+                    className="flex items-center text-lg text-light-default"
+                  >
+                    See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default md:col-span-2 xl:col-span-1">
-            <div className="overflow-hidden">
-              <h1 className="text-3xl font-normal truncate text-light-default">
-                Total Book Downloads
-              </h1>
-              <p className="mt-1 text-sm truncate text-light-secondary">
-                Total number of students currently <br /> registered on the
-                platform
-              </p>
-            </div>
-            <div className="flex items-end justify-between mt-4">
-              <h1 className="text-5xl font-bold text-light-default">34</h1>
-              <button className="flex items-center text-lg text-light-default">
-                See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
-              </button>
+          {/* Total Book Downloads Section */}
+          <div
+            className={`${
+              activeSection === "Book Downloads"
+                ? "bg-center bg-no-repeat bg-cover"
+                : "bg-dark-default"
+            } rounded-lg`}
+            style={{
+              backgroundImage:
+                activeSection === "Book Downloads"
+                  ? `url(${GradientVideoImg})`
+                  : "none",
+            }}
+          >
+            <div
+              className={`flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg shadow-lg ${
+                activeSection === "Book Downloads"
+                  ? "border-transparent"
+                  : "border-light-secondary"
+              }`}
+            >
+              <div className="overflow-hidden">
+                <h1 className="text-3xl font-normal truncate text-light-default">
+                  Total Book Downloads
+                </h1>
+                <p className="mt-1 text-sm truncate text-light-secondary">
+                  Total number of books downloaded by students
+                </p>
+              </div>
+              <div className="flex items-end justify-between mt-4">
+                <h1 className="text-5xl font-bold text-light-default">34</h1>
+                {activeSection !== "Book Downloads" && (
+                  <button
+                    onClick={() => setActiveSection("Book Downloads")}
+                    className="flex items-center text-lg text-light-default"
+                  >
+                    See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 md:flex-row md:col-span-2 xl:col-span-3">
-            <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
+          {/* Inactive Users Section */}
+          <div
+            className={`${
+              activeSection === "Inactive Users"
+                ? "bg-center bg-no-repeat bg-cover"
+                : "bg-dark-default"
+            } rounded-lg`}
+            style={{
+              backgroundImage:
+                activeSection === "Inactive Users"
+                  ? `url(${GradientVideoImg})`
+                  : "none",
+            }}
+          >
+            <div
+              className={`flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg shadow-lg ${
+                activeSection === "Inactive Users"
+                  ? "border-transparent"
+                  : "border-light-secondary"
+              }`}
+            >
               <div className="overflow-hidden">
                 <h1 className="text-3xl font-normal truncate text-light-default">
                   Inactive Users
                 </h1>
                 <p className="mt-1 text-sm truncate text-light-secondary">
-                  Total number of students currently <br /> registered on the
+                  Number of users who are currently inactive <br /> on the
                   platform
                 </p>
               </div>
               <div className="flex items-end justify-between mt-4">
                 <h1 className="text-5xl font-bold text-light-default">109</h1>
-                <button className="flex items-center text-lg text-light-default">
-                  See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
-                </button>
+                {activeSection !== "Inactive Users" && (
+                  <button
+                    onClick={() => setActiveSection("Inactive Users")}
+                    className="flex items-center text-lg text-light-default"
+                  >
+                    See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                  </button>
+                )}
               </div>
             </div>
+          </div>
 
-            <div className="justify-between w-full h-full px-6 py-3 border-2 rounded-lg border-light-secondary bg-dark-default">
+          {/* Total Students Section */}
+          <div
+            className={`${
+              activeSection === "Total Students"
+                ? "bg-center bg-no-repeat bg-cover"
+                : "bg-dark-default"
+            } rounded-lg`}
+            style={{
+              backgroundImage:
+                activeSection === "Total Students"
+                  ? `url(${GradientVideoImg})`
+                  : "none",
+            }}
+          >
+            <div
+              className={`flex flex-col justify-between w-full h-full px-6 py-3 border-2 rounded-lg shadow-lg ${
+                activeSection === "Total Students"
+                  ? "border-transparent"
+                  : "border-light-secondary"
+              }`}
+            >
               <div className="overflow-hidden">
                 <h1 className="text-3xl font-normal truncate text-light-default">
                   Total Students
                 </h1>
                 <p className="mt-1 text-sm truncate text-light-secondary">
-                  Total number of students currently <br /> registered on the
-                  platform
+                  Total number of students currently registered on the platform
                 </p>
               </div>
               <div className="flex items-end justify-between mt-4">
                 <h1 className="text-5xl font-bold text-light-default">213</h1>
-                <button className="flex items-center text-lg text-light-default">
-                  See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
-                </button>
+                {activeSection !== "Total Students" && (
+                  <button
+                    onClick={() => setActiveSection("Total Students")}
+                    className="flex items-center text-lg text-light-default"
+                  >
+                    See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
         </div>
 
+        {/* Data Table */}
         <div>
           <div className="flex items-center justify-between pt-12 md:gap-x-0 gap-x-2">
             <div className="flex gap-x-6">
               <div>
-                <h1 className="pb-1 md:text-3xl">Active Users</h1>
+                <h1 className="pb-1 md:text-3xl">{activeSection}</h1>
                 <p className="text-xs md:text-sm text-light-secondary">
-                  Number of users who are currently on active on the platform
+                  Number of users who are currently shown in {activeSection}
                 </p>
               </div>
             </div>
@@ -172,9 +369,11 @@ export function Analytics() {
           </div>
           <DataTable
             columns={columns}
-            data={data}
+            data={tableData}
             handleRowClick={handleRowClick}
+            totalRows={tableData.length}
           />
+          ;
         </div>
 
         <Footer />

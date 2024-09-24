@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { HiOutlineChartBar } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 import { Navbar, Footer, TabNavigation } from "@components";
 import { homeTabs } from "@utils";
 import {
@@ -160,6 +161,8 @@ const videos = [
 ];
 
 export function Home() {
+  const navigate = useNavigate();
+
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -198,6 +201,12 @@ export function Home() {
     } else return `${index * 18}rem`;
   };
 
+  const handleSeeAllCompletedStudents = () => {
+    navigate("/dashboard/analytics", {
+      state: { activeSection: "Completed Students" },
+    });
+  };
+
   return (
     <>
       <Navbar title="Home" />
@@ -222,7 +231,10 @@ export function Home() {
                 </h1>
               </div>
               <div className="flex items-end justify-end mt-4">
-                <button className="flex items-center text-lg text-light-default">
+                <button
+                  onClick={() => navigate("/dashboard/videos")}
+                  className="flex items-center text-lg text-light-default"
+                >
                   Go to Content
                   <span className="mb-1 ml-3 text-2xl">&#8250;</span>
                 </button>
@@ -241,7 +253,10 @@ export function Home() {
             </div>
             <div className="flex items-end justify-between mt-4">
               <h1 className="text-5xl font-bold text-light-default">40</h1>
-              <button className="flex items-center text-lg text-light-default">
+              <button
+                onClick={() => navigate("/dashboard/analytics")}
+                className="flex items-center text-lg text-light-default"
+              >
                 See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
               </button>
             </div>
@@ -259,7 +274,10 @@ export function Home() {
             </div>
             <div className="flex items-end justify-between mt-4">
               <h1 className="text-5xl font-bold text-light-default">230</h1>
-              <button className="flex items-center text-lg text-light-default">
+              <button
+                onClick={handleSeeAllCompletedStudents}
+                className="flex items-center text-lg text-light-default"
+              >
                 See All <span className="mb-1 ml-3 text-2xl">&#8250;</span>
               </button>
             </div>
@@ -275,7 +293,10 @@ export function Home() {
                 See all your active courses here
               </p>
             </div>
-            <button className="flex items-center text-sm md:items-end md:text-xl text-light-default">
+            <button
+              onClick={() => navigate("/dashboard/courses")}
+              className="flex items-center text-sm md:items-end md:text-xl text-light-default"
+            >
               See All <span className="ml-3 text-3xl">&#8250;</span>
             </button>
           </div>
@@ -327,7 +348,12 @@ export function Home() {
                 See all your active videos here
               </p>
             </div>
-            <button className="px-8 py-1 border rounded-full">Add Video</button>
+            <button
+              onClick={() => navigate("/dashboard/videos")}
+              className="px-8 py-1 border rounded-full"
+            >
+              Add Video
+            </button>
           </div>
 
           <div className="grid items-center justify-center grid-cols-1 gap-6 pt-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -380,7 +406,10 @@ export function Home() {
             className="bg-center bg-no-repeat bg-cover rounded-lg"
             style={{ backgroundImage: `url(${GradientHomeImg})` }}
           >
-            <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg">
+            <div
+              onClick={() => navigate("/dashboard/customization")}
+              className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg cursor-pointer"
+            >
               <div className="overflow-hidden">
                 <h1 className="py-6 text-3xl font-normal truncate text-light-default">
                   Edit Home <br /> Page
@@ -393,7 +422,10 @@ export function Home() {
             className="bg-center bg-no-repeat bg-cover rounded-lg"
             style={{ backgroundImage: `url(${GradientNotificationImg})` }}
           >
-            <div className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg">
+            <div
+              onClick={() => navigate("/dashboard/activities")}
+              className="flex flex-col justify-between w-full h-full px-6 py-3 border-2 border-transparent rounded-lg shadow-lg cursor-pointer"
+            >
               <div className="overflow-hidden">
                 <h1 className="py-6 text-3xl font-normal truncate text-light-default">
                   View <br /> Notifications
@@ -403,7 +435,8 @@ export function Home() {
           </div>
 
           <div
-            className="flex flex-col justify-between w-full h-full px-6 py-3 bg-center bg-no-repeat bg-cover border-2 border-transparent rounded-lg shadow-lg md:col-span-2 xl:col-span-1"
+            onClick={() => navigate("/dashboard/transactions")}
+            className="flex flex-col justify-between w-full h-full px-6 py-3 bg-center bg-no-repeat bg-cover border-2 border-transparent rounded-lg shadow-lg cursor-pointer md:col-span-2 xl:col-span-1"
             style={{ backgroundImage: `url(${GradientTransactionImg})` }}
           >
             <div className="overflow-hidden">

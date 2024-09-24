@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import { HiOutlineTrash } from "react-icons/hi";
 
@@ -17,6 +17,10 @@ export function DataTable({
   const [rowsPerPage, setRowsPerPage] = useState(initialRowsPerPage);
   const [selectedRows, setSelectedRows] = useState([]);
   const [tableData, setTableData] = useState(data);
+
+  useEffect(() => {
+    setTableData(data);
+  }, [data]);
 
   const totalRows = tableData.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
