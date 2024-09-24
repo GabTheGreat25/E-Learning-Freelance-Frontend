@@ -13,11 +13,13 @@ export function Customization() {
   const [moveDirection, setMoveDirection] = useState(null);
   const [editingSectionIndex, setEditingSectionIndex] = useState(null);
   const [editingData, setEditingData] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
 
   const handleButtonClick = () => {
     setSidebarOpen(true);
     setEditingSectionIndex(null);
     setEditingData(null);
+    setActiveSection(null);
   };
 
   const handleCloseSidebar = () => {
@@ -104,9 +106,17 @@ export function Customization() {
 
   const handleEditSection = (id) => {
     const sectionToEdit = addedSections.find((section) => section.id === id);
-    setEditingSectionIndex(id);
-    setEditingData(sectionToEdit.data);
-    setSidebarOpen(true);
+
+    // Reset activeSection first to ensure it triggers re-rendering
+    setActiveSection(null);
+
+    // Small delay to ensure React registers the change
+    setTimeout(() => {
+      setEditingSectionIndex(id);
+      setEditingData(sectionToEdit.data);
+      setActiveSection(sectionToEdit.title);
+      setSidebarOpen(true);
+    }, 0);
   };
 
   const renderSection = (section, index) => {
@@ -183,6 +193,7 @@ export function Customization() {
         sectionIdToEdit={editingSectionIndex}
         addedSections={addedSections}
         setAddedSections={setAddedSections}
+        activeSectionProp={activeSection}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CustomizationSidebarHeader } from "./customizationSidebarHeader";
 import { FaChevronRight } from "react-icons/fa";
 import {
@@ -24,6 +24,7 @@ export function CustomizationSidebar({
   sectionIdToEdit,
   addedSections,
   setAddedSections,
+  activeSectionProp,
 }) {
   const sections = [
     {
@@ -79,6 +80,12 @@ export function CustomizationSidebar({
   const [activeSection, setActiveSection] = useState(null);
   const [hoveredSection, setHoveredSection] = useState(null);
   const [selectedData, setSelectedData] = useState(editingData || null);
+
+  useEffect(() => {
+    if (activeSectionProp) {
+      handleSectionChange(activeSectionProp);
+    }
+  }, [activeSectionProp]);
 
   const handleSectionChange = (sectionTitle) => {
     setSelectedData(editingData || null);
