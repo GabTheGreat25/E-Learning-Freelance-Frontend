@@ -1,5 +1,5 @@
 import React from "react";
-import { FaArrowUp, FaArrowDown, FaCog } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { HiOutlineTrash } from "react-icons/hi";
 
 export function DividerSection({ id, onDelete, onMoveUp, onMoveDown }) {
@@ -8,7 +8,6 @@ export function DividerSection({ id, onDelete, onMoveUp, onMoveDown }) {
       <div className="flex justify-between px-8 py-2 bg-dark-default">
         <h1>Divider Section</h1>
         <div className="flex gap-x-3">
-          <FaCog size={20} className="cursor-pointer" />
           <HiOutlineTrash
             size={22}
             onClick={() => onDelete(id)}

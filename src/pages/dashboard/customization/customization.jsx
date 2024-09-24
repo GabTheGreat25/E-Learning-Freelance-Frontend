@@ -11,9 +11,13 @@ export function Customization() {
   const [sectionImages, setSectionImages] = useState({});
   const [movingSectionIndex, setMovingSectionIndex] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
+  const [editingSectionIndex, setEditingSectionIndex] = useState(null);
+  const [editingData, setEditingData] = useState(null);
 
   const handleButtonClick = () => {
     setSidebarOpen(true);
+    setEditingSectionIndex(null);
+    setEditingData(null);
   };
 
   const handleCloseSidebar = () => {
@@ -26,15 +30,27 @@ export function Customization() {
       return;
     }
 
-    const newSection = {
-      id: uuidv4(),
-      title: sectionTitle,
-      uiComponent: uiComponent,
-      data,
-    };
+    if (editingSectionIndex !== null) {
+      const updatedSections = addedSections.map((section) => {
+        if (section.id === editingSectionIndex) {
+          return { ...section, data };
+        }
+        return section;
+      });
+      setAddedSections(updatedSections);
+    } else {
+      const newSection = {
+        id: uuidv4(),
+        title: sectionTitle,
+        uiComponent: uiComponent,
+        data,
+      };
+      setAddedSections((prevSections) => [...prevSections, newSection]);
+    }
 
-    setAddedSections((prevSections) => [...prevSections, newSection]);
     setSidebarOpen(false);
+    setEditingSectionIndex(null);
+    setEditingData(null);
   };
 
   const handleImageChange = (id, imageData) => {
@@ -86,6 +102,13 @@ export function Customization() {
     }, 750);
   };
 
+  const handleEditSection = (id) => {
+    const sectionToEdit = addedSections.find((section) => section.id === id);
+    setEditingSectionIndex(id);
+    setEditingData(sectionToEdit.data);
+    setSidebarOpen(true);
+  };
+
   const renderSection = (section, index) => {
     let sectionClass = "section";
 
@@ -104,6 +127,7 @@ export function Customization() {
           data={section.data}
           onImageChange={handleImageChange}
           onDelete={() => handleDeleteSection(section.id)}
+          onEdit={() => handleEditSection(section.id)}
           onMoveUp={() => handleMoveUp(index)}
           onMoveDown={() => handleMoveDown(index)}
         />
@@ -155,6 +179,10 @@ export function Customization() {
         isOpen={isSidebarOpen}
         onClose={handleCloseSidebar}
         onSectionChange={handleSectionChange}
+        editingData={editingData}
+        sectionIdToEdit={editingSectionIndex}
+        addedSections={addedSections}
+        setAddedSections={setAddedSections}
       />
     </>
   );

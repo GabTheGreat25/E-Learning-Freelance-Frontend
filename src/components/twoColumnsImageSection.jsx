@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UploadImg } from "@assets";
-import { FaArrowUp, FaArrowDown, FaCog } from "react-icons/fa";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { HiOutlineTrash } from "react-icons/hi";
 import { Toast } from "@utils";
 import { TOAST } from "@constants";
@@ -60,7 +60,6 @@ export function TwoColumnsImageSection({
       <div className="flex justify-between px-8 py-2 bg-dark-default">
         <h1>Two Columns Image</h1>
         <div className="flex gap-x-3">
-          <FaCog size={20} className="cursor-pointer" />
           <HiOutlineTrash
             size={22}
             onClick={() => onDelete(id)}

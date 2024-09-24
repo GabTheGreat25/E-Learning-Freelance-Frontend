@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { VideoImg } from "@assets";
 
@@ -71,11 +71,24 @@ const videoData = [
   },
 ];
 
-export function VideoSection({ setSelectedData }) {
+export function VideoSection({ setSelectedData, selectedData }) {
   const navigate = useNavigate();
-
   const [selectedVideosState, setSelectedVideosState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      setSelectedVideosState(selectedData);
+    }
+  }, [selectedData]);
+
+  useEffect(() => {
+    if (selectedVideosState.length === videoData.length) {
+      setSelectAll(true);
+    } else {
+      setSelectAll(false);
+    }
+  }, [selectedVideosState]);
 
   const toggleCheckbox = (video) => {
     setSelectedVideosState((prevSelected) => {

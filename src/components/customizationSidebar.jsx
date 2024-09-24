@@ -16,7 +16,15 @@ import { Toast } from "@utils";
 import { TOAST } from "@constants";
 import { GalleryImg, GalleryDarkImg } from "@assets";
 
-export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
+export function CustomizationSidebar({
+  isOpen,
+  onClose,
+  onSectionChange,
+  editingData,
+  sectionIdToEdit,
+  addedSections,
+  setAddedSections,
+}) {
   const sections = [
     {
       title: "Image Section",
@@ -70,10 +78,10 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
 
   const [activeSection, setActiveSection] = useState(null);
   const [hoveredSection, setHoveredSection] = useState(null);
-  const [selectedData, setSelectedData] = useState(null);
+  const [selectedData, setSelectedData] = useState(editingData || null);
 
   const handleSectionChange = (sectionTitle) => {
-    setSelectedData(null);
+    setSelectedData(editingData || null);
 
     const selectedSection = sections.find(
       (section) => section.title === sectionTitle,
@@ -96,14 +104,20 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       (section) => section.title === activeSection,
     );
 
-    if (currentSection.component) {
-      onSectionChange(activeSection, currentSection.ui, selectedData);
+    if (sectionIdToEdit) {
+      const updatedSections = addedSections.map((section) =>
+        section.id === sectionIdToEdit
+          ? { ...section, data: selectedData }
+          : section,
+      );
+      setAddedSections(updatedSections);
     } else {
-      onSectionChange(activeSection, currentSection.ui);
+      onSectionChange(activeSection, currentSection.ui, selectedData);
     }
 
     setActiveSection(null);
     setSelectedData(null);
+    onClose();
   };
 
   const handleBack = () => {
@@ -129,7 +143,10 @@ export function CustomizationSidebar({ isOpen, onClose, onSectionChange }) {
       />
       <div className="grid gap-y-6">
         {activeSection && CurrentSectionComponent ? (
-          <CurrentSectionComponent setSelectedData={setSelectedData} />
+          <CurrentSectionComponent
+            setSelectedData={setSelectedData}
+            selectedData={selectedData}
+          />
         ) : (
           sections.map((section, index) => (
             <div
