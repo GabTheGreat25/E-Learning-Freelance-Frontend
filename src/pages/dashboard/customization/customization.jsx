@@ -9,6 +9,7 @@ export function Customization() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [addedSections, setAddedSections] = useState([]);
   const [sectionImages, setSectionImages] = useState({});
+  const [movingSectionIndex, setMovingSectionIndex] = useState(null);
   const [moveDirection, setMoveDirection] = useState(null);
 
   const handleButtonClick = () => {
@@ -52,6 +53,8 @@ export function Customization() {
   const handleMoveUp = (index) => {
     if (index === 0) return;
     setMoveDirection("up");
+    setMovingSectionIndex(index - 1);
+
     const newSections = [...addedSections];
     [newSections[index - 1], newSections[index]] = [
       newSections[index],
@@ -60,6 +63,7 @@ export function Customization() {
     setAddedSections(newSections);
 
     setTimeout(() => {
+      setMovingSectionIndex(null);
       setMoveDirection(null);
     }, 750);
   };
@@ -67,6 +71,8 @@ export function Customization() {
   const handleMoveDown = (index) => {
     if (index === addedSections.length - 1) return;
     setMoveDirection("down");
+    setMovingSectionIndex(index + 1);
+
     const newSections = [...addedSections];
     [newSections[index], newSections[index + 1]] = [
       newSections[index + 1],
@@ -75,14 +81,20 @@ export function Customization() {
     setAddedSections(newSections);
 
     setTimeout(() => {
+      setMovingSectionIndex(null);
       setMoveDirection(null);
     }, 750);
   };
 
   const renderSection = (section, index) => {
     let sectionClass = "section";
-    if (moveDirection === "up") sectionClass += " section-up";
-    if (moveDirection === "down") sectionClass += " section-down";
+
+    if (movingSectionIndex === index && moveDirection === "up") {
+      sectionClass += " section-up";
+    }
+    if (movingSectionIndex === index && moveDirection === "down") {
+      sectionClass += " section-down";
+    }
 
     const SectionComponent = section.uiComponent;
 
