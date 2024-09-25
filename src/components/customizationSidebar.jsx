@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CustomizationSidebarHeader } from "./customizationSidebarHeader";
 import { FaChevronRight } from "react-icons/fa";
 import {
@@ -81,6 +81,8 @@ export function CustomizationSidebar({
   const [hoveredSection, setHoveredSection] = useState(null);
   const [selectedData, setSelectedData] = useState(editingData || null);
 
+  const sidebarRef = useRef(null);
+
   useEffect(() => {
     if (activeSectionProp) {
       handleSectionChange(activeSectionProp);
@@ -136,8 +138,27 @@ export function CustomizationSidebar({
     (section) => section.title === activeSection,
   )?.component;
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   return (
     <div
+      ref={sidebarRef}
       className={`fixed top-0 right-0 h-full w-[30rem] bg-dark-default text-light-default shadow-lg transform transition-transform duration-300 ease-in-out p-6 ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
