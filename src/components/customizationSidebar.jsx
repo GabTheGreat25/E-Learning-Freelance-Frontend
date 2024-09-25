@@ -147,6 +147,7 @@ export function CustomizationSidebar({
         onClose={onClose}
         onBack={handleBack}
         onSave={handleSave}
+        isEditMode={!!sectionIdToEdit}
       />
       <div className="grid gap-y-6">
         {activeSection && CurrentSectionComponent ? (
