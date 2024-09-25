@@ -4,9 +4,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { contentTabs, SelectStyles } from "@utils";
+import { contentTabs, SelectStyles, Toast } from "@utils";
 import { Navbar, Footer, TabNavigation } from "@components";
-import { CalendarImg, VideoImg } from "@assets";
+import { CalendarImg, VideoImg, UploadImg } from "@assets";
+import { TOAST } from "@constants";
 
 const videoData = [
   {
@@ -52,6 +53,10 @@ export function AddCourses() {
     useState(false);
   const [selectedVideos, setSelectedVideos] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [trailer, setTrailer] = useState(null);
+  const [trailerFileName, setTrailerFileName] = useState("");
+  const [banner, setBanner] = useState(null);
+  const [bannerFileName, setBannerFileName] = useState("");
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -152,6 +157,77 @@ export function AddCourses() {
     return text;
   };
 
+  const handleTrailerFileSelect = (file) => {
+    if (file && file.type === "video/mp4") {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTrailer(reader.result);
+        setTrailerFileName(file.name);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      Toast(TOAST.ERROR, "Only MP4 files are supported for the trailer.");
+    }
+  };
+
+  const handleTrailer = (e) => {
+    const file = e.target.files[0];
+    handleTrailerFileSelect(file);
+  };
+
+  const handleTrailerDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleTrailerDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleTrailerFileSelect(files[0]);
+    }
+  };
+
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setBanner(reader.result);
+          setBannerFileName(file.name);
+        }
+      };
+      reader.readAsDataURL(file);
+    } else {
+      Toast(TOAST.ERROR, "Only image files are supported for the banner.");
+    }
+  };
+
+  const handleBannerFileSelect = (file) => {
+    if (file && file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBanner(reader.result);
+        setBannerFileName(file.name);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      Toast(TOAST.ERROR, "Please upload a valid image file for the banner.");
+    }
+  };
+
+  const handleBannerDrop = (e) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleBannerFileSelect(files[0]);
+    }
+  };
+
+  const handleBannerDragOver = (e) => {
+    e.preventDefault();
+  };
+
   return (
     <>
       <Navbar title="Content" />
@@ -190,6 +266,79 @@ export function AddCourses() {
           <form className="px-10 py-6 xl:px-12">
             <div className="grid items-start justify-center xl:grid-cols-[55%_45%] gap-x-10">
               <div className="w-full pb-6 xl:pb-0">
+                <div className="grid grid-cols-2 gap-x-6">
+                  <div className="pb-6">
+                    <h1 className="pb-3 text-sm xs:text-xl text-light-default">
+                      Trailer
+                    </h1>
+                    <div
+                      className={`flex items-center justify-center w-full p-6 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default focus:border-info-secondary focus:outline-none`}
+                      onDragOver={handleTrailerDragOver}
+                      onDrop={handleTrailerDrop}
+                    >
+                      <input
+                        type="file"
+                        accept="video/mp4"
+                        onChange={handleTrailer}
+                        className="hidden"
+                        id="upload-trailer"
+                      />
+                      <label htmlFor="upload-trailer">
+                        <div className="flex flex-col items-center justify-center cursor-pointer">
+                          <img
+                            src={UploadImg}
+                            alt="UploadImg"
+                            className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
+                          />
+                          <h1 className="pt-3 text-xs text-center md:text-base text-light-default">
+                            Drag MP4 files here
+                          </h1>
+                          <p className="text-xs text-center md:text-base text-light-secondary">
+                            {trailerFileName
+                              ? truncateText(trailerFileName, 30)
+                              : "MP4 files supported"}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <h1 className="pb-3 text-sm xs:text-xl text-light-default">
+                      Banner
+                    </h1>
+                    <div
+                      className={`flex items-center justify-center w-full p-6 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default focus:border-info-secondary focus:outline-none`}
+                      onDragOver={handleBannerDragOver}
+                      onDrop={handleBannerDrop}
+                    >
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleBannerChange}
+                        className="hidden"
+                        id="upload-banner"
+                      />
+                      <label htmlFor="upload-banner">
+                        <div className="flex flex-col items-center justify-center cursor-pointer">
+                          <img
+                            src={UploadImg}
+                            alt="UploadImg"
+                            className="w-12 h-12 xs:h-16 xs:w-16 md:h-fit md:w-fit"
+                          />
+                          <h1 className="pt-3 text-xs text-center md:text-base text-light-default">
+                            Banner Photo
+                          </h1>
+                          <p className="text-xs text-center md:text-base text-light-secondary">
+                            {bannerFileName
+                              ? truncateText(bannerFileName, 20)
+                              : "jpg, jpeg, png files"}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="relative mb-8">
                   <label
                     htmlFor="title"
@@ -201,6 +350,20 @@ export function AddCourses() {
                     id="title"
                     type="text"
                     placeholder="Enter title"
+                    className={`w-full p-4 border rounded-md text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none bg-transparent`}
+                  />
+                </div>
+                <div className="relative mb-8">
+                  <label
+                    htmlFor="author"
+                    className="block mb-2 text-xl font-medium"
+                  >
+                    Author <span className="text-red-600">*</span>
+                  </label>
+                  <input
+                    id="author"
+                    type="text"
+                    placeholder="Enter author"
                     className={`w-full p-4 border rounded-md text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none bg-transparent`}
                   />
                 </div>
@@ -251,16 +414,10 @@ export function AddCourses() {
                     />
                   </div>
                   <div className="relative w-full mb-4">
-                    <label
-                      htmlFor="publishing"
-                      className="block mb-2 text-xl font-medium"
-                    >
-                      Publishing <span className="text-red-600">*</span>
-                    </label>
-                    <div className="flex items-center">
+                    <div className="flex items-center pt-9">
                       <input
                         type="text"
-                        id="publishing"
+                        id=""
                         value={startDate ? startDate.toLocaleDateString() : ""}
                         readOnly
                         className={`w-full p-[1.1rem] border rounded-md focus:border-info-secondary focus:outline-none bg-transparent text-light-secondary placeholder-light-secondary`}

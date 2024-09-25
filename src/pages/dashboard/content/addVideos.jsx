@@ -11,8 +11,8 @@ import { TOAST } from "@constants";
 export function AddVideos() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Videos");
-  const [video, setVideo] = useState(null);
-  const [fileName, setFileName] = useState("");
+  const [video, setPreview] = useState(null);
+  const [previewFileName, setPreviewFileName] = useState("");
   const [banner, setBanner] = useState(null);
   const [bannerFileName, setBannerFileName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
@@ -32,33 +32,33 @@ export function AddVideos() {
     return text;
   };
 
-  const handleVideoFileSelect = (file) => {
+  const handlePreviewFileSelect = (file) => {
     if (file && file.type === "video/mp4") {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setVideo(reader.result);
-        setFileName(file.name);
+        setPreview(reader.result);
+        setPreviewFileName(file.name);
       };
       reader.readAsDataURL(file);
     } else {
-      Toast(TOAST.ERROR, "Only MP4 files are supported for the video.");
+      Toast(TOAST.ERROR, "Only MP4 files are supported for the preview.");
     }
   };
 
-  const handleVideo = (e) => {
+  const handlePreview = (e) => {
     const file = e.target.files[0];
-    handleVideoFileSelect(file);
+    handlePreviewFileSelect(file);
   };
 
-  const handleVideoDragOver = (e) => {
+  const handlePreviewDragOver = (e) => {
     e.preventDefault();
   };
 
-  const handleVideoDrop = (e) => {
+  const handlePreviewDrop = (e) => {
     e.preventDefault();
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-      handleVideoFileSelect(files[0]);
+      handlePreviewFileSelect(files[0]);
     }
   };
 
@@ -186,17 +186,17 @@ export function AddVideos() {
               </h1>
               <div
                 className={`w-full h-[18rem] flex flex-col items-center justify-center md:p-8 p-4 border-[.125rem] border-dashed cursor-pointer rounded-xl bg-dark-default focus:border-info-secondary focus:outline-none`}
-                onDragOver={handleVideoDragOver}
-                onDrop={handleVideoDrop}
+                onDragOver={handlePreviewDragOver}
+                onDrop={handlePreviewDrop}
               >
                 <input
                   type="file"
                   accept="video/mp4"
-                  onChange={handleVideo}
+                  onChange={handlePreview}
                   className="hidden"
-                  id="upload-video"
+                  id="upload-preview"
                 />
-                <label htmlFor="upload-video">
+                <label htmlFor="upload-preview">
                   <div className="flex flex-col items-center justify-center cursor-pointer">
                     <img
                       src={UploadImg}
@@ -207,8 +207,8 @@ export function AddVideos() {
                       Drag MP4 files here
                     </h1>
                     <p className="text-xs text-center md:text-base text-light-secondary">
-                      {fileName
-                        ? truncateText(fileName, 30)
+                      {previewFileName
+                        ? truncateText(previewFileName, 30)
                         : "MP4 files supported"}
                     </p>
                   </div>
@@ -309,16 +309,10 @@ export function AddVideos() {
                     />
                   </div>
                   <div className="relative w-full mb-8">
-                    <label
-                      htmlFor="publishing"
-                      className="block mb-2 text-xl font-medium"
-                    >
-                      Publishing <span className="text-red-600">*</span>
-                    </label>
-                    <div className="flex items-center">
+                    <div className="flex items-center pt-9">
                       <input
                         type="text"
-                        id="publishing"
+                        id=""
                         value={startDate ? startDate.toLocaleDateString() : ""}
                         readOnly
                         className={`w-full p-[1.1rem] border rounded-md focus:border-info-secondary focus:outline-none bg-transparent text-light-secondary placeholder-light-secondary`}

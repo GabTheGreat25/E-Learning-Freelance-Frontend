@@ -322,16 +322,10 @@ export function AddPromotions() {
                     />
                   </div>
                   <div className="relative w-full mb-4">
-                    <label
-                      htmlFor="publishing"
-                      className="block mb-2 text-xl font-medium"
-                    >
-                      Publishing <span className="text-red-600">*</span>
-                    </label>
-                    <div className="flex items-center">
+                    <div className="flex items-center pt-9">
                       <input
                         type="text"
-                        id="publishing"
+                        id=""
                         value={startDate ? startDate.toLocaleDateString() : ""}
                         readOnly
                         className={`w-full p-[1.1rem] border rounded-md focus:border-info-secondary focus:outline-none bg-transparent text-light-secondary placeholder-light-secondary`}
