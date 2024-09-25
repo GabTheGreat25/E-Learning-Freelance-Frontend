@@ -1,21 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { SelectStyles } from "@utils";
 
-export function TextSection({ setSelectedData }) {
-  const [text, setText] = useState("");
-  const [style, setStyle] = useState(null);
+const styleOptions = [
+  { label: "Header", value: "text-3xl" },
+  { label: "Paragraph", value: "text-base" },
+];
+
+export function TextSection({ selectedData, setSelectedData }) {
+  const [data, setData] = useState(selectedData || { text: "", style: null });
+
+  useEffect(() => {
+    if (JSON.stringify(data) !== JSON.stringify(selectedData)) {
+      setSelectedData(data);
+    }
+  }, [data, selectedData, setSelectedData]);
 
   const handleTextChange = (e) => {
-    const newText = e.target.value;
-    setText(newText);
-    setSelectedData({ text: newText, style });
+    setData((prev) => ({
+      ...prev,
+      text: e.target.value,
+    }));
   };
 
   const handleStyleChange = (selectedOption) => {
-    setStyle(selectedOption);
-    setSelectedData({ text, style: selectedOption });
+    setData((prev) => ({
+      ...prev,
+      style: selectedOption,
+    }));
   };
+
+  useEffect(() => {
+    setData(selectedData || { text: "", style: null });
+  }, [selectedData]);
 
   return (
     <div>
@@ -30,7 +47,7 @@ export function TextSection({ setSelectedData }) {
           type="text"
           id="text"
           placeholder="Enter Text"
-          value={text}
+          value={data.text}
           onChange={handleTextChange}
           className="w-full px-4 py-3 text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none"
         />
@@ -43,15 +60,12 @@ export function TextSection({ setSelectedData }) {
           Style <span className="text-red-600">*</span>
         </label>
         <Select
-          options={[
-            { label: "Header", value: "text-3xl" },
-            { label: "Paragraph", value: "text-base" },
-          ]}
-          className={`w-full px-[.65rem] py-[.35rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none`}
-          value={style}
+          options={styleOptions}
+          value={data.style}
           onChange={handleStyleChange}
           styles={SelectStyles()}
           placeholder="Select Style"
+          className="w-full px-[.65rem] py-[.35rem] text-[.65rem] bg-transparent border rounded-md md:text-base text-light-default placeholder-light-secondary focus:border-info-secondary focus:outline-none"
         />
       </div>
     </div>

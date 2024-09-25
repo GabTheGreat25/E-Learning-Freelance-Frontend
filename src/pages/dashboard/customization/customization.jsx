@@ -107,10 +107,8 @@ export function Customization() {
   const handleEditSection = (id) => {
     const sectionToEdit = addedSections.find((section) => section.id === id);
 
-    // Reset activeSection first to ensure it triggers re-rendering
     setActiveSection(null);
 
-    // Small delay to ensure React registers the change
     setTimeout(() => {
       setEditingSectionIndex(id);
       setEditingData(sectionToEdit.data);

@@ -2,7 +2,14 @@ import React from "react";
 import { FaArrowUp, FaArrowDown, FaCog } from "react-icons/fa";
 import { HiOutlineTrash } from "react-icons/hi";
 
-export function CourseUiSection({ id, data, onDelete, onMoveUp, onMoveDown }) {
+export function CourseUiSection({
+  id,
+  data,
+  onDelete,
+  onMoveUp,
+  onMoveDown,
+  onEdit,
+}) {
   const truncateText = (text, wordLimit) => {
     const words = text.split(" ");
     if (words.length > wordLimit) {
@@ -28,7 +35,11 @@ export function CourseUiSection({ id, data, onDelete, onMoveUp, onMoveDown }) {
       <div className="flex justify-between px-8 py-2 bg-dark-default">
         <h1>Course Section</h1>
         <div className="flex gap-x-3">
-          <FaCog size={20} className="cursor-pointer" />
+          <FaCog
+            size={20}
+            className="cursor-pointer"
+            onClick={() => onEdit(id)}
+          />
           <HiOutlineTrash
             size={22}
             onClick={() => onDelete(id)}

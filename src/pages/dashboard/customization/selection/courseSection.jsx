@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CoverImg } from "@assets";
 
@@ -53,11 +53,20 @@ const courseData = [
   },
 ];
 
-export function CourseSection({ setSelectedData }) {
+export function CourseSection({ setSelectedData, selectedData }) {
   const navigate = useNavigate();
-
   const [selectedCoursesState, setSelectedCoursesState] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    if (selectedData && selectedData.length > 0) {
+      setSelectedCoursesState(selectedData);
+    }
+  }, [selectedData]);
+
+  useEffect(() => {
+    setSelectAll(selectedCoursesState.length === courseData.length);
+  }, [selectedCoursesState]);
 
   const toggleCheckbox = (course) => {
     setSelectedCoursesState((prevSelected) => {
@@ -82,6 +91,10 @@ export function CourseSection({ setSelectedData }) {
 
   const truncateText = (text, charLimit) =>
     text.length > charLimit ? `${text.slice(0, charLimit)}...` : text;
+
+  const handleEdit = (id) => {
+    navigate(`/dashboard/courses/edit/${id}`);
+  };
 
   return (
     <div>
@@ -121,6 +134,12 @@ export function CourseSection({ setSelectedData }) {
                 <p className="text-sm text-light-secondary">
                   {truncateText(course.description, 50)}
                 </p>
+                <button
+                  className="text-sm underline text-light-default"
+                  onClick={() => handleEdit(course.id)}
+                >
+                  Edit
+                </button>
               </div>
             </div>
             <hr className="w-full border-light-shadow" />
